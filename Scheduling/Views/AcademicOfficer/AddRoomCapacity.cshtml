@@ -1,0 +1,83 @@
+﻿@model Scheduling.Models.ViewModels.CombineScheduleVM
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddRoomCapacity</title>
+
+    <style>
+
+        .cell-empty{
+
+            height:12px;
+        }
+
+    </style>
+</head>
+<body>
+    <div> 
+        <table border="1" style="border-collapse: collapse; border-color:black; width:100%;">
+            <tr>
+                <td>Offid</td>
+                <td>Day</td>
+                <td>Slottype</td>
+                <td>Room</td>
+                <td>Section</td>
+                <td>Course Offered</td>
+                <td>Teacher</td>
+                
+               
+            </tr>
+                     
+                    
+                       
+
+                        @foreach (var slot in Model.slots)
+                        {
+                            var key = slot.slotid;
+                            if (Model.dOffCourses.ContainsKey(key))
+                            {
+                                var Schedules = Model.dOffCourses[key];
+                                <tr>
+                                    <td>@Schedules.offid</td>
+                                    <td>@slot.day.dayname</td>
+                                    <td>@slot.slottype.duration</td>
+                                    <td>@slot.room.roomno</td>
+                                    <td>@Schedules.Section</td>
+                                    <td>@Schedules.title</td>
+                                    <td>@Schedules.teachername</td>
+
+                                </tr>
+
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td class="cell-empty"></td>
+                                    <td class="cell-empty"></td>
+                                    <td class="cell-empty"></td>
+                                    <td class="cell-empty"></td>
+                                    <td class="cell-empty"></td>
+                                    <td class="cell-empty"></td>
+                                    <td class="cell-empty"></td>
+                                </tr>
+
+                            }
+                        }
+
+
+
+
+                    
+             
+
+
+        </table>
+    </div>
+</body>
+</html>

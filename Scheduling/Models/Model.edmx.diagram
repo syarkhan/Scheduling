@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="a11c07eed8ea4542a98e4d16ec839c94" Name="Diagram1">
+        <EntityTypeShape EntityType="Scheduling.Academic" Width="1.5" PointX="3" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.AccountType" Width="1.5" PointX="0.75" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.Class" Width="1.5" PointX="3.75" PointY="14.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.ClassType" Width="1.5" PointX="8.25" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.course" Width="1.5" PointX="6" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.day" Width="1.5" PointX="6" PointY="16.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.DEMO" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.Login" Width="1.5" PointX="3" PointY="11" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.offeredcourse" Width="1.5" PointX="8.25" PointY="8.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.Program" Width="1.5" PointX="0.75" PointY="11.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.Request" Width="1.5" PointX="10.5" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.room" Width="1.5" PointX="6" PointY="18.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.schedule" Width="1.5" PointX="13.5" PointY="8.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.section" Width="1.5" PointX="6" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.sectiondetail" Width="1.5" PointX="10.5" PointY="18" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.Semester" Width="1.5" PointX="11.25" PointY="11.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.SemesterType" Width="1.5" PointX="3.75" PointY="16.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.slot" Width="1.5" PointX="8.25" PointY="19.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.slottype" Width="1.5" PointX="6" PointY="22" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.Student" Width="1.5" PointX="8.25" PointY="12.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.teacher" Width="1.5" PointX="3" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.WeekWise" Width="1.5" PointX="15.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.vAvailable" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.voffcours" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.voffCoursesWithSectionsandTeacher" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.vschedule" Width="1.5" PointX="13.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.vsection" Width="1.5" PointX="12.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Scheduling.vslottype" Width="1.5" PointX="14.75" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="Scheduling.FK_Admin" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK_Student" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK_teacher" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK_sec2" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK__schedule__CTId__48CFD27E" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK__WeekWise__CTId__4E88ABD4" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK_Requests3" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK__offeredco__cours__57FD0775" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK__slots__dayid__4BAC3F29" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK_Login" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK__offeredco__secid__5708E33C" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK__offeredco__teach__58F12BAE" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK__schedule__offid__542C7691" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK__sectionde__offid__55209ACA" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK_Requests" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK_sec1" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK_teacher1" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK_Requests1" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK_Requests2" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK__slots__roomid__4CA06362" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK__schedule__slotid__46E78A0C" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK__WeekWise__schid__4D94879B" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK_schedule" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK_sec" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK_Student1" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK_Semester" ManuallyRouted="false" />
+        <AssociationConnector Association="Scheduling.FK__slots__slottypei__37C5420D" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

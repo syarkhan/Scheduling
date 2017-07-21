@@ -1,0 +1,65 @@
+﻿
+@model Scheduling.Models.Request
+
+@{int i = 1; }
+
+
+@if (Model.CTID == 3)
+{
+    <tr>
+        
+        <td>MakeUp</td>
+        <td>@Model.offeredcourse.course.code-@Model.offeredcourse.course.title - @Model.offeredcourse.section.Program.Program1 @Model.offeredcourse.section.Class.Class1 - @Model.offeredcourse.section.sectionname</td>
+        <td>@Model.slot.room.roomno - @Model.slot.room.campus</td>
+        <td>@Model.Date.ToString("MM/dd/yyyy")</td>
+        <td>@Model.slot.slottype.duration</td>
+        @if (Model.Status == false)
+                {
+            <td>Pending</td>
+        }
+        else
+        {
+            <td>Approved</td>
+        }
+        @if (Model.Reason == null)
+                {
+            <td>-</td>
+        }
+        else
+        {
+            <td>@Model.Reason</td>
+        }
+
+    </tr>
+}
+else if (Model.CTID == 2)
+{
+    <tr>
+        
+        <td>Cancel</td>
+        <td>@Model.offeredcourse.course.code-@Model.offeredcourse.course.title - @Model.offeredcourse.section.Program.Program1 @Model.offeredcourse.section.Class.Class1 - @Model.offeredcourse.section.sectionname</td>
+        <td></td>
+        <td>@Model.Date.ToString("MM/dd/yyyy")</td>
+        <td></td>
+
+        @if (Model.Status == false)
+                {
+            <td>Pending</td>
+        }
+        else
+        {
+            <td>Approved</td>
+        }
+        @if (Model.Reason == null)
+                {
+            <td>-</td>
+        }
+        else
+        {
+            <td>@Model.Reason</td>
+        }
+
+    </tr>
+}
+        
+

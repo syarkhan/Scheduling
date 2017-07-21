@@ -1,0 +1,102 @@
+﻿@model Scheduling.Models.ViewModels.ReportsVM
+
+@{
+    ViewBag.Title = "Current";
+    Layout = "~/Views/Shared/Layout_AAC.cshtml";
+}
+
+
+<script>
+
+    $(document).ready(function () {
+
+        console.log("hello");
+
+    });
+
+</script>
+
+
+<div class="container" style="font-family:'Segoe UI';">
+    <h2>Current Classes - @ViewBag.today</h2>
+
+    
+    <table class="table tb" style="font-size:12.9px;">
+        <thead class="">
+            <tr>
+                <th>
+                    S.No.
+                </th>
+
+                <th>
+                    Room No.
+                </th>
+                <th>
+                    Campus
+                </th>
+                <th>
+                    Duration
+                </th>
+                <th>
+                    Offered Course
+                </th>
+                <th>
+                    Teacher
+                </th>
+                <th>
+                    Type
+                </th>
+            </tr>
+        </thead>
+
+        @{int a = 1;}
+        @foreach (var item in Model.currentclasses)
+        {
+            <tbody>
+                <tr>
+
+                    <td>
+                        @a
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.roomno)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.campus)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.duration)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.sectionname) @Html.DisplayFor(modelItem => item.title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.teachername)
+                    </td>
+
+
+                    @if (item.CTID == null)
+                    {
+
+                        <td  style="background-color:#449d44;font-weight:bold;">
+                            In Progress
+                        </td>
+                    }
+
+                    else if (item.CTID == 2)
+                    {
+                        <td  style="background-color:red;font-weight:bold;">Cancelled</td>
+
+                    }
+
+
+
+
+                </tr>
+            </tbody>
+            a++;
+        }
+
+    </table>
+
+</div>

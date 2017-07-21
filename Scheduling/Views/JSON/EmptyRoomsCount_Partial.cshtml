@@ -1,0 +1,52 @@
+﻿@model Scheduling.Models.ViewModels.ReportsVM
+
+<table class="table tb">
+    <tr>
+        <th>
+            @Html.Label("SNo")
+        </th>
+        <th>
+            @Html.Label("Room")
+        </th>
+        <th>
+            @Html.Label("Campus")
+        </th>
+        <th>
+            @Html.Label("Duration")
+        </th>
+
+
+
+    </tr>
+
+    @foreach (var item in Model.empty_rooms)
+    {
+        <tr>
+
+
+            <td>
+                @i
+
+            </td>
+            @{i++;}
+
+            <td>
+                @Html.DisplayFor(modelItem => item.roomno)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.campus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.duration)
+            </td>
+
+
+
+
+        </tr>
+                }
+
+</table>
+
+
+

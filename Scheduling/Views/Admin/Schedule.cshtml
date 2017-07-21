@@ -1,0 +1,2913 @@
+﻿@model  Scheduling.Models.ViewModels.CombineScheduleVM
+
+@{
+    ViewBag.Title = "Schedule";
+}
+
+
+
+
+<style>
+    .active-room {
+        color: #37474F;
+        font-weight: 600;
+    }
+
+    .font {
+        font-family: 'Segoe UI';
+        font-size: 14px;
+    }
+
+    h3, h6 {
+        margin: 6px;
+        font-family: 'Segoe UI';
+    }
+
+
+
+    /*.active-campus{
+
+            background-color: #102c44;
+            border-color: #000000;
+
+        }*/
+
+
+    .panel-head {
+        color: #43A047 !important;
+        background-color: #4A4A4A !important;
+        border-color: #00e83d !important;
+    }
+
+    .campuses {
+        background-color: #fff;
+        position: fixed;
+        width: 100%;
+        border-bottom-style: groove;
+        border-bottom-width: thin;
+        /*border-color: black;*/
+        box-shadow: 2px 2px 5px #c6c0c7;
+        border-radius: 0;
+        z-index: 1;
+    }
+
+    
+
+
+    .active-day {
+        color: #2ce22b;
+        font-weight: bolder;
+    }
+
+
+    .roomselect {
+        color: #37474F;
+        font-weight: 600;
+    }
+
+
+    .day:focus {
+        color: #707070;
+        text-decoration: none;
+    }
+    /*.day:hover{
+
+            color: #444;
+            text-decoration: none;
+            background: url(../Content/themes/base/images/expand-icon.png) 85px -4px no-repeat;
+            background-size: 20px;
+
+        }*/
+
+
+
+
+    .tablex td {
+        border: 1px solid black;
+    }
+
+    .tablex {
+        width: 80%;
+        margin-left: 11.3%;
+    }
+
+    .day {
+        text-transform: uppercase;
+        line-height: 20px;
+    }
+
+
+    .room {
+        /*color: #428bca;*/
+        text-decoration: none;
+    }
+
+        .room:hover {
+            color: #37474F;
+            list-style-type: none;
+            text-decoration: none;
+        }
+
+        .room:focus {
+            color: #37474F;
+            list-style-type: none;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+    .carousel {
+        margin-left: -3.4%;
+    }
+
+    .carousel-control {
+        text-shadow: none !important;
+    }
+
+        .carousel-control.left, .carousel-control.right {
+            background-image: none !important;
+            filter: none !important;
+        }
+
+
+    .noshow {
+        display: none;
+    }
+
+
+    .div {
+        background-color: #fff;
+        border: 1px solid #dedede;
+        color: #000;
+        font-size: 12px;
+        /*width: 100%;*/
+        height: 210px;
+        border-radius: 0;
+        cursor: pointer;
+        box-shadow: 2px 2px 5px rgba(0,0,0,.1);
+        position: relative;
+        overflow: hidden;
+        float: left;
+    }
+
+    .content {
+        margin: 10px;
+        font-size: 12px;
+        /* margin-top: 100px; */
+        border-radius: 5px;
+        width: 20.9%;
+        height: 162px;
+        border: 1px dashed #1b89bf;
+        float: left;
+        background-color: white;
+        /* box-shadow: 2px 2px 5px #c6c0c7; */
+        /*padding: 0;*/
+        padding-top: 0.5%;
+        padding-left: 0.5%;
+        padding-right: 0.5%;
+    }
+
+    .content1 {
+        font-size: 12px;
+        /* margin-top: 100px; */
+        border-radius: 5px;
+        width: 100%;
+        height: 160px;
+        /* border: 1px dashed #1b89bf; */
+        /* float: left; */
+        background-color: white;
+        /* box-shadow: 2px 2px 5px #c6c0c7; */
+        /* padding: 0; */
+        padding-top: 0.5%;
+        padding-left: 0.5%;
+        padding-right: 0.5%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
+
+    .content2 {
+        font-size: 12px;
+        /* margin-top: 100px; */
+        border-radius: 5px;
+        width: 100%;
+        height: 80px;
+        /* border: 1px dashed #1b89bf; */
+        /* float: left; */
+        background-color: white;
+        /* box-shadow: 2px 2px 5px #c6c0c7; */
+        /* padding: 0; */
+        padding-top: 0.5%;
+        padding-left: 0.5%;
+        padding-right: 0.5%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
+
+    .slots {
+        margin: 10px;
+        margin-top: 6px;
+        /* margin-left: 2px; */
+        border-radius: 4px;
+        width: 20.9%;
+        height: 34px;
+        border: 1px solid #e4e2e2;
+        float: left;
+        background-color: #ffffff;
+        /* box-shadow: 2px 2px 5px #c6c0c7; */
+        color: #615454;
+        font-size: 16px;
+        font-family: 'Segoe UI';
+        line-height: 30px;
+        /*border-left: 3px solid #507182;
+        border-right: 3px solid #507182;*/
+    }
+
+
+    .inside-ul-list {
+        list-style-type: none;
+        margin-top: -7px;
+        font-size: 12.9px;
+        padding: 0px;
+        border-left: 1px solid #FF5722;
+        padding-left: 25px;
+        margin-left: -13px;
+        color: black;
+    }
+
+    ul.outer-ul-list {
+        list-style-type: none;
+        /*margin-top: -40px;*/
+        border-left: 1px solid #9E9E9E;
+        padding: 12px;
+        padding-top: inherit;
+    }
+
+    /*.scroll{
+
+        max-height: 490px;
+        overflow-y: scroll;
+
+       }*/
+    #sidebar {
+        height: 490px;
+        overflow: hidden;
+    }
+
+        #sidebar:hover {
+            overflow: auto;
+        }
+
+    /*.jqstooltip {
+     background-color: #c6e5f6 !important;
+     font-size: 11px !important;
+     padding: 5px !important;
+     color: black !important;
+     overflow: auto !important;
+     text-align: center !important;
+     border-color: #CCCCCC !important;
+     max-width: 400px !important;
+     max-height: 400px !important;
+    }
+
+    .jqsfield {
+     font-size: 10px !important;
+     color: black !important; /*set the text color here
+           }
+
+       */
+
+
+
+    .fixed {
+        position: fixed;
+    }
+    /* sidebar */
+
+    .bs-docs-sidebar {
+        padding-left: 20px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+        /* all links */
+
+        .bs-docs-sidebar .nav > li > a {
+            color: #999;
+            border-left: 2px solid transparent;
+            padding: 4px 20px;
+            font-size: 13px;
+            font-weight: 400;
+        }
+        /* nested links */
+
+        .bs-docs-sidebar .nav .nav > li > a {
+            padding-top: 1px;
+            padding-bottom: 1px;
+            padding-left: 30px;
+            font-size: 12px;
+        }
+        /* active & hover links */
+
+        .bs-docs-sidebar .nav > .active > a,
+        .bs-docs-sidebar .nav > li > a:hover,
+        .bs-docs-sidebar .nav > li > a:focus {
+            color: #563d7c;
+            text-decoration: none;
+            background-color: transparent;
+            border-left-color: #563d7c;
+            border-right-color: #563d7c;
+            margin-left: -1px;
+        }
+        /* all active links */
+
+        .bs-docs-sidebar .nav > .active > a,
+        .bs-docs-sidebar .nav > .active:hover > a,
+        .bs-docs-sidebar .nav > .active:focus > a {
+            font-weight: 700;
+            margin-left: -1px;
+        }
+        /* nested active links */
+
+        .bs-docs-sidebar .nav .nav > .active > a,
+        .bs-docs-sidebar .nav .nav > .active:hover > a,
+        .bs-docs-sidebar .nav .nav > .active:focus > a {
+            font-weight: 700;
+            margin-left: -1px;
+        }
+        /* hide inactive nested list */
+
+        .bs-docs-sidebar .nav ul.nav {
+            display: none;
+        }
+        /* show active nested list */
+
+        .bs-docs-sidebar .nav > .active > ul.nav {
+            display: block;
+            border-left: 1px solid #81a1a9;
+        }
+
+    .group {
+        background: yellow;
+        width: 200px;
+        /*height: 1100px;*/
+    }
+
+        .group .subgroup {
+            background: orange;
+            width: 150px;
+            height: 500px;
+        }
+
+
+    .bs-docs-sidebar2 {
+        padding-left: 20px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+        /* all links */
+
+        .bs-docs-sidebar2 .nav > li > a {
+            color: #999;
+            border-left: 2px solid transparent;
+            padding: 4px 20px;
+            font-size: 13px;
+            font-weight: 400;
+        }
+        /* nested links */
+
+        .bs-docs-sidebar2 .nav .nav > li > a {
+            padding-top: 1px;
+            padding-bottom: 1px;
+            padding-left: 30px;
+            font-size: 12px;
+        }
+        /* active & hover links */
+
+        .bs-docs-sidebar2 .nav > .active > a,
+        .bs-docs-sidebar2 .nav > li > a:hover,
+        .bs-docs-sidebar2 .nav > li > a:focus {
+            color: #563d7c;
+            text-decoration: none;
+            background-color: transparent;
+            border-left-color: #563d7c;
+            border-right-color: #563d7c;
+            margin-left: -1px;
+        }
+        /* all active links */
+
+        .bs-docs-sidebar2 .nav > .active > a,
+        .bs-docs-sidebar2 .nav > .active:hover > a,
+        .bs-docs-sidebar2 .nav > .active:focus > a {
+            font-weight: 700;
+            margin-left: -1px;
+        }
+        /* nested active links */
+
+        .bs-docs-sidebar2 .nav .nav > .active > a,
+        .bs-docs-sidebar2 .nav .nav > .active:hover > a,
+        .bs-docs-sidebar2 .nav .nav > .active:focus > a {
+            font-weight: 700;
+            margin-left: -1px;
+        }
+        /* hide inactive nested list */
+
+        .bs-docs-sidebar2 .nav ul.nav {
+            display: none;
+        }
+        /* show active nested list */
+
+        .bs-docs-sidebar2 .nav > .active > ul.nav {
+            display: block;
+            border-left: 1px solid #81a1a9;
+        }
+
+
+
+    .course-name {
+        white-space: nowrap;
+        /*width: 13em;*/
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .room-tag {
+        white-space: nowrap;
+        /*width: 13em;*/
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .parts {
+        height: 65px;
+        padding-top: 2px;
+    }
+
+
+    .day-group {
+        width: 89.4%;
+        height: 1460px;
+    }
+
+    .room-group {
+        /*width: 150px;
+                height: 500px;*/
+    }
+
+    .active-slot {
+        background-color: #37474f;
+        color: white;
+    }
+
+
+    #sidebar:hover::-webkit-scrollbar {
+        width: 9px;
+    }
+
+    /*#sidebar:hover::-webkit-scrollbar-button {
+        background: #ccc
+    }*/
+    #sidebar:hover::-webkit-scrollbar-track-piece {
+        background: #ccc;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        border-radius: 10px;
+    }
+
+    #sidebar:hover::-webkit-scrollbar-thumb {
+        background: #37474F;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        border-radius: 10px;
+    }
+
+    .hover_content .ovrlay {
+        border-radius: 5px;
+        width: 20.9%;
+        height: 175px;
+        position: absolute;
+    }
+    /*.hovereffect {
+      width: 100%;
+      height: 100%;
+      float: left;
+      overflow: hidden;
+      position: relative;
+      text-align: center;
+      cursor: default;
+    }*/
+
+    .hovereffect .overlay {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        overflow: hidden;
+        left: 0;
+        background-color: rgba(255, 255, 255, 0.7);
+        top: -200px;
+        /*opacity: 0;*/
+        filter: alpha(opacity=0);
+        -webkit-transition: all 0.1s ease-out 0.5s;
+        transition: all 0.1s ease-out 0.5s;
+    }
+
+    .hovereffect:hover .overlay {
+        opacity: 1;
+        filter: alpha(opacity=100);
+        top: 0px;
+        -webkit-transition-delay: 0s;
+        transition-delay: 0s;
+    }
+
+    .hovereffect img {
+        display: block;
+        position: relative;
+    }
+
+    .hovereffect h2 {
+        text-transform: uppercase;
+        color: #fff;
+        text-align: center;
+        position: relative;
+        font-size: 17px;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.6);
+        -webkit-transform: translateY(-200px);
+        -ms-transform: translateY(-200px);
+        transform: translateY(-200px);
+        -webkit-transition: all ease-in-out 0.1s;
+        transition: all ease-in-out 0.1s;
+        -webkit-transition-delay: 0.3s;
+        transition-delay: 0.3s;
+    }
+
+    .hovereffect:hover h2 {
+        -webkit-transform: translateY(0px);
+        -ms-transform: translateY(0px);
+        transform: translateY(0px);
+        -webkit-transition-delay: 0.3s;
+        transition-delay: 0.3s;
+    }
+
+    .hovereffect a.info {
+        display: inline-block;
+        text-decoration: none;
+        padding: 7px 14px;
+        text-transform: uppercase;
+        margin: 50px 0 0 0;
+        background-color: transparent;
+        -webkit-transform: translateY(-200px);
+        -ms-transform: translateY(-200px);
+        transform: translateY(-200px);
+        color: #000;
+        border: 1px solid #000;
+        -webkit-transition: all ease-in-out 0.3s;
+        transition: all ease-in-out 0.3s;
+    }
+
+        .hovereffect a.info:hover {
+            box-shadow: 0 0 5px #fff;
+        }
+
+    .hovereffect:hover a.info {
+        -webkit-transform: translateY(0px);
+        -ms-transform: translateY(0px);
+        transform: translateY(0px);
+        box-shadow: 0 0 5px #000;
+        color: #000;
+        border: 1px solid #000;
+        -webkit-transition-delay: 0.3s;
+        transition-delay: 0.3s;
+    }
+
+    .up-down {
+        overflow: hidden;
+        height: 175px;
+    }
+
+    .slide {
+        width: 20.9%;
+        height: 175px;
+    }
+
+    .onhover {
+        background-color: #1DB7CB;
+    }
+
+    .red-color {
+        color: red;
+    }
+
+    .blue-color {
+        color: darkblue;
+    }
+
+    .green-color {
+        color: green;
+    }
+
+    .silver-color {
+        color: #767676;
+    }
+
+
+
+
+    /*.tooltip-arrow, .black-tooltip + .tooltip > .tooltip-inner {background-color: black;}*/
+</style>
+
+
+
+
+<script type="text/javascript">
+
+    var weekno;
+    var current_content1;
+    $(function () {
+
+        $("body").tooltip({ selector: '[data-toggle="tooltip"]' });
+        //$('[data-toggle="tooltip"]').tooltip();
+
+    });
+
+
+    $(window).on('load', function (e) {
+        //e.preventDefault();
+        $('body').scrollspy({
+            target: '.bs-docs-sidebar',
+            offset: 120
+
+        });
+
+    });
+
+    $(document).ready(function () {
+
+        
+
+        //BootstrapDialog.alert('I want banana!');
+
+
+
+
+        var type;
+        var schid;
+        var cls_start;
+        var cls_end;
+        var cls_break;
+        var date;
+        var weekno;
+
+        if ($('#time').val() >= 0 && $('#time').val() <= 10 || $('#time').val() >= 22 && $('#time').val() <= 23) {
+            $('.slots').eq(0).addClass('active-slot');
+        }
+        else if ($('#time').val() >= 11 && $('#time').val() <= 14) {
+            $('.slots').eq(1).addClass('active-slot');
+        }
+        else if ($('#time').val() >= 15 && $('#time').val() <= 17) {
+            $('.slots').eq(2).addClass('active-slot');
+        }
+        else if ($('#time').val() >= 18 && $('#time').val() <= 21) {
+            $('.slots').eq(3).addClass('active-slot');
+        }
+
+
+
+        if ($('#dayid').val() == 1) {
+            var hash = ('#active-day-1');
+        }
+        else if ($('#dayid').val() == 2) {
+            var hash = ('#active-day-2');
+        }
+        else if ($('#dayid').val() == 3) {
+            var hash = ('#active-day-3');
+        }
+        else if ($('#dayid').val() == 4) {
+            var hash = ('#active-day-4');
+        }
+        else if ($('#dayid').val() == 5) {
+            var hash = ('#active-day-5');
+        }
+        else if ($('#dayid').val() == 6) {
+            var hash = ('#active-day-6');
+        }
+        else if ($('#dayid').val() == 7) {
+            var hash = ('#active-day-7');
+        }
+
+        $('html, body').animate({
+            scrollTop: $(hash).offset().top - 120
+        }, 700, function () {
+
+            // Add hash (#) to URL when done scrolling (default click behavior)
+            window.location.hash = hash;
+
+        });
+
+
+        
+
+
+        $("body").on('click', ".bs-docs-sidebar a", function (event) {
+
+            //var offset = 120;
+            //event.preventDefault();
+            //$($(this).attr('href'))[0].scrollIntoView();
+            //scrollBy(0, -offset);
+
+
+            event.preventDefault();
+            // Make sure this.hash has a value before overriding default behavior
+            if (this.hash !== "") {
+
+                // Prevent default anchor click behavior
+
+
+                // Store hash
+                var hash = this.hash;
+
+                // Using jQuery's animate() method to add smooth page scroll
+                // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
+                $('html, body').animate({
+                    scrollTop: $(hash).offset().top - 120
+                }, 700, function () {
+
+                    // Add hash (#) to URL when done scrolling (default click behavior)
+                    window.location.hash = hash;
+
+                });
+
+            } // End if
+
+
+
+
+        });
+
+
+
+
+        var contentNumber = 0;
+
+
+
+        $("body").on('click', '.left', function () {
+
+            weekno = parseInt($('#week option:selected').text()) - 1;
+            var start = $('.day').eq(0).attr('date');
+            var campus = $('#incampus').val();
+            console.log(campus);
+            console.log(weekno);
+            console.log(start);
+            if (weekno < 1) {
+                $(this).children().css({ "opacity": "0.5", "cursor": "not-allowed" });
+
+
+            } else {
+                $('.right').children().css({ "opacity": "1", "cursor": "pointer" });
+                $("#week").val(weekno);
+
+
+                var jsonData = $.ajax({
+
+                    url: '@Url.Action("FilterByWeekLeft", "JSON")',
+                    data: {
+                        campus,
+                        start,
+                        weekno
+                    },
+                    type: "GET",
+                    success: function (result) {
+                        //console.log(result);
+                        $("body").scrollTop(0);
+                        //$('').remove();
+                        $('.main-div').html(result);
+                    }
+                });
+                if (weekno == 1) {
+                    $(this).children().css({ "opacity": "0.5", "cursor": "not-allowed" });
+                    weekno = weekno - 1;
+                }
+            }
+        });
+
+
+
+
+
+
+
+        $("body").on('click', '.right', function () {
+
+            weekno = parseInt($('#week option:selected').text()) + 1;
+            var end1 = $('.day').eq(6).attr('date');
+            var campus = $('#incampus').val();
+            console.log(campus);
+            console.log(weekno);
+
+
+            if (weekno > 18) {
+                $(this).children().css({ "opacity": "0.5", "cursor": "not-allowed" });
+
+
+            } else {
+                //$(this).children().css({ "opacity": "1", "cursor": "pointer" });
+                $('.left').children().css({ "opacity": "1", "cursor": "pointer" });
+                $("#week").val(weekno);
+
+
+
+                var jsonData = $.ajax({
+
+                    url: '@Url.Action("FilterByWeekRight", "JSON")',
+                    data: {
+                        campus,
+                        end1
+                    },
+                    type: "GET",
+                    success: function (result) {
+                        //console.log(result);
+                        $("body").scrollTop(0);
+                        //$('').remove();
+                        $('.main-div').html(result);
+                    }
+                });
+
+                if (weekno == 18) {
+                    $(this).children().css({ "opacity": "0.5", "cursor": "not-allowed" });
+                    weekno = weekno + 18;
+                }
+
+            }
+
+        });
+
+        $("body").on('change', '.week', function () {
+
+            weekno = parseInt($('#week option:selected').text());
+            var campus = $('#incampus').val();
+            console.log(weekno);
+            console.log(campus);
+
+            if (weekno == 1) {
+                $(this).prev().children().css({ "opacity": "0.5", "cursor": "not-allowed" });
+                $(this).next().children().css({ "opacity": "1", "cursor": "default" });
+            }
+            else if (weekno == 18) {
+                $(this).next().children().css({ "opacity": "0.5", "cursor": "not-allowed" });
+            }
+            else if (weekno >= 2 && weekno <= 17) {
+                $(this).prev().children().css({ "opacity": "1", "cursor": "default" });
+                $(this).next().children().css({ "opacity": "1", "cursor": "default" });
+            }
+
+            var jsonData = $.ajax({
+
+                url: '@Url.Action("FilterByWeekDropDown", "JSON")',
+                data: {
+                    campus,
+                    weekno
+                },
+                type: "GET",
+                success: function (result) {
+                    //console.log(result);
+                    $("body").scrollTop(0);
+                    //$('').remove();
+                    $('.main-div').html(result);
+                }
+            });
+
+
+        });
+
+
+
+        $('body').on('click', '.class-held', function () {
+            //e.preventDefault();
+
+
+            $('#form-details').dialog('open');
+
+
+
+
+            type = 1;
+            schid = $(this).attr('schid');
+            cls_start = $(this).attr('class-start');
+            cls_end = $(this).attr('class-end');
+            cls_break = $(this).attr('class-break');
+            date = $(this).closest(".day-group").attr("day-date");
+            weekno = parseInt($('#week option:selected').text());
+            current_content1 = $(this);
+
+            $('#cls_start_spinner').val(cls_start.substring(0, 5));
+
+            $('#cls_end_spinner').val(cls_end.substring(0, 5));
+
+            $('#cls_break_spinner').val(cls_break.substring(0, 5));
+
+            //var dialog = new BootstrapDialog({
+            //    message: 'Class Started: <input id="cls_start_spinner" value="' + cls_start.substring(0, 5) + '"><br>'+
+            //             'Class Ended: <input id="cls_end_spinner" value="' + cls_end.substring(0, 5) + '"><br>',
+            //    buttons: [{
+            //        label: 'Save',
+            //        title: 'Mouse over Button 1',
+            //        cssClass: 'btn-primary',
+            //        id: 'btn_save'
+            //    }]
+            //});
+
+            console.log($(this).attr('schid'));
+            console.log($(this).attr('class-start'));
+            console.log($(this).attr('class-end'));
+            console.log($(this).attr('class-break'));
+            console.log($(this).closest(".day-group").attr("day-date"));
+            console.log(weekno);
+            console.log(type);
+
+            //dialog.open();
+
+            @*
+
+            var jsonData = $.ajax({
+
+                url: '@Url.Action("WeekWiseClassHeld", "JSON")',
+                data: {
+                    schid,
+                    cls_start,
+                    cls_end,
+                    cls_break,
+                    date,
+                    weekno,
+                    type
+                },
+                type: "POST",
+                success: function (result) {
+
+                }
+
+            });*@
+            //$(this).find(".hover-options").hide();
+
+        });
+
+        $("#form-details").dialog({
+            autoOpen: false,
+            resizable: false,
+            height: "auto",
+            width: 345,
+            modal: true
+
+        });
+
+
+        $("#form-makeup").dialog({
+            autoOpen: false,
+            resizable: false,
+            height: "auto",
+            width: 345,
+            modal: true
+
+        });
+
+        $("body").on('click', '#btn_save', function () {
+
+
+            console.log("DETAILS");
+            console.log(schid);
+            console.log(cls_start);
+            console.log(cls_end);
+            console.log(cls_break);
+            console.log(date);
+            console.log(weekno);
+            console.log(type);
+
+            cls_start = $("#cls_start_spinner").val();
+            cls_end = $("#cls_end_spinner").val();
+            cls_break = $("#cls_break_spinner").val();
+
+            console.log(schid);
+            console.log(cls_start);
+            console.log(cls_end);
+            console.log(cls_break);
+            console.log(date);
+            console.log(weekno);
+            console.log(type);
+
+            var jsonData = $.ajax({
+
+                url: '@Url.Action("WeekWiseClassHeld", "JSON")',
+                data: {
+                    schid,
+                    cls_start,
+                    cls_end,
+                    cls_break,
+                    date,
+                    weekno,
+                    type
+                },
+                type: "POST",
+                beforeSend: function () {
+                    $('#loading2').show();
+                },
+                complete: function () {
+                    $('#loading2').hide();
+                },
+                success: function (result) {
+                    console.log(result);
+                    //current_content1.parent().parent().prev().prev().prev().prev().parent().animate({ backgroundColor: "#a5d6a7" }, "slow");
+                    current_content1.parent().parent().closest('.content').animate({
+                        "background-color": "#dcedc8"
+                    }, 2000)
+                    .delay(4000)
+                    .animate({
+                        "background-color": "white"
+                    }, 1000);
+
+                    //current_content1.parent().parent().closest('.content').animate({ backgroundColor: "#a5d6a7" }, "slow");
+                    //setTimeout(function () {
+                    //current_content1.parent().parent().prev().prev().prev().prev().parent().animate({ backgroundColor: "white" }, "slow"); // change it back after ...
+                    //}, 9000);
+                    current_content1.parent().html('<div class="alert alert-success"><span>Class Held ' + result["schid"] + '<span class="glyphicon glyphicon-check"></span> <span title="Class Started: ' + result["ClassStarted"]["Hours"] + ':' + result["ClassStarted"]["Minutes"] + '" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>');
+                    $('#form-details').dialog("close");
+
+                },
+                error: function (data, errorThrown) {
+                    alert('request failed :' + errorThrown);
+                }
+
+
+            });
+
+        });
+
+
+        $('body').on('click', '.makeup', function () {
+
+
+            //console.log("Hello");
+
+        });
+
+
+
+        $('body').on('click', '.campus', function () {
+
+
+            $('.campus').removeClass('active');
+            $(this).addClass('active');
+
+
+
+            //var durid = $('#durid').val();
+            //var dayid = $('#dayid').val();
+            //console.log(dayid);
+            $('#incampus').val($(this).attr('campus'));
+
+            var start = $('.day').eq(0).attr('date');
+            var end = $('.day').eq(6).attr('date');
+
+
+
+            console.log(start);
+            console.log(end);
+
+            var campus = $('#incampus').val();
+            console.log($('#incampus').val());
+            //var slottime = $('.slottime').text();
+            //console.log(campus);
+            //$('.main-div').empty();
+            //".room[hrf='" + id + "']"
+            //$('.main-div').load("/JSON/FilterByCampus?campus=" + campus + "");
+
+            //refreshScrollSpy();
+
+            var jsonData = $.ajax({
+
+                url: '@Url.Action("FilterByCampusAndDate", "JSON")',
+                data: {
+                    campus,
+                    start,
+                    end
+                },
+                type: "GET",
+                beforeSend: function () {
+                    $('#loading').show();
+                },
+                complete: function () {
+                    $('#loading').hide();
+                },
+                success: function (result) {
+                    //console.log(result);
+                    $("body").scrollTop(0);
+                    //$('').remove();
+                    $('.main-div').html(result);
+                    if (campus == "100") {
+                        $('.day-group').css('height', '4007px');
+                    }
+                    else if (campus == "154") {
+                        $('.day-group').css('height', '2914px');
+
+                    }
+                    else if (campus == "90") {
+                        $('.day-group').css('height', '1460px');
+
+                    }
+
+
+
+                    //refreshScrollSpy();
+                    //$(".content").addClass("noshow");
+
+                    //$('.inside-ul-list').eq(0).show();
+                    //$('.room').eq(0).css({ "color": "#37474F", "font-weight": "600" });
+
+                    //$('.content').eq(0).removeClass("noshow");
+
+                    for (i = 0; i < 12; i++) {
+                        ////    //Get the nth div of class content, where n is the contentNumber, and make it shown
+                        $('.content').eq(i).removeClass("noshow");
+                        ////    contentNumber++;
+                    }
+                    contentNumber = 0;
+                    a = 0;
+                    //reveal();
+
+
+                }
+
+
+            });
+
+
+
+
+        });
+        //function refreshScrollSpy() {
+        //    $('[data-spy="scroll"]').each(function () {
+        //        $('body').scrollspy('refresh');
+        //        console.log("hello");
+        //    });
+        //};
+        //$(document).ajaxStart(function () {
+        //    $("#loading").show(); // show loading indicator
+        //    $('.main-div').hide();
+
+        //});
+
+        //$(document).ajaxComplete(function () {
+        //    $('#loading').hide();  // hide loading indicator
+        //    $('.main-div').show();
+        //    //refreshScrollSpy();
+
+        //});
+
+
+
+        //Set intital divs to be hidden
+
+
+        function reveal() {
+
+
+            var constraintNumber = contentNumber + 12;
+            //console.log(contentNumber);
+            //IMPORTANT - DO NOT DELETE
+            $(window).trigger('resize');
+            //IMPORTANT - DO NOT DELETE
+            for (i = contentNumber; i < constraintNumber; i++) {
+                //Get the nth div of class content, where n is the contentNumber, and make it shown
+                $('.content').eq(contentNumber).removeClass("noshow");
+                contentNumber++;
+            }
+        }
+
+
+
+        function day_select_reveal(div_no) {
+
+            console.log(div_no);
+            var constraintNumber = contentNumber + div_no;
+            console.log(contentNumber);
+            //IMPORTANT - DO NOT DELETE
+            $(window).trigger('resize');
+            //IMPORTANT - DO NOT DELETE
+            for (i = contentNumber; i < constraintNumber; i++) {
+                //Get the nth div of class content, where n is the contentNumber, and make it shown
+                $('.content').eq(contentNumber).removeClass("noshow");
+                contentNumber++;
+            }
+
+        }
+
+        //Window scroll function
+
+        //$(window).scroll(function () {
+        //if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+
+        //$('.room')
+        //reveal();
+
+        //}
+        //$('.room').addClass("active-room");
+
+        //$('.room').removeClass("active-room");
+
+
+        //var scrollPos = $(document).scrollTop();
+
+        //$('.room').each(function () {
+
+        //        var currLink = $(this);
+        //        var id = $(this).attr('content')
+
+
+        //        var refElement = $(".content[data-pos='"+id+"']");
+
+        //        if ((refElement.offset().top - 120) <= scrollPos && ((refElement.offset().top - 120) + refElement.height()) > scrollPos) {
+
+
+        //            currLink.addClass("active-room");
+
+        //        }
+        //        else
+        //        {
+
+        //            currLink.removeClass("active-room");
+        //        }
+
+
+
+        //});
+
+
+
+
+
+
+
+
+
+        //console.log(currentScrollPosition);
+        //var firstroom=220;
+        //if(currentScrollPosition >= firstroom)
+        //{
+        //    $('.room').css({ "color": "", "font-weight": "" });
+        //    //console.log($('.room').eq(0).next().children().text());
+        //    $('.room').eq(0).next().children().css({ "color": "#37474F", "font-weight": "600" });
+        //    firstroom = firstroom + 220;
+        //    //console.log("Hello");
+        //}
+        //else if(currentScrollPosition <= firstroom)
+        //{
+        //    $('.room').css({ "color": "", "font-weight": "" });
+        //    $('.room').eq(0).css({ "color": "#37474F", "font-weight": "600" });
+        //}
+        //});
+        //reveal();
+        var a = 0;
+        $('body').on('click', '.room', function () {
+            var div_number = 0;
+            //scrollTo($(this).attr("href"));
+            //$('.room').removeClass('active-room');
+            //$(this).addClass('active-room');
+
+            if ($('#incampus').val() == "90") {
+                //console.log($(this).eq());
+                //console.log($(this).text());
+                //console.log($('.room').eq(0).text());
+                if (a == 0) {
+
+                    div_number = 20;
+                    console.log("Campus 90");
+                    var constraintNumber = contentNumber + div_number;
+                    //console.log(contentNumber);
+                    //IMPORTANT - DO NOT DELETE
+                    $(window).trigger('resize');
+                    //IMPORTANT - DO NOT DELETE
+                    for (i = contentNumber; i < constraintNumber; i++) {
+                        //Get the nth div of class content, where n is the contentNumber, and make it shown
+                        $('.content').eq(contentNumber).removeClass("noshow");
+                        contentNumber++;
+                    }
+
+                    //scrollTo($(this).attr("data-target"));
+                    a++;
+
+                }
+
+            }
+            else if ($('#incampus').val() == "100") {
+
+                if (a == 0) {
+
+                    div_number = 84;
+                    console.log("Campus 100");
+                    var constraintNumber = contentNumber + div_number;
+                    //console.log(contentNumber);
+                    //IMPORTANT - DO NOT DELETE
+                    $(window).trigger('resize');
+                    //IMPORTANT - DO NOT DELETE
+                    for (i = contentNumber; i < constraintNumber; i++) {
+                        //Get the nth div of class content, where n is the contentNumber, and make it shown
+                        $('.content').eq(contentNumber).removeClass("noshow");
+                        contentNumber++;
+                    }
+
+                    //scrollTo($(this).attr("data-target"));
+                    a++;
+
+                }
+
+            }
+            else if ($('#incampus').val() == "154") {
+
+                if (a == 0) {
+
+                    div_number = 60;
+                    console.log("Campus 154");
+                    var constraintNumber = contentNumber + div_number;
+                    //console.log(contentNumber);
+                    //IMPORTANT - DO NOT DELETE
+                    $(window).trigger('resize');
+                    //IMPORTANT - DO NOT DELETE
+                    for (i = contentNumber; i < constraintNumber; i++) {
+                        //Get the nth div of class content, where n is the contentNumber, and make it shown
+                        $('.content').eq(contentNumber).removeClass("noshow");
+                        contentNumber++;
+                    }
+
+                    //scrollTo($(this).attr("data-target"));
+                    a++;
+
+                }
+
+            }
+
+            //scrollTo($(this).attr("data-target"));
+
+
+        });
+
+
+
+
+        var b = 0;
+        var c = 0;
+        var d = 0;
+        var e = 0;
+        var f = 0;
+        var g = 0;
+        $('body').on('click', '.day', function () {
+
+            //$('.room').removeClass('active-room');
+            //$(this).next().children().children().eq(0).addClass('active-room');
+
+            //$('.day').removeClass('active-day');
+            //$(this).addClass('active-day');
+
+            //scrollTo2($(this).attr("href"));
+
+            $('#dayid').val($(this).attr('dayid'));
+            var dayid = $('#dayid').val();
+            console.log(dayid);
+
+            var campus = $('#incampus').val();
+            console.log(campus);
+
+            //day_select_reveal(11);
+
+            var div_number2 = 0;
+
+            if ($('#incampus').val() == "90") {
+
+
+                //IF MONDAY CLICKED
+                if ($(this).attr('dayid') == 1) {
+
+
+                    //scrollTo2($(this).attr("data-target"));
+                    //b++;
+
+                }
+
+
+                    //IF TUESDAY CLICKED
+                else if ($(this).attr('dayid') == 2) {
+                    if (b == 0) {
+                        div_number2 = 32;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        b++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+                    //IF WEDNESDAY CLICKED
+                else if ($(this).attr('dayid') == 3) {
+                    if (c == 0) {
+                        div_number2 = 56;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        c++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+
+                    //IF THURSDAY CLICKED
+                else if ($(this).attr('dayid') == 4) {
+                    if (d == 0) {
+                        div_number2 = 88;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        d++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+                    //IF FRIDAY CLICKED
+                else if ($(this).attr('dayid') == 5) {
+                    if (e == 0) {
+                        div_number2 = 120;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        e++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+
+                    //IF SATURDAY CLICKED
+                else if ($(this).attr('dayid') == 6) {
+                    if (f == 0) {
+                        div_number2 = 152;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        f++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+                    //IF SUNDAY CLICKED
+                else if ($(this).attr('dayid') == 7) {
+                    if (f == 0) {
+                        div_number2 = 188;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        f++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+
+
+            }
+            else if ($('#incampus').val() == "100") {
+
+
+
+
+                //IF MONDAY CLICKED
+                if ($(this).attr('dayid') == 1) {
+
+
+                    //scrollTo2($(this).attr("data-target"));
+                    //b++;
+
+                }
+
+
+                    //IF TUESDAY CLICKED
+                else if ($(this).attr('dayid') == 2) {
+                    if (b == 0) {
+                        div_number2 = 92;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        b++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+                    //IF WEDNESDAY CLICKED
+                else if ($(this).attr('dayid') == 3) {
+                    if (c == 0) {
+                        div_number2 = 180;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        c++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+
+                    //IF THURSDAY CLICKED
+                else if ($(this).attr('dayid') == 4) {
+                    if (d == 0) {
+                        div_number2 = 268;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        d++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+                    //IF FRIDAY CLICKED
+                else if ($(this).attr('dayid') == 5) {
+                    if (e == 0) {
+                        div_number2 = 352;
+                        day_select_reveal(div_number2);
+
+                        ////scrollTo2($(this).attr("data-target"));
+                        e++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+
+                    //IF SATURDAY CLICKED
+                else if ($(this).attr('dayid') == 6) {
+                    if (f == 0) {
+                        div_number2 = 432;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        f++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+                    //IF SUNDAY CLICKED
+                else if ($(this).attr('dayid') == 7) {
+                    if (f == 0) {
+                        div_number2 = 532;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        f++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+
+
+
+
+
+
+
+            }
+            else if ($('#incampus').val() == "154") {
+
+                if (b == 0) {
+
+                    div_number2 = 60;
+                    console.log("Campus 154");
+                    var constraintNumber = contentNumber + div_number2;
+                    //console.log(contentNumber);
+                    //IMPORTANT - DO NOT DELETE
+                    $(window).trigger('resize');
+                    //IMPORTANT - DO NOT DELETE
+                    for (i = contentNumber; i < constraintNumber; i++) {
+                        //Get the nth div of class content, where n is the contentNumber, and make it shown
+                        $('.content').eq(contentNumber).removeClass("noshow");
+                        contentNumber++;
+                    }
+
+                    //scrollTo2($(this).attr("data-target"));
+                    b++;
+
+                }
+
+            }
+
+
+
+        });
+        //$('.content').mouseover(function () {
+        //    $('.content1').stop().animate({
+        //        height: 0
+        //    }, 200);
+        //}).mouseout(function () {
+        //    $('.content1').stop().animate({
+        //        height: 175
+        //    }, 200)
+        //});
+
+        $("body").on('mouseenter', '.content', function () {
+            $(this).css("border-style", "solid");
+            //$(this).css("opacity", "0.8");
+            //$('.hover-options').show();
+            $(this).find(".hover-options").show();
+            $(this).find(".hover-options2").show();
+            //$('.content1').animate({
+            //    height: 175
+            //},200);
+
+        });
+
+        $("body").on('mouseleave', '.content', function () {
+            $(this).css("border-style", "dashed");
+            //$(this).css("opacity", "1");
+            $(this).find(".hover-options").hide();
+            $(this).find(".hover-options2").hide();
+            $(this).find('.content1').hide();
+            $('.content2').hide();
+            $('.cancel').show();
+            //$(this).find(":button").hide();
+            //$('.action-btn').hide();
+        });
+
+
+
+
+        $("body").on('mouseenter', '.hover-options', function () {
+
+            //console.log("Hello");
+            //$(this).find(".hover-options").show();
+            $(this).parent().next().slideDown(1000);
+            $('.cancel').hide();
+        });
+
+        $("body").on('mouseenter', '.hover-options2', function () {
+
+            //console.log("Hello");
+            $(this).closest(".content").find('.content2').slideDown(1000);
+
+            $(this).closest(".content2").slideDown(1000);
+            //$(this).parent().prev().prev().slideDown(1000);
+            //$(this).parent().next().slideDown(1000);
+            $('.cancel').hide();
+        });
+
+
+
+
+
+        var Globalize;
+
+        if (typeof require !== "undefined"
+            && typeof exports !== "undefined"
+            && typeof module !== "undefined") {
+            // Assume CommonJS
+            Globalize = require("globalize");
+        } else {
+            // Global variable
+            Globalize = window.Globalize;
+        }
+
+        Globalize.addCultureInfo("de-DE", "default", {
+            name: "de-DE",
+            englishName: "German (Germany)",
+            nativeName: "Deutsch (Deutschland)",
+            language: "de",
+            numberFormat: {
+                ",": ".",
+                ".": ",",
+                NaN: "n. def.",
+                negativeInfinity: "-unendlich",
+                positiveInfinity: "+unendlich",
+                percent: {
+                    pattern: ["-n%", "n%"],
+                    ",": ".",
+                    ".": ","
+                },
+                currency: {
+                    pattern: ["-n $", "n $"],
+                    ",": ".",
+                    ".": ",",
+                    symbol: "â‚¬"
+                }
+            },
+            calendars: {
+                standard: {
+                    "/": ".",
+                    firstDay: 1,
+                    days: {
+                        names: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
+                        namesAbbr: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
+                        namesShort: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"]
+                    },
+                    months: {
+                        names: ["Januar", "Februar", "MÃ¤rz", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember", ""],
+                        namesAbbr: ["Jan", "Feb", "Mrz", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez", ""]
+                    },
+                    AM: null,
+                    PM: null,
+                    eras: [{ "name": "n. Chr.", "start": null, "offset": 0 }],
+                    patterns: {
+                        d: "dd.MM.yyyy",
+                        D: "dddd, d. MMMM yyyy",
+                        t: "HH:mm",
+                        T: "HH:mm:ss",
+                        f: "dddd, d. MMMM yyyy HH:mm",
+                        F: "dddd, d. MMMM yyyy HH:mm:ss",
+                        M: "dd MMMM",
+                        Y: "MMMM yyyy"
+                    }
+                }
+            }
+        });
+
+
+
+        $.widget("ui.timespinner", $.ui.spinner, {
+            options: {
+                // seconds
+                step: 60 * 1000,
+                // hours
+                page: 60
+            },
+
+            _parse: function (value) {
+                if (typeof value === "string") {
+                    // already a timestamp
+                    if (Number(value) == value) {
+                        return Number(value);
+                    }
+                    return +Globalize.parseDate(value);
+                }
+                return value;
+            },
+
+            _format: function (value) {
+                return Globalize.format(new Date(value), "t");
+            }
+        });
+
+
+
+        Globalize.culture("de-DE");
+        $("#cls_start_spinner").timespinner();
+        $("#cls_end_spinner").timespinner();
+        $("#cls_break_spinner").spinner();
+
+
+
+
+        $("body").on('click', '#btn_cancel', function () {
+            $('#form-details').dialog("close");
+        });
+
+        $("body").on('mouseenter', '.course-name', function () {
+            $(this).tooltip().show();
+        });
+
+
+        $("body").on('click', '.action', function () {
+
+            var current = $(this);
+
+            //console.log($(this).parent().prev().prev().children().next().text());
+            //$(this).parent().prev().append('<h6>hello</h6>');
+
+            @*$.ajax({
+
+                url: '@Url.Action("InsertSchedule", "JSON")',
+                data: {
+                    'offid': 2,
+                    'slotid': 276,
+                    'occupied': 2
+
+                },
+                type: "POST"
+
+            }).done(function (result) {
+
+                if (result == "NO")
+                {
+                    alert("Class already scheduled");
+                }
+                else
+                {
+
+                //console.log(current.parent().prev().prev().children().next().text());
+                console.log(result);
+                //$(this).parent().prev().append('<h6>hello</h6>');
+                current.parent().prev().append('<h6 style="text-align:center;color:#767676;">' + result["sectionname"] + '(' + result["duration"] + ')' + '</h6>');
+                current.parent().prev().append('<h6 style="text-align:center;color:#767676;">' + result["teachername"] + '</h6>');
+                current.parent().prev().append('<h6 style="text-align:center;color:#767676;">' + result["title"] + '</h6>');
+                }
+            });*@
+        });
+
+
+
+        //$('.content').hover(function () {
+
+        //    //console.log("Hello");
+        //    $(this).css("border-style", "solid");
+        //    $(this).css("opacity", "0.8");
+        //    //$(this).addClass("btn btn-danger glyphicon glyphicon-eye-open");
+
+
+
+        //}
+        //, function () {
+        //    $(this).css("border-style", "dashed");
+        //    $(this).css("opacity", "1");
+        //});
+
+
+        //$(document).on("scroll", onScroll);
+
+
+
+    });
+
+
+    function scrollTo(target) {
+        //console.log(target);
+        var tagScroll = $(".content[data-pos='" + target + "']");
+        //console.log(target[1]);
+        $('html,body').animate({ scrollTop: tagScroll.offset().top - 120 }, 'slow');
+    }
+
+    function scrollTo2(target) {
+        //console.log(target);
+        var tagScroll = $(".day-group[data-pos2='" + target + "']");
+        $('html,body').animate({ scrollTop: tagScroll.offset().top - 120 }, 'slow');
+    }
+
+
+
+    //function onScroll(event) {
+    //    //if(contentNumber)
+
+
+
+
+
+
+    //    var scrollPos = $(document).scrollTop();
+    //    var cont = 0;
+    //    var str =0;
+    //    $('.room').each(function () {
+
+    //        cont = cont + 1;
+    //        str = "content_"+cont+"";
+
+    //        //console.log(cont);
+    //        //console.log(str);
+    //        var tagScroll = $(".content[data-pos='" + str + "']");
+
+    //        var currLink = $(this);
+    //        var refElement = $($(this).attr("content"));
+    //        $(this).attr("content");
+    //        //console.log(currLink.text());
+    //        //console.log(refElement);
+    //        if (tagScroll.position().top <= scrollPos && tagScroll.position().top + tagScroll.height() > scrollPos) {
+    //            //$('.room').removeClass("active");
+    //            currLink.css({ "color": "#37474F", "font-weight": "600" });
+    //        }
+    //    else{
+    //            currLink.css({ "color": "", "font-weight": "" });
+    //    }
+    //});
+    //}
+
+
+
+
+
+
+
+</script>
+
+
+
+@{
+
+
+
+
+    //Slots
+    //var slot1 = Model.vslottypes.Where(o => o.occupied == 3 && o.slottypeid == 1).SingleOrDefault();
+    //var slot2 = Model.vslottypes.Where(o => o.occupied == 3 && o.slottypeid == 2).SingleOrDefault();
+    //var slot3 = Model.vslottypes.Where(o => o.occupied == 3 && o.slottypeid == 3).SingleOrDefault();
+    //var slot4 = Model.vslottypes.Where(o => o.occupied == 3 && o.slottypeid == 4).SingleOrDefault();
+
+
+    List<int> occupied = new List<int>(new int[] { 1, 2, 3 });
+
+
+}
+
+
+<div id="form-details" style="display:none;font-family:'Segoe UI';float:right;text-align:right;" title="Details">
+
+
+    <p>
+        <label for="spinner">Class Started:</label>
+        <input id="cls_start_spinner" name="spinner" value="">
+    </p>
+    <p>
+        <label for="spinner">Class Ended:</label>
+        <input id="cls_end_spinner" name="spinner" value="">
+    </p>
+    <p>
+        <label for="spinner">Break Duration:</label>
+        <input id="cls_break_spinner" name="spinner" value="">
+    </p>
+    <p style="text-align:end;">
+        <span id="loading2" style="display:none;" class="">
+            <img src="~/Content/themes/base/images/loading.svg" height="35" width="35">
+        </span>
+        <button type="button" class="btn btn-primary" id="btn_save">Save</button>
+
+        <input type="button" class="btn btn-danger" value="Cancel" id="btn_cancel" />
+    </p>
+
+
+</div>
+
+<div id="form-makeup" style="display:none;font-family:'Segoe UI';float:right;text-align:right;" title="MakeUp Class">
+
+
+    <p>
+        <label for="">Teacher</label>
+        <input id="teacher" name="teacher" value="">
+    </p>
+
+</div>
+
+<div class="campuses navbar">
+    <div class="row">
+        <div class="col-md-1 col-lg-1">
+            @*Welcome @Session["Username"]*@
+
+        </div>
+        <div class="col-md-2">
+            <a href="#" class="left"><span style="font-size:22px;padding-top:12px;" class="glyphicon glyphicon-arrow-left"></span></a>
+            @Html.DropDownList("week", (SelectList)ViewBag.weeks, htmlAttributes: new { @class = "week", @weekno = ViewBag.week })
+
+            <a href="#" class="right"><span style="font-size:22px;padding-top:12px; padding-left:15px;" class="glyphicon glyphicon-arrow-right"></span></a>
+
+        </div>
+
+        <div class="col-md-8 col-lg-8">
+
+
+            <div style="padding-left: 51px;text-align: center;padding-top: 2px;">
+                <span class="slots">08:30 - 11:30</span>
+                <span class="slots">11:45 - 02:45</span>
+                <span class="slots">03:15 - 06:15</span>
+                <span class="slots">06:30 - 09:30</span>
+            </div>
+
+        </div>
+
+
+        <div class="col-md-2 col-lg-2 btn-group-sm font" style="padding-top: 9px;padding-left: 5.5%;margin-left: -9%;">
+            <a href="#" data-toggle="tooltip" data-placement="left" title="90 CAMPUS" class="black-tooltip btn btn-default campus active" campus="90">90</a>  <a href="#" data-toggle="tooltip" data-placement="bottom" title="100 CAMPUS" campus="100" class="btn btn-default  campus" role="button">100</a>  <a href="#" data-toggle="tooltip" data-placement="bottom" title="154 CAMPUS" campus="154" class="btn btn-default campus" role="button">154</a>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+@{int day = ((int)DateTime.Now.DayOfWeek == 0) ? 7 : (int)DateTime.Now.DayOfWeek;
+    int a = 1;
+}
+<input id="incampus" hidden value="90" />
+<input id="dayid" hidden value="@day" />
+<input id="time" hidden value="@ViewBag.currtime" />
+<div id="loading" style="display:none;" class="col-md-offset-5">
+    <img src="~/Content/themes/base/images/loading.svg" height="550" width="350">
+</div>
+
+
+
+<div class="main-div">
+    
+    <div class="row" style="padding-top:70px;margin-right: 0px;">
+        <!--Nav Bar -->
+        <div class="col-md-1 col-lg-1 visible-lg visible-md visible-sm">
+
+        </div>
+
+        <div id="NB" class="visible-md visible-lg">
+            <nav class="col-md-2 col-lg-2 bs-docs-sidebar">
+
+                <ul id="sidebar" class="nav nav-stacked fixed scroll" style="margin-top: -1.01%;">
+                    <li id="date" class="alert alert-info">
+                        <strong>@ViewBag.currdate</strong>
+                    </li>
+                    @{ int x = 1;}
+                    @foreach (var days in Model.days)
+            {
+
+
+                        <li>
+                            <a date="@ViewBag.dates[a-1].Date.ToString("MM/dd/yyyy")" class="day" href="#active-day-@a" dayid="@days.dayid">@days.dayname-@ViewBag.dates[a - 1].Date.ToString("dd/MMM")</a>
+                            <ul class="nav nav-stacked">
+                                @foreach (var rooms in Model.rooms)
+                                {
+
+
+                                    <li> <a href="#content_@x" class="room"> @rooms.roomno </a></li>
+                                    x++;
+                                }
+                            </ul>
+                            @{ a++; }
+                        </li>
+
+
+                                }
+                </ul>
+            </nav>
+        </div>
+
+        <!--Main Content -->
+        <div class="col-md-9 col-lg-9" style="padding-left:70px;">
+
+            @{int i = 1; a = 1; int z = 0;}
+
+            @foreach (var days in Model.days)
+            {
+
+                <section id="active-day-@a" class="day-group" data-pos2="#active-day-@a" day-date="@ViewBag.dates[a-1].Date.ToString("MM/dd/yyyy")">
+                    <div style="position:absolute;padding-left:1.4%;margin-top:-12px;">
+                        <span style="font-family: Segoe UI;border-top: 1px solid #b9b9b9;border-left: 1px solid #b9b9b9;border-right: 1px solid #b9b9b9;background-color: #ffffff;color: #474e52;border-radius: 3px;font-size: 18px;">@days.dayname</span>
+                    </div>
+                    @foreach (var rooms in Model.rooms)
+                    {
+
+
+                        foreach (var slots in Model.vslottypes)
+                        {
+
+
+                            //<a href="#" class="content-link">
+
+                            <div class="col-md-3 content" id="content_@i" data-pos="#content_@i">
+                                @{
+                                    var IsSchedule = Model.vschedule.Where(d => d.dayid == days.dayid && d.slottypeid == slots.slottypeid && d.roomid == rooms.roomid
+                                    || d.dayid == days.dayid && d.slottypeid == slots.slottypeid && d.roomid == rooms.roomid && d.occupied >= 1 && d.occupied <= 2).ToList();
+
+                                    //var Occupied1and2 = Model.vschedule.Where(d => d.dayid == days.dayid && d.slottypeid == slots.slottypeid && d.roomid == rooms.roomid && d.occupied >= 1 && d.occupied <= 2).ToList();
+
+
+                                    if (z % 4 == 0)
+                                    {
+
+                                        if (rooms.roomno.Length < 3)
+                                        {
+                                            <div style="position:absolute;margin-left:-22px;">
+                                                <span style="border: 1px solid #21211b;background-color: #394c48;color: white;border-radius: 3px;">@rooms.roomno</span>
+                                            </div>
+                                        }
+
+                                        else if (rooms.roomno.Length == 3)
+                                        {
+                                            <div style="position:absolute;margin-left:-29px;">
+                                                <span class="room-tag" style="border: 1px solid #21211b;background-color: #394c48;color: white;border-radius: 3px;">@rooms.roomno</span>
+                                            </div>
+
+                                        }
+
+                                        else if (rooms.roomno.Length > 3)
+                                        {
+                                            <div style="position:absolute;margin-left:-43px;">
+                                                <span class="room-tag" title="@rooms.roomno" style="border: 1px solid #21211b;background-color: #394c48;color: white;border-radius: 3px;">@rooms.roomno.Substring(0, 4)..</span>
+                                            </div>
+
+                                        }
+                                    }
+
+
+                                    z++;
+
+
+                                    if (IsSchedule.Count > 0)
+                                    {
+
+                                        foreach (var sch in IsSchedule)
+                                        {
+
+                                            var weekwise = Model.WeekWise.Where(w => w.schid == sch.schid).ToList();
+
+                                            if (IsSchedule.Count > 1)
+                                            {
+
+                                                if (sch.occupied == 1)
+                                                {
+
+
+                                                    if (weekwise.Count() > 0)
+                                                    {
+                                                        foreach (var week in weekwise)
+                                                        {
+                                                            if (week.CTId == 1 && sch.SchCTId == null)
+                                                            {
+                                                                <div class="parts green-color">
+                                                                    <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                    <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                    <h6 class="course-name" title="@sch.title" style="text-align:center;">@sch.title</h6>
+                                                                </div>
+
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+
+                                                                <div class="content2" style="display:none;text-align:center;">
+                                                                    <div style="" class="parts">
+                                                                        <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                    </div>
+                                                                    <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                                </div>
+                                                            }
+                                                            else if (week.CTId == 1 && sch.SchCTId == 3)
+                                                            {
+                                                                <div class="parts green-color">
+                                                                    <span class="blue-color" style="font-size: 10.3px;font-family: Segoe UI;font-weight: 700;position:absolute;top:-1px;">Makeup</span>
+                                                                    <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                    <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                    <h6 class="course-name" title="@sch.title" style="text-align:center;">@sch.title</h6>
+                                                                </div>
+
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+
+                                                                <div class="content2" style="display:none;text-align:center;">
+                                                                    <div style="" class="parts">
+                                                                        <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                    </div>
+                                                                    <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                                </div>
+
+                                                            }
+                                                            else if (week.CTId == 2)
+                                                            {
+                                                                <div class="parts red-color">
+                                                                    <span style="font-size: 10.3px;font-family: Segoe UI;font-weight: 700;position:absolute;top:-1px;">Cancelled</span>
+                                                                    <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                    <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                    <h6 class="course-name" title="@sch.title" style="text-align:center;">@sch.title</h6>
+                                                                </div>
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                                <div class="content2" style="display:none;text-align:center;">
+                                                                    <div style="" class="parts">
+                                                                        <div class="alert alert-danger"><span date="@weekwise.Select(w => w.Date).Single()">Class Cancelled<span class="glyphicon glyphicon-info-sign"></span> <span style="float:right;" class="glyphicon glyphicon-list"></span> </span></div>
+                                                                    </div>
+                                                                    <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                                </div>
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (sch.SchCTId == null)
+                                                        {
+                                                            <div class="parts silver-color">
+
+                                                                <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                <h6 class="course-name" title="@sch.title" style="text-align:center;">@sch.title</h6>
+                                                            </div>
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            <div class="content2" style="display:none;text-align:center;padding-top:10px;">
+                                                                <div style="" class="parts">
+                                                                    <div style="cursor:pointer;" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime">Class Held</div>
+                                                                    <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Cancel class</div></a>
+                                                                </div>
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            </div>
+                                                        }
+
+                                                        else if (sch.SchCTId == 3)
+                                                        {
+                                                            <div class="parts silver-color">
+                                                                <span class="blue-color" style="font-size: 10.3px;font-family: Segoe UI;font-weight: 700;position:absolute;top:-1px;">Makeup</span>
+                                                                <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                <h6 class="course-name" title="@sch.title" style="text-align:center;">@sch.title</h6>
+                                                            </div>
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            <div class="content2" style="display:none;text-align:center;padding-top:10px;">
+                                                                <div style="" class="parts">
+                                                                    <div style="cursor:pointer;" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime">Class Held</div>
+                                                                    <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Cancel class</div></a>
+                                                                </div>
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            </div>
+                                                        }
+
+                                                    }
+
+                                                }
+
+
+                                                else if (sch.occupied == 2)
+                                                {
+
+
+                                                    if (weekwise.Count() > 0)
+                                                    {
+                                                        foreach (var week in weekwise)
+                                                        {
+                                                            if (week.CTId == 1 && sch.SchCTId == null)
+                                                            {
+                                                                <div class="parts green-color">
+                                                                    <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                    <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                    <h6 class="course-name" title="@sch.title" style="text-align:center;">@sch.title</h6>
+                                                                </div>
+                                                                <div style="text-align:end;">
+                                                                    <span style="display:none;" class="hover-options2 glyphicon glyphicon-cog"></span>
+                                                                </div>
+
+                                                                <div class="content2" style="display:none;text-align:center;margin-top:80px;">
+                                                                    <div style="" class="parts">
+                                                                        <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            else if (week.CTId == 1 && sch.SchCTId == 3)
+                                                            {
+
+                                                                <div class="parts green-color">
+                                                                    <span class="blue-color" style="font-size: 10.3px;font-family: Segoe UI;font-weight: 700;position:absolute;top:69px;">Makeup</span>
+                                                                    <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                    <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                    <h6 class="course-name" title="@sch.title" style="text-align:center;">@sch.title</h6>
+                                                                </div>
+
+                                                                <div style="text-align:end;">
+                                                                    <span style="display:none;" class="hover-options2 glyphicon glyphicon-cog"></span>
+                                                                </div>
+                                                                <div class="content2" style="display:none;text-align:center;margin-top:80px;">
+                                                                    <div style="" class="parts">
+                                                                        <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                    </div>
+
+                                                                </div>
+                                                            }
+                                                            else if (week.CTId == 2)
+                                                            {
+                                                                <div class="parts red-color">
+                                                                    <span class="cancel" style="position:absolute;top:69px;font-size: 10.3px;font-family: Segoe UI;font-weight: 700;">Cancelled</span>
+
+                                                                    <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                    <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                    <h6 class="course-name" title="@sch.title" style="text-align:center;">@sch.title</h6>
+                                                                </div>
+
+                                                                <div style="text-align:end;">
+                                                                    <span style="display:none;" class="hover-options2 glyphicon glyphicon-cog"></span>
+                                                                </div>
+
+                                                                <div class="content2" style="display:none;text-align:center;margin-top:80px;">
+                                                                    <div style="" class="parts">
+                                                                        <div class="alert alert-danger"><span date="@weekwise.Select(w => w.Date).Single()">Class Cancelled<span class="glyphicon glyphicon-info-sign"></span> <span style="float:right;" class="glyphicon glyphicon-list"></span> </span></div>
+                                                                    </div>
+
+                                                                </div>
+                                                            }
+
+
+
+
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+
+                                                        if (sch.SchCTId == null)
+                                                        {
+
+                                                            <div class="parts silver-color">
+                                                                <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                <h6 class="course-name" title="@sch.title" style="text-align:center;">@sch.title</h6>
+                                                            </div>
+
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options2 glyphicon glyphicon-cog"></span>
+                                                            </div>
+                                                            <div class="content2" style="display:none;text-align:center;padding-top:10px;margin-top:80px;">
+                                                                <div style="" class="parts">
+                                                                    <div style="cursor:pointer;" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime">Class Held</div>
+                                                                    <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Cancel class</div></a>
+                                                                </div>
+
+                                                            </div>
+
+                                                        }
+                                                        else if (sch.SchCTId == 3)
+                                                        {
+                                                            <div class="parts silver-color">
+                                                                <span class="blue-color" style="font-size: 10.3px;font-family: Segoe UI;font-weight: 700;position:absolute;top:69px">Makeup</span>
+                                                                <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                <h6 class="course-name" title="@sch.title" style="text-align:center;">@sch.title</h6>
+                                                            </div>
+
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options2 glyphicon glyphicon-cog"></span>
+                                                            </div>
+
+                                                            <div class="content2" style="display:none;text-align:center;padding-top:10px;margin-top:80px;">
+                                                                <div style="" class="parts">
+                                                                    <div style="cursor:pointer;" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime">Class Held</div>
+                                                                    <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Cancel class</div></a>
+                                                                </div>
+
+                                                            </div>
+
+                                                        }
+
+                                                    }
+
+                                                }
+
+                                            }
+
+
+                                            else if (sch.occupied == 2)
+                                            {
+
+
+                                                if (weekwise.Count() > 0)
+                                                {
+                                                    foreach (var week in weekwise)
+                                                    {
+                                                        if (week.CTId == 1 && sch.SchCTId == null)
+                                                        {
+
+                                                            <div class="parts">
+
+                                                            </div>
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            <div class="parts green-color">
+
+
+                                                                <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                <h6 class="course-name" style="text-align:center;">@sch.title</h6>
+
+                                                            </div>
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                            </div>
+
+
+                                                            <div class="content1" style="display:none;text-align:center;padding-top:10px;">
+                                                                <div style="" class="parts">
+                                                                    <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Makeup class</div></a>
+                                                                </div>
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                                <div style="padding-top:8px;" class="parts">
+                                                                    <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                </div>
+                                                            </div>
+                                                        }
+
+
+                                                        else if (week.CTId == 1 && sch.SchCTId == 3)
+                                                        {
+
+                                                            <div class="parts">
+
+                                                            </div>
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            <div class="parts green-color">
+
+                                                                <span class="blue-color" style="font-size: 10.3px;font-family: Segoe UI;font-weight: 700;position:absolute;top:69px">Makeup</span>
+                                                                <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                <h6 class="course-name" style="text-align:center;">@sch.title</h6>
+
+                                                            </div>
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                            </div>
+
+
+                                                            <div class="content1" style="display:none;text-align:center;padding-top:10px;">
+                                                                <div style="" class="parts">
+                                                                    <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Makeup class</div></a>
+                                                                </div>
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                                <div style="padding-top:8px;" class="parts">
+                                                                    <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                </div>
+                                                            </div>
+                                                        }
+
+
+                                                        else if (week.CTId == 2)
+                                                        {
+
+                                                            <div class="parts">
+
+                                                            </div>
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            <div class="parts red-color">
+
+                                                                <span class="" style="font-size: 10.3px;font-family: Segoe UI;font-weight: 700;position:absolute;top:69px">Cancelled</span>
+                                                                <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                <h6 class="course-name" style="text-align:center;">@sch.title</h6>
+
+                                                            </div>
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                            </div>
+
+
+                                                            <div class="content1" style="display:none;text-align:center;padding-top:10px;">
+                                                                <div style="" class="parts">
+                                                                    <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Makeup class</div></a>
+                                                                </div>
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                                <div style="padding-top:8px;" class="parts">
+                                                                    <div class="alert alert-danger"><span date="@weekwise.Select(w => w.Date).Single()">Class Cancelled @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                </div>
+                                                            </div>
+                                                        }
+
+                                                    }
+                                                }
+                                                else
+                                                {
+
+                                                    if (sch.SchCTId == null)
+                                                    {
+                                                        <div class="parts">
+
+                                                        </div>
+                                                        <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                        <div class="parts silver-color">
+
+
+                                                            <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                            <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                            <h6 class="course-name" style="text-align:center;">@sch.title</h6>
+
+                                                        </div>
+                                                        <div style="text-align:end;">
+                                                            <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                        </div>
+
+                                                        <div class="content1" style="display:none;text-align:center;padding-top:10px;">
+                                                            <div style="" class="parts">
+                                                                <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Makeup class</div></a>
+                                                            </div>
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            <div style="padding-top:8px;" class="parts">
+
+                                                                <div style="cursor:pointer;" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime" class-break="@sch.BreakDuration">Class Held</div>
+                                                                <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger class-cancel">Cancel class</div></a>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                    else if (sch.SchCTId == 3)
+                                                    {
+                                                        <div class="parts">
+
+                                                        </div>
+                                                        <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                        <div class="parts silver-color">
+
+                                                            <span class="blue-color" style="font-size: 10.3px;font-family: Segoe UI;font-weight: 700;position:absolute;top:69px">Makeup</span>
+                                                            <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                            <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                            <h6 class="course-name" style="text-align:center;">@sch.title</h6>
+
+                                                        </div>
+                                                        <div style="text-align:end;">
+                                                            <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                        </div>
+
+                                                        <div class="content1" style="display:none;text-align:center;padding-top:10px;">
+                                                            <div style="" class="parts">
+                                                                <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Makeup class</div></a>
+                                                            </div>
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            <div style="padding-top:8px;" class="parts">
+
+                                                                <div style="cursor:pointer;" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime" class-break="@sch.BreakDuration">Class Held</div>
+                                                                <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger class-cancel">Cancel class</div></a>
+                                                            </div>
+                                                        </div>
+
+
+                                                    }
+                                                }
+
+                                            }
+
+
+                                            else if (sch.occupied == 1)
+                                            {
+
+
+                                                if (weekwise.Count() > 0)
+                                                {
+                                                    foreach (var week in weekwise)
+                                                    {
+                                                        if (week.CTId == 1 && sch.SchCTId == null)
+                                                        {
+
+                                                            <div class="parts green-color">
+                                                                <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                <h6 class="course-name" style="text-align:center;">@sch.title</h6>
+                                                            </div>
+                                                            <div class="parts">
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+
+                                                            </div>
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                            </div>
+
+
+                                                            <div class="content1" style="display:none;text-align:center;padding-top:10px;">
+                                                                <div style="" class="parts">
+                                                                    <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                </div>
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                                <div style="padding-top:8px;" class="parts">
+
+                                                                    <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Makeup class</div></a>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else if (week.CTId == 1 && sch.SchCTId == 3)
+                                                        {
+                                                            <div class="parts green-color">
+                                                                <span class="blue-color" style="font-size: 10.3px;font-family: Segoe UI;font-weight: 700;position:absolute;top:-1px">Makeup</span>
+                                                                <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                <h6 class="course-name" style="text-align:center;">@sch.title</h6>
+                                                            </div>
+                                                            <div class="parts">
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+
+                                                            </div>
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                            </div>
+
+                                                            <div class="content1" style="display:none;text-align:center;padding-top:10px;">
+                                                                <div style="" class="parts">
+                                                                    <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded Break Duration: @week.BreakDuration" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+
+                                                                </div>
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                                <div style="padding-top:8px;" class="parts">
+
+                                                                    <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Makeup class</div></a>
+                                                                </div>
+                                                            </div>
+
+                                                        }
+
+
+                                                        else if (week.CTId == 2)
+                                                        {
+                                                            <div class="parts red-color">
+                                                                <span class="" style="font-size: 10.3px;font-family: Segoe UI;font-weight: 700;position:absolute;top:-1px">Cancelled</span>
+                                                                <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                <h6 class="course-name" style="text-align:center;">@sch.title</h6>
+                                                            </div>
+                                                            <div class="parts">
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+
+                                                            </div>
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                            </div>
+
+                                                            <div class="content1" style="display:none;text-align:center;padding-top:10px;">
+                                                                <div style="" class="parts">
+                                                                    <div class="alert alert-danger"><span date="@weekwise.Select(w => w.Date).Single()">Class Cancelled @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                </div>
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                                <div style="padding-top:8px;" class="parts">
+
+                                                                    <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Makeup class</div></a>
+                                                                </div>
+                                                            </div>
+
+                                                        }
+
+                                                    }
+                                                }
+                                                else
+                                                {
+
+                                                    if (sch.SchCTId == null)
+                                                    {
+                                                        <div class="parts">
+                                                            <h6 style="font-size:11.5px;text-align:center;color: #767676;">@sch.sectionname (@sch.duration)</h6>
+                                                            <h6 style="text-align:center;font-size:11.5px;color: #767676;">@sch.teachername</h6>
+                                                            <h6 class="course-name" style="text-align:center;color: #767676;">@sch.title</h6>
+                                                        </div>
+                                                        <div class="parts">
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+
+                                                        </div>
+                                                        <div style="text-align:end;">
+                                                            <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                        </div>
+
+                                                        <div class="content1" style="display:none;text-align:center;padding-top:10px;">
+                                                            <div style="" class="parts">
+                                                                <div style="cursor:pointer;" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime" class-break="@sch.BreakDuration">Class Held</div>
+                                                                <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger class-cancel">Cancel class</div></a>
+                                                            </div>
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            <div style="padding-top:8px;" class="parts">
+                                                                <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Makeup class</div></a>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                    else if (sch.SchCTId == 3)
+                                                    {
+                                                        <div class="parts silver-color">
+                                                            <span class="blue-color" style="font-size: 10.3px;font-family: Segoe UI;font-weight: 700;position:absolute;top:-1px">Makeup</span>
+                                                            <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                            <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                            <h6 class="course-name" style="text-align:center;">@sch.title</h6>
+                                                        </div>
+                                                        <div class="parts">
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+
+                                                        </div>
+                                                        <div style="text-align:end;">
+                                                            <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                        </div>
+
+                                                        <div class="content1" style="display:none;text-align:center;padding-top:10px;">
+                                                            <div style="" class="parts">
+                                                                <div style="cursor:pointer;" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime" class-break="@sch.BreakDuration">Class Held</div>
+                                                                <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger class-cancel">Cancel class</div></a>
+                                                            </div>
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            <div style="padding-top:8px;" class="parts">
+                                                                <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Makeup class</div></a>
+                                                            </div>
+                                                        </div>
+                                                    }
+
+
+                                                }
+
+                                            }
+
+
+
+                                            else if (sch.occupied == 3)
+                                            {
+
+                                                if (weekwise.Count() > 0)
+                                                {
+                                                    foreach (var week in weekwise)
+                                                    {
+                                                        if (week.CTId == 1 && sch.SchCTId == null)
+                                                        {
+
+                                                            <div class="parts">
+
+
+                                                                <h6 style="font-size:11.5px;text-align:center;color: green;">@sch.sectionname</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;color: green;">@sch.teachername</h6>
+                                                                <h6 style="text-align:center;color: green;">@sch.title</h6>
+                                                            </div>
+                                                            <div class="parts">
+
+                                                            </div>
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                            </div>
+
+                                                            <div class="content1" style="display:none;text-align:center;">
+                                                                <div style="padding-top:100px;">
+                                                                    @*<div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held<span class="glyphicon glyphicon-check"></span> <span style="float:right;" class="glyphicon glyphicon-list"></span> </span></div>*@
+                                                                    <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded Break Duration: @week.BreakDuration" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else if (week.CTId == 1 && sch.SchCTId == 3)
+                                                        {
+
+                                                            <div class="parts green-color">
+
+                                                                <span class="blue-color" style="font-size: 10.3px;font-family: Segoe UI;font-weight: 700;position:absolute;">Makeup</span>
+                                                                <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                <h6 style="text-align:center;">@sch.title</h6>
+                                                            </div>
+                                                            <div class="parts">
+
+                                                            </div>
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                            </div>
+
+                                                            <div class="content1" style="display:none;text-align:center;">
+                                                                <div style="padding-top:100px;">
+                                                                    @*<div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held<span class="glyphicon glyphicon-check"></span> <span style="float:right;" class="glyphicon glyphicon-list"></span> </span></div>*@
+                                                                    <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded Break Duration: @week.BreakDuration" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else if (week.CTId == 2)
+                                                        {
+                                                            <div class="parts red-color">
+
+                                                                <span class="" style="font-size: 10.3px;font-family: Segoe UI;font-weight: 700;position:absolute;">Cancelled</span>
+                                                                <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                <h6 style="text-align:center;">@sch.title</h6>
+                                                            </div>
+                                                            <div class="parts">
+
+                                                            </div>
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                            </div>
+
+
+                                                            <div class="content1" style="display:none;text-align:center;">
+                                                                <div style="padding-top:100px;">
+                                                                    @*<div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held<span class="glyphicon glyphicon-check"></span> <span style="float:right;" class="glyphicon glyphicon-list"></span> </span></div>*@
+                                                                    <div class="alert alert-danger"><span date="@weekwise.Select(w => w.Date).Single()">Class Cancelled<span class="glyphicon glyphicon-info-sign"></span> <span style="float:right;" class="glyphicon glyphicon-list"></span> </span></div>
+                                                                </div>
+                                                            </div>
+
+
+                                                        }
+
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    if (sch.SchCTId == null)
+                                                    {
+                                                        <div class="parts silver-color">
+
+
+                                                            <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname</h6>
+                                                            <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                            <h6 style="text-align:center;">@sch.title</h6>
+                                                        </div>
+                                                        <div class="parts">
+
+                                                        </div>
+                                                        <div style="text-align:end;">
+                                                            <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                        </div>
+                                                        <div class="content1" style="display:none;text-align:center;">
+                                                            <div style="padding-top:100px;">
+                                                                @*<div>@Model.WeekWise.Where(w=>w.schid==sch.schid).Select(w=>w.CTId).SingleOrDefault()</div>*@
+                                                                <div style="cursor:pointer;" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime" class-break="@sch.BreakDuration">Class Held</div>
+                                                                <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger class-cancel">Cancel class</div></a>
+                                                            </div>
+                                                        </div>
+
+                                                    }
+                                                    else if (sch.SchCTId == 3)
+                                                    {
+                                                        <div class="parts">
+
+                                                            <span class="blue-color" style="font-size: 10.3px;font-family: Segoe UI;font-weight: 700;position:absolute;">Makeup</span>
+                                                            <h6 style="font-size:11.5px;text-align:center;color: #767676;">@sch.sectionname</h6>
+                                                            <h6 style="text-align:center;font-size:11.5px;color: #767676;">@sch.teachername</h6>
+                                                            <h6 style="text-align:center;color: #767676;">@sch.title</h6>
+                                                        </div>
+                                                        <div class="parts">
+
+                                                        </div>
+                                                        <div style="text-align:end;">
+                                                            <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                        </div>
+
+                                                        <div class="content1" style="display:none;text-align:center;">
+                                                            <div style="padding-top:100px;">
+                                                                @*<div>@Model.WeekWise.Where(w=>w.schid==sch.schid).Select(w=>w.CTId).SingleOrDefault()</div>*@
+                                                                <div style="cursor:pointer;" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime" class-break="@sch.BreakDuration">Class Held</div>
+
+                                                            </div>
+                                                        </div>
+
+                                                    }
+
+
+                                                }
+
+                                                @*<div class="action-btn" style="text-align:center;">
+                                                        <button course="@sch.title"  data-toggle="tooltip" data-placement="left" title="Action" type="button" style="font-size:10px;display:none;" class="action btn btn-danger glyphicon glyphicon-pencil"></button>
+                                                    </div>*@
+                                                //}
+                                            }
+
+                                        }
+
+
+                                    }
+                                    else
+                                    {
+                                        <div class="parts">
+                                            @*<h4 style="text-align:center;"> No Class Scheduled</h4>*@
+                                            <div style="text-align:center;">
+                                                <span data-toggle="tooltip" data-placement="left" title="No Class Scheduled" class="glyphicon glyphicon-exclamation-sign course-name" style="font-size: 45px;color: #53575a;"></span>
+                                            </div>
+                                        </div>
+                                        <div class="parts">
+
+                                        </div>
+                                        <div style="text-align:end;">
+                                            <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                        </div>
+                                                        <div class="content1" style="display:none;text-align:center;">
+                                                            <div style="padding-top:100px;">
+                                                                @*<a href="#" style="text-decoration:none;"><div class="btn-sm btn-primary">Class Held</div></a>*@
+                                                                <div class="makeup btn-sm btn-danger" style="cursor:pointer;">Makeup class</div>
+                                                            </div>
+                                                        </div>
+
+                                    }
+
+                                }
+
+
+                                @*<div class="content1" style="display:none;text-align:center;">
+                                        <div style="padding-top:115px;">
+                                            <a href="#" style="text-decoration:none;"><div class="btn-sm btn-primary">Schedule class</div></a>
+                                            <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Cancel class</div></a>
+                                        </div>
+                                    </div>*@
+
+                            </div>
+
+
+                                        }
+                                        i++;
+                                    }
+                </section>
+                                        a++;
+                                    }
+
+        </div>
+    </div>
+
+
+</div>

@@ -1,0 +1,272 @@
+﻿@model Scheduling.Models.ViewModels.CombineScheduleVM
+
+@{
+    ViewBag.Title = "Index";
+}
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        $("#frm").dialog({
+            modal: true,
+            autoOpen: false,
+            minWidth: 600,
+            minHeight: 500,
+            width: 600,
+            height: 500,
+        });
+        $('body').on('click','.cell-fill',function(){
+        $('#frm').dialog('open');
+        $("#frm").css({ "display": "inline" });
+        });
+
+        $('body').on('click', '.cell-empty', function () {
+            $('#frm').dialog('open');
+            $("#frm").css({ "display": "inline" });
+        });
+    
+    //$( "#tags" ).autocomplete({
+    //  source: availableTags
+    //});
+  });
+</script>
+<div class="container">
+    <div id="frm" style="display:none">
+        <form class="frm" name="frmopr" method="post">
+
+            <table>
+                <tr>
+                    <td>Course Title</td>
+                    <td><input id="Course"></td>
+                </tr>
+                <tr>
+                    <td>Room No</td>
+                    <td><input id="Room"></td>
+                </tr>
+                <tr>
+                    <td><input type="button" name="save-insert" value="Insert"></td>
+                    <td><input type="button" value="Cancel"></td>
+                </tr>
+            </table>
+        </form>
+
+    </div>
+    @{ int i = 1;}
+    <table border="1" style="border-collapse: collapse; border-color:black; width:100%;">
+        <tr>
+            <td>Day</td>
+            <td>Class</td>
+            @foreach (var item in Model.vslottypes.Where(o => o.occupied == 3))
+            {
+            <td colspan="3">@i Time Slot</td>
+                i++;
+            }
+
+
+        </tr>
+        <tr>
+            <td>Day</td>
+            <td>Room #</td>
+            @foreach (var slots in Model.vslottypes.Where(subslot => subslot.subslotid < 5))
+            {
+            <td colspan="3">
+                @Html.DisplayFor(modelItem => slots.duration)
+            </td>
+            }
+
+        </tr>
+        <tr>
+            <td>Day</td>
+            <td>Room #</td>
+            @foreach (var item in Model.vslottypes.Where(subslot => subslot.subslotid < 5))
+            {
+            <td>Teacher</td>
+            <td>Subject</td>
+            <td>Class</td>
+            }
+
+        </tr>
+        @foreach (var days in Model.days)
+        {
+            foreach (var rooms in Model.rooms)
+            {
+                //<c:when test="${Rooms[0]==rooms}">
+                //if(Model.rooms.ElementAt(0)==rooms)
+                //{
+        <tr>
+            @if (Model.rooms.ElementAt(0) == rooms)
+                    {
+                    <td rowspan="@Model.rooms.Count()">@Html.DisplayFor(modelItem => days.dayname)</td>
+                    }
+            <td>@Html.DisplayFor(modelItem => rooms.roomno)</td>
+
+
+            @foreach (var slots in Model.slottypes)
+                    {
+                        var key = days.dayid + "-" + rooms.roomid + "-" + slots.slottypeid;
+                        if (Model.hSchedule.ContainsKey(key))
+                        {
+                            var Schedules = Model.hSchedule[key];
+                    @*<td>
+                        <table>
+                            <tr class="cell-fill">
+                                <td style="color:#b94a48;font-weight:bold;">
+                                    @foreach (var sch in Schedules)
+                                            {
+                                                if (sch.occupied == 1)
+                                                {
+                                            @sch.schid  @sch.teachername
+                                                    //if(sch.duration==)
+                                            <hr style="border:2px solid;border-color:#1c3e1c;margin-top:10px;margin-bottom:10px;" />
+
+                                                }
+
+
+                                            }
+                                </td>
+                            </tr>
+                            <tr class="cell-fill">
+                                <td style="color:#0e3c3c;font-weight:bold;">
+                                    @foreach (var sch in Schedules)
+                                            {
+                                                if (sch.occupied == 2)
+                                                {
+                                            @sch.schid  @sch.teachername
+                                                }
+
+
+                                            }
+                                </td>
+                            </tr>
+                            <tr class="cell-fill">
+                                <td style="color:coral;font-weight:bold;">
+                                    @foreach (var sch in Schedules)
+                                            {
+                                                if (sch.occupied == 3)
+                                                {
+                                            @sch.schid  @sch.teachername
+                                                }
+
+
+                                            }
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table>
+                            <tr class="cell-fill">
+                                <td style="color:#b94a48;font-weight:bold;">
+                                    @foreach (var sch in Schedules)
+                                            {
+                                                if (sch.occupied == 1)
+                                                {
+                                            @sch.title
+                                            <hr style="border:2px solid;border-color:#1c3e1c;margin-top:10px;margin-bottom:10px;" />
+                                                }
+
+
+
+                                            }
+                                </td>
+                            </tr>
+
+                            <tr class="cell-fill">
+                                <td style="color:#0e3c3c;font-weight:bold;">
+                                    @foreach (var sch in Schedules)
+                                            {
+                                                if (sch.occupied == 2)
+                                                {
+                                            @sch.title
+                                                }
+
+
+                                            }
+                                </td>
+                            </tr>
+                            <tr class="cell-fill">
+                                <td style="color:coral;font-weight:bold;">
+                                    @foreach (var sch in Schedules)
+                                            {
+                                                if (sch.occupied == 3)
+                                                {
+                                            @sch.title
+                                                }
+
+
+                                            }
+                                </td>
+                            </tr>
+
+                        </table>
+                    </td>
+                    <td>
+                        <table>
+                            <tr class="cell-fill">
+                                <td style="color:#b94a48;font-weight:bold;">
+                                    @foreach (var sch in Schedules)
+                                                {
+                                                    if (sch.occupied == 1)
+                                                    {
+                                                @sch.sectionname
+
+
+                                                @sch.duration
+                                                <hr style="border:2px solid;border-color:#1c3e1c;margin-top:10px;margin-bottom:10px;" />
+                                                    }
+
+
+                                                }
+                                </td>
+                            </tr>
+
+                            <tr class="cell-fill">
+                                <td style="color:#0e3c3c;font-weight:bold;">
+                                    @foreach (var sch in Schedules)
+                                                {
+                                                    if (sch.occupied == 2)
+                                                    {
+                                                @sch.sectionname
+
+
+                                                @sch.duration
+                                                    }
+
+
+                                                }
+                                </td>
+                            </tr>
+                            <tr class="cell-fill">
+                                <td style="color:coral;font-weight:bold;">
+                                    @foreach (var sch in Schedules)
+                                                {
+                                                    if (sch.occupied == 3)
+                                                    {
+                                                @sch.sectionname
+                                                    }
+
+
+                                                }
+                                </td>
+                            </tr>
+
+                        </table>
+                    </td>*@
+                        }
+                        else
+                        {
+                    <td class="cell-empty"></td>
+                    <td class="cell-empty"></td>
+                    <td class="cell-empty"></td>
+                        }
+                    }
+
+
+
+
+        </tr>
+            }
+        }
+
+
+    </table>
+</div>

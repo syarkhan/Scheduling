@@ -1,0 +1,81 @@
+﻿
+@model Scheduling.Models.ViewModels.CombineScheduleVM
+
+
+@{ int a = 1;
+    List<int> occupied = new List<int>(new int[] { 1, 2, 3 });
+
+}
+<div class="row" style="padding-top:70px;margin-right: 0px;">
+    <!--Nav Bar -->
+    <div class="col-md-1 col-lg-1 visible-lg visible-md visible-sm">
+        
+    </div>
+
+    <div id="NB" class="visible-md visible-lg">
+        <nav class="col-md-2 col-lg-2 bs-docs-sidebar">
+
+            <ul id="sidebar" class="nav nav-stacked fixed scroll" style="margin-top: -1.01%;">
+                <li id="date" class="alert alert-info">
+                    <strong>@ViewBag.currdate - MID WEEK</strong>
+                </li>
+                @{ int x = 1;}
+                @foreach (var days in Model.days)
+            {
+
+
+                    <li>
+                        <a date="@ViewBag.dates[a-1].Date.ToString("MM/dd/yyyy")" class="day" href="#active-day-@a" dayid="@days.dayid">@days.dayname-@ViewBag.dates[a - 1].Date.ToString("dd/MMM")</a>
+                        <ul class="nav nav-stacked">
+                            @foreach (var rooms in Model.rooms)
+                            {
+
+
+                                <li> <a href="#content_@x" class="room"> @rooms.roomno </a></li>
+                                x++;
+                            }
+                        </ul>
+                        @{ a++; }
+                    </li>
+
+
+                            }
+            </ul>
+        </nav>
+    </div>
+
+    <!--Main Content -->
+    <div class="col-md-9 col-lg-9" style="padding-left:70px;">
+
+        @{int i = 1; a = 1; int z = 0;}
+
+        @foreach (var days in Model.days)
+        {
+
+            <section id="active-day-@a" class="day-group" data-pos2="#active-day-@a">
+                <div style="position:absolute;padding-left:1.4%;margin-top:-10px;">
+                    <span style="border: 1px solid #21211b;background-color: #394c48;color: white;border-radius: 3px;">@days.dayname.Substring(0, 3).ToUpper()</span>
+                </div>
+                @foreach (var rooms in Model.rooms)
+                {
+
+                foreach (var slots in Model.vslottypes)
+                {
+
+
+                    //<a href="#" class="content-link">
+
+                    <div class="col-md-3 content" id="content_@i" data-pos="#content_@i">
+                       
+                    </div>
+
+
+                                }
+                                i++;
+                            }
+            </section>
+                                a++;
+                            }
+
+    </div>
+</div>

@@ -1,0 +1,139 @@
+﻿@model Scheduling.Models.ViewModels.ReportsVM
+
+@{
+    ViewBag.Title = "Empty";
+    Layout = "~/Views/Shared/Layout_AAC.cshtml";
+}
+
+<script>
+
+    $(document).ready(function () {
+
+        $('.count').click(function () {
+
+            
+            var array = $(this).attr('data-count');
+            var data = array.split('-');
+            
+            //$(".INO").remove();
+            var dayid = data[0];
+            //var start =  $('#startdate').val();
+            //var end = $('#enddate').val();
+            var slottypeid = data[1];
+            //var dayid = $('#days').val();
+
+            //value = new Date(parseInt(start.replace("/Date(", "").replace(")/", ""), 10));
+
+            
+
+            var jsonData = $.ajax({
+
+                url: '@Url.Action("FilterEmptyRoomCountBySlottype", "JSON")',
+                data: {
+                    
+                    dayid,
+                    slottypeid
+                    
+                },
+                type: "GET",
+                beforeSend: function () {
+                    $('#loading').show();
+
+                    $('.tb2').remove();
+
+                    //$('.right').attr('disabled', 'disabled');
+                    //$('.left').attr('disabled', 'disabled');
+                },
+                complete: function () {
+                    $('#loading').hide();
+                    //$('.right').removeAttr('disabled');
+                    //$('.left').removeAttr('disabled');
+                },
+                success: function (result) {
+                    //console.log(result);
+                    $("body").scrollTop(0);
+                    //$('').remove();
+                    $('.modal-body').append(result);
+                }
+            });
+
+
+        });
+
+    });
+</script>
+
+<div class="modal empty-rooms-modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="font-family:'Segoe UI';">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4>Empty Rooms</h4>
+            </div>
+            <div class="modal-body">
+
+                <div id="loading" style="display:none;" class="col-md-offset-5">
+                    <img src="~/Content/themes/base/images/loading.svg" height="250" width="150">
+                </div>
+                <table class="table tb2">
+
+                </table>
+</div>
+            <div class="modal-footer">
+
+                
+
+            </div>
+        </div>
+    </div>
+</div>
+@{int i = 1;}
+<div class="container" style="font-family:'Segoe UI';">
+    <h2>Empty Rooms Count</h2>
+    <table class="table tb table-condensed table-hover table-striped" style="font-size:13px;">
+        <thead class="">
+            <tr>
+
+                <th>
+                    Day Name 
+                </th>
+                @foreach (var item in Model.emptyroomscount.Where(s => s.slottypeid == i))
+                {
+                    <th>
+                        @Html.DisplayFor(modelItem => item.duration)
+                    </th>
+                    i++;
+                }
+
+            </tr>
+        </thead>
+
+    @{int a = 1;}   
+    @foreach (var item in Model.emptyroomscount.Where(s => s.dayid == a))
+    {
+        <tbody>
+            <tr>
+
+                <th>
+                    @Html.DisplayFor(modelItem => item.dayname) - @ViewBag.dates[a - 1].Date.ToString("MM/dd/yyyy")
+                </th>
+
+                @foreach (var dur in Model.emptyroomscount.Where(s => s.dayid == a))
+                {
+                    <td>
+                        <span class=""><a style="color:black;" href="#" class="count" data-toggle="modal" data-target=".empty-rooms-modal" data-count="@dur.dayid-@dur.slottypeid"> @Html.DisplayFor(modelItem => dur.Empty) </a></span>
+                    </td>
+                }
+
+            </tr>
+        </tbody>
+        a++;
+    }
+
+    </table>
+
+</div>
+

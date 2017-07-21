@@ -1,0 +1,1720 @@
+﻿@model  Scheduling.Models.ViewModels.CombineScheduleVM
+
+@{
+    ViewBag.Title = "Schedule";
+}
+
+
+
+
+<style>
+        .active-room {
+            color: #37474F;
+            font-weight: 600;
+        }
+
+        .font {
+            font-family: 'Segoe UI';
+            font-size: 14px;
+        }
+
+        h3, h6 {
+            margin: 6px;
+            font-family: 'Segoe UI';
+        }
+
+
+
+        /*.active-campus{
+
+            background-color: #102c44;
+            border-color: #000000;
+
+        }*/
+
+
+        .panel-head {
+            color: #43A047 !important;
+            background-color: #4A4A4A !important;
+            border-color: #00e83d !important;
+        }
+
+        .campuses {
+            background-color: #fff;
+            position: fixed;
+            width: 100%;
+            border-bottom-style: groove;
+            border-bottom-width: thin;
+            /*border-color: black;*/
+            box-shadow: 2px 2px 5px #c6c0c7;
+            border-radius: 0;
+            z-index: 1;
+        }
+
+       
+
+
+        .active-day {
+            color: #2ce22b;
+            font-weight: bolder;
+        }
+
+
+        .roomselect {
+            color: #37474F;
+            font-weight: 600;
+        }
+
+
+        .day:focus {
+            color: #707070;
+            text-decoration: none;
+        }
+        /*.day:hover{
+
+            color: #444;
+            text-decoration: none;
+            background: url(../Content/themes/base/images/expand-icon.png) 85px -4px no-repeat;
+            background-size: 20px;
+
+        }*/
+
+
+
+
+        .tablex td {
+            border: 1px solid black;
+        }
+
+        .tablex {
+            width: 80%;
+            margin-left: 11.3%;
+        }
+
+        .day {
+            text-transform: uppercase;
+            line-height: 20px;
+        }
+
+
+        .room {
+            /*color: #428bca;*/
+            text-decoration: none;
+        }
+
+            .room:hover {
+                color: #37474F;
+                list-style-type: none;
+                text-decoration: none;
+            }
+
+            .room:focus {
+                color: #37474F;
+                list-style-type: none;
+                text-decoration: none;
+                font-weight: 600;
+            }
+
+        .carousel {
+            margin-left: -3.4%;
+        }
+
+        .carousel-control {
+            text-shadow: none !important;
+        }
+
+            .carousel-control.left, .carousel-control.right {
+                background-image: none !important;
+                filter: none !important;
+            }
+
+
+        .noshow {
+            display: none;
+        }
+
+
+        .div {
+            background-color: #fff;
+            border: 1px solid #dedede;
+            color: #000;
+            font-size: 12px;
+            /*width: 100%;*/
+            height: 210px;
+            border-radius: 0;
+            cursor: pointer;
+            box-shadow: 2px 2px 5px rgba(0,0,0,.1);
+            position: relative;
+            overflow: hidden;
+            float: left;
+        }
+
+        .content {
+            margin: 10px;
+            font-size: 12px;
+            /* margin-top: 100px; */
+            border-radius: 5px;
+            width: 20.9%;
+            height: 175px;
+            border: 1px dashed #1b89bf;
+            float: left;
+            background-color: white;
+            /* box-shadow: 2px 2px 5px #c6c0c7; */
+            /*padding: 0;*/
+            padding-top: 0.5%;
+            padding-left: 0.5%;
+            padding-right: 0.5%;
+        }
+
+        .slots {
+            margin: 10px;
+            margin-top: 6px;
+            /* margin-left: 2px; */
+            border-radius: 4px;
+            width: 20.9%;
+            height: 34px;
+            border: 1px solid #e4e2e2;
+            float: left;
+            background-color: #ffffff;
+            /* box-shadow: 2px 2px 5px #c6c0c7; */
+            color: #615454;
+            font-size: 16px;
+            font-family: 'Segoe UI';
+            line-height: 30px;
+            /*border-left: 3px solid #507182;
+        border-right: 3px solid #507182;*/
+        }
+
+
+        .inside-ul-list {
+            list-style-type: none;
+            margin-top: -7px;
+            font-size: 12.9px;
+            padding: 0px;
+            border-left: 1px solid #FF5722;
+            padding-left: 25px;
+            margin-left: -13px;
+            color: black;
+        }
+
+        ul.outer-ul-list {
+            list-style-type: none;
+            /*margin-top: -40px;*/
+            border-left: 1px solid #9E9E9E;
+            padding: 12px;
+            padding-top: inherit;
+        }
+
+        /*.scroll{
+
+        max-height: 490px;
+        overflow-y: scroll;
+
+       }*/
+        #sidebar {
+            height: 490px;
+            overflow: hidden;
+        }
+
+            #sidebar:hover {
+                overflow: auto;
+            }
+
+        /*.jqstooltip {
+     background-color: #c6e5f6 !important;
+     font-size: 11px !important;
+     padding: 5px !important;
+     color: black !important;
+     overflow: auto !important;
+     text-align: center !important;
+     border-color: #CCCCCC !important;
+     max-width: 400px !important;
+     max-height: 400px !important;
+    }
+
+    .jqsfield {
+     font-size: 10px !important;
+     color: black !important; /*set the text color here
+           }
+
+       */
+
+
+
+        .fixed {
+            position: fixed;
+        }
+        /* sidebar */
+
+        .bs-docs-sidebar {
+            padding-left: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+            /* all links */
+
+            .bs-docs-sidebar .nav > li > a {
+                color: #999;
+                border-left: 2px solid transparent;
+                padding: 4px 20px;
+                font-size: 13px;
+                font-weight: 400;
+            }
+            /* nested links */
+
+            .bs-docs-sidebar .nav .nav > li > a {
+                padding-top: 1px;
+                padding-bottom: 1px;
+                padding-left: 30px;
+                font-size: 12px;
+            }
+            /* active & hover links */
+
+            .bs-docs-sidebar .nav > .active > a,
+            .bs-docs-sidebar .nav > li > a:hover,
+            .bs-docs-sidebar .nav > li > a:focus {
+                color: #563d7c;
+                text-decoration: none;
+                background-color: transparent;
+                border-left-color: #563d7c;
+                border-right-color: #563d7c;
+                margin-left: -1px;
+            }
+            /* all active links */
+
+            .bs-docs-sidebar .nav > .active > a,
+            .bs-docs-sidebar .nav > .active:hover > a,
+            .bs-docs-sidebar .nav > .active:focus > a {
+                font-weight: 700;
+                margin-left: -1px;
+            }
+            /* nested active links */
+
+            .bs-docs-sidebar .nav .nav > .active > a,
+            .bs-docs-sidebar .nav .nav > .active:hover > a,
+            .bs-docs-sidebar .nav .nav > .active:focus > a {
+                font-weight: 700;
+                margin-left: -1px;
+            }
+            /* hide inactive nested list */
+
+            .bs-docs-sidebar .nav ul.nav {
+                display: none;
+            }
+            /* show active nested list */
+
+            .bs-docs-sidebar .nav > .active > ul.nav {
+                display: block;
+                border-left: 1px solid #81a1a9;
+            }
+
+        .group {
+            background: yellow;
+            width: 200px;
+            /*height: 1100px;*/
+        }
+
+            .group .subgroup {
+                background: orange;
+                width: 150px;
+                height: 500px;
+            }
+
+
+        .bs-docs-sidebar2 {
+            padding-left: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+            /* all links */
+
+            .bs-docs-sidebar2 .nav > li > a {
+                color: #999;
+                border-left: 2px solid transparent;
+                padding: 4px 20px;
+                font-size: 13px;
+                font-weight: 400;
+            }
+            /* nested links */
+
+            .bs-docs-sidebar2 .nav .nav > li > a {
+                padding-top: 1px;
+                padding-bottom: 1px;
+                padding-left: 30px;
+                font-size: 12px;
+            }
+            /* active & hover links */
+
+            .bs-docs-sidebar2 .nav > .active > a,
+            .bs-docs-sidebar2 .nav > li > a:hover,
+            .bs-docs-sidebar2 .nav > li > a:focus {
+                color: #563d7c;
+                text-decoration: none;
+                background-color: transparent;
+                border-left-color: #563d7c;
+                border-right-color: #563d7c;
+                margin-left: -1px;
+            }
+            /* all active links */
+
+            .bs-docs-sidebar2 .nav > .active > a,
+            .bs-docs-sidebar2 .nav > .active:hover > a,
+            .bs-docs-sidebar2 .nav > .active:focus > a {
+                font-weight: 700;
+                margin-left: -1px;
+            }
+            /* nested active links */
+
+            .bs-docs-sidebar2 .nav .nav > .active > a,
+            .bs-docs-sidebar2 .nav .nav > .active:hover > a,
+            .bs-docs-sidebar2 .nav .nav > .active:focus > a {
+                font-weight: 700;
+                margin-left: -1px;
+            }
+            /* hide inactive nested list */
+
+            .bs-docs-sidebar2 .nav ul.nav {
+                display: none;
+            }
+            /* show active nested list */
+
+            .bs-docs-sidebar2 .nav > .active > ul.nav {
+                display: block;
+                border-left: 1px solid #81a1a9;
+            }
+
+
+
+        .course-name {
+            white-space: nowrap;
+            /*width: 13em;*/
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .room-tag {
+            white-space: nowrap;
+            /*width: 13em;*/
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .parts {
+            height: 65px;
+            padding-top: 2px;
+        }
+
+
+        .day-group {
+            width: 89.4%;
+            height: 1460px;
+        }
+
+        .room-group {
+            /*width: 150px;
+                height: 500px;*/
+        }
+
+        .active-slot {
+            background-color: aqua;
+            color: white;
+        }
+
+
+        #sidebar:hover::-webkit-scrollbar {
+            width: 9px;
+        }
+
+        /*#sidebar:hover::-webkit-scrollbar-button {
+        background: #ccc
+    }*/
+        #sidebar:hover::-webkit-scrollbar-track-piece {
+            background: #ccc;
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            border-radius: 10px;
+        }
+
+        #sidebar:hover::-webkit-scrollbar-thumb {
+            background: #37474F;
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            border-radius: 10px;
+        }
+
+
+        /*.tooltip-arrow, .black-tooltip + .tooltip > .tooltip-inner {background-color: black;}*/
+</style>
+
+
+
+
+<script type="text/javascript">
+
+    $(function () {
+
+        $("body").tooltip({ selector: '[data-toggle="tooltip"]' });
+            //$('[data-toggle="tooltip"]').tooltip();
+
+        });
+
+    $(document).ready(function () {
+
+        //$("html").mouseover(function () {
+        //    $("html").niceScroll();
+        //});
+
+        var hash = ('#active-day-4');
+
+        // Using jQuery's animate() method to add smooth page scroll
+        // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
+        $('html, body').animate({
+            scrollTop: $(hash).offset().top - 120
+        }, 700, function () {
+
+            // Add hash (#) to URL when done scrolling (default click behavior)
+            window.location.hash = hash;
+
+        });
+
+
+        $(window).on('load', function (e) {
+            //e.preventDefault();
+            $('body').scrollspy({
+                target: '.bs-docs-sidebar',
+                offset:120
+
+            });
+
+        });
+
+
+        $("body").on('click', ".bs-docs-sidebar a", function (event) {
+
+            //var offset = 120;
+            //event.preventDefault();
+            //$($(this).attr('href'))[0].scrollIntoView();
+            //scrollBy(0, -offset);
+
+
+            event.preventDefault();
+            // Make sure this.hash has a value before overriding default behavior
+            if (this.hash !== "") {
+
+                // Prevent default anchor click behavior
+
+
+                // Store hash
+                var hash = this.hash;
+
+                // Using jQuery's animate() method to add smooth page scroll
+                // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
+                $('html, body').animate({
+                    scrollTop: $(hash).offset().top-120
+                }, 700, function () {
+
+                    // Add hash (#) to URL when done scrolling (default click behavior)
+                    window.location.hash = hash;
+
+                });
+
+            } // End if
+
+
+
+
+        });
+
+
+
+        //var $navigationLinks = $('.room');
+        //console.log($navigationLinks);
+        //var $contents = $(".content");
+        //console.log($contents);
+        //var $contentsReversed = $($(".content").get().reverse());
+        //console.log($contentsReversed);
+        //var contentidtonavigationlink = {};
+        //console.log(contentidtonavigationlink);
+
+
+        //$contents.each(function () {
+        //    contentidtonavigationlink[$(this).attr('id')] = $(".room[hrf='" + $(this).attr('id') + "']");
+        //    //console.log(contentidtonavigationlink[$(this).attr('id')]);
+        //});
+
+        //function unoptimized() {
+        //    var scrollPosition = $(window).scrollTop();
+
+        //    $('.content').each(function () {
+        //        var sectionTop = $(this).offset().top;
+        //        var id = $(this).attr('id');
+
+        //        if (scrollPosition >= sectionTop) {
+        //            $('.room').removeClass('active');
+        //            $(".room[hrf='" + id + "']").addClass('active');
+        //        }
+        //    });
+        //}
+
+
+
+        var contentNumber = 0;
+
+        //$(".content").addClass("noshow");
+
+
+
+
+        //$('.room').eq(0).css({ "color": "#37474F", "font-weight": "600" });
+
+        //$('.inside-ul-list').eq(0).show();
+
+
+        //for (var a = 1; a < 8; a++)
+        //{
+        //    if ($('#dayid').val() == $('.active-day-'+a).attr('dayid')) {
+        //        console.log("Sheryar");
+        //        $('.active-day-' + a).addClass('active-day');
+        //        $('.active-icon-' + a).css('font-weight', 'bolder');
+        //        $('.active-icon-' + a).show();
+
+        //    }
+
+        //}
+        //console.log($('#dayid').val());
+        //console.log($('.day').attr('dayid'));
+
+
+        $("body").on('click', '.left', function () {
+
+            console.log("hh");
+            var start = $('.day').eq(0).attr('date');
+            var campus = $('#incampus').val();
+
+
+            var jsonData = $.ajax({
+
+                url: '@Url.Action("FilterByWeek", "JSON")',
+                data:{
+                    campus,
+                    start
+                },
+                type: "GET",
+                success: function (result) {
+                    //console.log(result);
+                    $("body").scrollTop(0);
+                    //$('').remove();
+                    $('.main-div').html(result);
+                }
+                });
+
+
+
+
+        });
+
+
+
+
+
+        $('body').on('click', '.campus', function () {
+
+
+            $('.campus').removeClass('active');
+            $(this).addClass('active');
+
+
+            //var durid = $('#durid').val();
+            //var dayid = $('#dayid').val();
+            //console.log(dayid);
+            $('#incampus').val($(this).attr('campus'));
+
+            var start = $('.day').eq(0).attr('date');
+            var end = $('.day').eq(6).attr('date');
+
+
+
+            console.log(start);
+            console.log(end);
+
+            var campus = $('#incampus').val();
+            console.log($('#incampus').val());
+            //var slottime = $('.slottime').text();
+            //console.log(campus);
+            //$('.main-div').empty();
+            //".room[hrf='" + id + "']"
+            //$('.main-div').load("/JSON/FilterByCampus?campus=" + campus + "");
+
+            //refreshScrollSpy();
+
+            var jsonData = $.ajax({
+
+                url: '@Url.Action("FilterByCampusAndDate", "JSON")',
+                data:{
+                    campus,
+                    start,
+                    end
+                },
+                type: "GET",
+                success: function (result) {
+                    //console.log(result);
+                    $("body").scrollTop(0);
+                    //$('').remove();
+                    $('.main-div').html(result);
+                    if (campus == "100")
+                    {
+                        $('.day-group').css('height', '4292px');
+                    }
+                    else if (campus == "154")
+                    {
+                        $('.day-group').css('height', '3122px');
+
+                    }
+                    else if (campus == "90")
+                    {
+                        $('.day-group').css('height', '1561px');
+
+                    }
+
+
+
+                    //refreshScrollSpy();
+                    //$(".content").addClass("noshow");
+
+                    //$('.inside-ul-list').eq(0).show();
+                    //$('.room').eq(0).css({ "color": "#37474F", "font-weight": "600" });
+
+                    //$('.content').eq(0).removeClass("noshow");
+
+                    for (i = 0; i < 12; i++) {
+                    ////    //Get the nth div of class content, where n is the contentNumber, and make it shown
+                        $('.content').eq(i).removeClass("noshow");
+                    ////    contentNumber++;
+                    }
+                    contentNumber = 0;
+                    a = 0;
+                    //reveal();
+
+
+                }
+
+
+            });
+
+
+
+
+        });
+        function refreshScrollSpy() {
+            $('[data-spy="scroll"]').each(function () {
+                $('body').scrollspy('refresh');
+                console.log("hello");
+            });
+        };
+        $(document).ajaxStart(function () {
+            $("#loading").show(); // show loading indicator
+            $('.main-div').hide();
+
+        });
+
+        $(document).ajaxComplete(function () {
+            $('#loading').hide();  // hide loading indicator
+            $('.main-div').show();
+            //refreshScrollSpy();
+
+
+        });
+
+
+
+        //Set intital divs to be hidden
+
+
+        function reveal() {
+
+
+            var constraintNumber = contentNumber + 12;
+            //console.log(contentNumber);
+            //IMPORTANT - DO NOT DELETE
+            $(window).trigger('resize');
+            //IMPORTANT - DO NOT DELETE
+            for (i = contentNumber; i < constraintNumber; i++) {
+                //Get the nth div of class content, where n is the contentNumber, and make it shown
+                $('.content').eq(contentNumber).removeClass("noshow");
+                contentNumber++;
+            }
+        }
+
+
+
+        function day_select_reveal(div_no) {
+
+            console.log(div_no);
+            var constraintNumber = contentNumber + div_no;
+            console.log(contentNumber);
+            //IMPORTANT - DO NOT DELETE
+            $(window).trigger('resize');
+            //IMPORTANT - DO NOT DELETE
+            for (i = contentNumber; i < constraintNumber; i++) {
+                //Get the nth div of class content, where n is the contentNumber, and make it shown
+                $('.content').eq(contentNumber).removeClass("noshow");
+                contentNumber++;
+            }
+
+        }
+
+        //Window scroll function
+
+        $(window).scroll(function () {
+            //if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+
+                //$('.room')
+                //reveal();
+
+            //}
+            //$('.room').addClass("active-room");
+
+            //$('.room').removeClass("active-room");
+
+
+            //var scrollPos = $(document).scrollTop();
+
+            //$('.room').each(function () {
+
+        //        var currLink = $(this);
+        //        var id = $(this).attr('content')
+
+
+        //        var refElement = $(".content[data-pos='"+id+"']");
+
+        //        if ((refElement.offset().top - 120) <= scrollPos && ((refElement.offset().top - 120) + refElement.height()) > scrollPos) {
+
+
+        //            currLink.addClass("active-room");
+
+        //        }
+        //        else
+        //        {
+
+        //            currLink.removeClass("active-room");
+        //        }
+
+
+
+        //});
+
+
+
+
+
+
+
+
+
+            //console.log(currentScrollPosition);
+            //var firstroom=220;
+            //if(currentScrollPosition >= firstroom)
+            //{
+            //    $('.room').css({ "color": "", "font-weight": "" });
+            //    //console.log($('.room').eq(0).next().children().text());
+            //    $('.room').eq(0).next().children().css({ "color": "#37474F", "font-weight": "600" });
+            //    firstroom = firstroom + 220;
+            //    //console.log("Hello");
+            //}
+            //else if(currentScrollPosition <= firstroom)
+            //{
+            //    $('.room').css({ "color": "", "font-weight": "" });
+            //    $('.room').eq(0).css({ "color": "#37474F", "font-weight": "600" });
+            //}
+        });
+        //reveal();
+        var a = 0;
+        $('body').on('click', '.room', function () {
+            var div_number = 0;
+            //scrollTo($(this).attr("href"));
+            //$('.room').removeClass('active-room');
+            //$(this).addClass('active-room');
+
+            if ($('#incampus').val() == "90") {
+                //console.log($(this).eq());
+                //console.log($(this).text());
+                //console.log($('.room').eq(0).text());
+                if (a == 0) {
+
+                    div_number = 20;
+                    console.log("Campus 90");
+                    var constraintNumber = contentNumber + div_number;
+                    //console.log(contentNumber);
+                    //IMPORTANT - DO NOT DELETE
+                    $(window).trigger('resize');
+                    //IMPORTANT - DO NOT DELETE
+                    for (i = contentNumber; i < constraintNumber; i++) {
+                        //Get the nth div of class content, where n is the contentNumber, and make it shown
+                        $('.content').eq(contentNumber).removeClass("noshow");
+                        contentNumber++;
+                    }
+
+                    //scrollTo($(this).attr("data-target"));
+                    a++;
+
+                }
+
+            }
+            else if ($('#incampus').val() == "100") {
+
+                if (a == 0) {
+
+                    div_number = 84;
+                    console.log("Campus 100");
+                    var constraintNumber = contentNumber + div_number;
+                    //console.log(contentNumber);
+                    //IMPORTANT - DO NOT DELETE
+                    $(window).trigger('resize');
+                    //IMPORTANT - DO NOT DELETE
+                    for (i = contentNumber; i < constraintNumber; i++) {
+                        //Get the nth div of class content, where n is the contentNumber, and make it shown
+                        $('.content').eq(contentNumber).removeClass("noshow");
+                        contentNumber++;
+                    }
+
+                    //scrollTo($(this).attr("data-target"));
+                    a++;
+
+                }
+
+            }
+            else if ($('#incampus').val() == "154") {
+
+                if (a == 0) {
+
+                    div_number = 60;
+                    console.log("Campus 154");
+                    var constraintNumber = contentNumber + div_number;
+                    //console.log(contentNumber);
+                    //IMPORTANT - DO NOT DELETE
+                    $(window).trigger('resize');
+                    //IMPORTANT - DO NOT DELETE
+                    for (i = contentNumber; i < constraintNumber; i++) {
+                        //Get the nth div of class content, where n is the contentNumber, and make it shown
+                        $('.content').eq(contentNumber).removeClass("noshow");
+                        contentNumber++;
+                    }
+
+                    //scrollTo($(this).attr("data-target"));
+                    a++;
+
+                }
+
+            }
+
+            //scrollTo($(this).attr("data-target"));
+
+
+        });
+
+
+
+
+        var b = 0;
+        var c = 0;
+        var d = 0;
+        var e = 0;
+        var f = 0;
+        var g = 0;
+        $('body').on('click', '.day', function () {
+
+            //$('.room').removeClass('active-room');
+            //$(this).next().children().children().eq(0).addClass('active-room');
+
+            //$('.day').removeClass('active-day');
+            //$(this).addClass('active-day');
+
+            //scrollTo2($(this).attr("href"));
+
+            $('#dayid').val($(this).attr('dayid'));
+            var dayid = $('#dayid').val();
+            console.log(dayid);
+
+            var campus = $('#incampus').val();
+            console.log(campus);
+
+            //day_select_reveal(11);
+
+            var div_number2 = 0;
+
+            if ($('#incampus').val() == "90") {
+
+
+                //IF MONDAY CLICKED
+                if ($(this).attr('dayid') == 1) {
+
+
+                    //scrollTo2($(this).attr("data-target"));
+                    //b++;
+
+                }
+
+
+                //IF TUESDAY CLICKED
+                else if ($(this).attr('dayid') == 2)
+                {
+                    if (b == 0) {
+                        div_number2 = 32;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        b++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+                //IF WEDNESDAY CLICKED
+                else if ($(this).attr('dayid') == 3) {
+                    if (c == 0) {
+                        div_number2 = 56;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        c++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+
+                    //IF THURSDAY CLICKED
+                else if ($(this).attr('dayid') == 4) {
+                    if (d == 0) {
+                        div_number2 = 88;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        d++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+                    //IF FRIDAY CLICKED
+                else if ($(this).attr('dayid') == 5) {
+                    if (e == 0) {
+                        div_number2 = 120;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        e++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+
+                    //IF SATURDAY CLICKED
+                else if ($(this).attr('dayid') == 6) {
+                    if (f == 0) {
+                        div_number2 = 152;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        f++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+                    //IF SUNDAY CLICKED
+                else if ($(this).attr('dayid') == 7) {
+                    if (f == 0) {
+                        div_number2 = 188;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        f++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+
+
+            }
+            else if ($('#incampus').val() == "100") {
+
+
+
+
+                //IF MONDAY CLICKED
+                if ($(this).attr('dayid') == 1) {
+
+
+                    //scrollTo2($(this).attr("data-target"));
+                    //b++;
+
+                }
+
+
+                    //IF TUESDAY CLICKED
+                else if ($(this).attr('dayid') == 2) {
+                    if (b == 0) {
+                        div_number2 = 92;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        b++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+                    //IF WEDNESDAY CLICKED
+                else if ($(this).attr('dayid') == 3) {
+                    if (c == 0) {
+                        div_number2 = 180;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        c++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+
+                    //IF THURSDAY CLICKED
+                else if ($(this).attr('dayid') == 4) {
+                    if (d == 0) {
+                        div_number2 = 268;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        d++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+                    //IF FRIDAY CLICKED
+                else if ($(this).attr('dayid') == 5) {
+                    if (e == 0) {
+                        div_number2 = 352;
+                        day_select_reveal(div_number2);
+
+                        ////scrollTo2($(this).attr("data-target"));
+                        e++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+
+                    //IF SATURDAY CLICKED
+                else if ($(this).attr('dayid') == 6) {
+                    if (f == 0) {
+                        div_number2 = 432;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        f++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+                    //IF SUNDAY CLICKED
+                else if ($(this).attr('dayid') == 7) {
+                    if (f == 0) {
+                        div_number2 = 532;
+                        day_select_reveal(div_number2);
+
+                        //scrollTo2($(this).attr("data-target"));
+                        f++;
+                    }
+                    else {
+
+                        //scrollTo2($(this).attr("data-target"));
+                    }
+
+                }
+
+
+
+
+
+
+
+
+            }
+            else if ($('#incampus').val() == "154") {
+
+                if (b == 0) {
+
+                    div_number2 = 60;
+                    console.log("Campus 154");
+                    var constraintNumber = contentNumber + div_number2;
+                    //console.log(contentNumber);
+                    //IMPORTANT - DO NOT DELETE
+                    $(window).trigger('resize');
+                    //IMPORTANT - DO NOT DELETE
+                    for (i = contentNumber; i < constraintNumber; i++) {
+                        //Get the nth div of class content, where n is the contentNumber, and make it shown
+                        $('.content').eq(contentNumber).removeClass("noshow");
+                        contentNumber++;
+                    }
+
+                    //scrollTo2($(this).attr("data-target"));
+                    b++;
+
+                }
+
+            }
+
+            //console.log("ATTR : " + $(this).attr('dayid'));
+            //if ($(this).attr('dayid') == 1) {
+            //    $('.inside-ul-list').eq(0).toggle("fast");
+
+            //    for (var a = 0; a < 7; a++) {
+            //        if (a != 0) {
+            //            $('.inside-ul-list').eq(a).slideUp();
+            //        }
+
+            //    }
+            //}
+            //else if ($(this).attr('dayid') == 2) {
+            //    $('.inside-ul-list').eq(1).toggle("fast");
+
+            //    for (var a = 0; a < 7; a++) {
+            //        if (a != 1) {
+            //            $('.inside-ul-list').eq(a).slideUp();
+            //        }
+
+            //    }
+            //}
+            //else if ($(this).attr('dayid') == 3) {
+            //    $('.inside-ul-list').eq(2).toggle("fast");
+
+            //    for (var a = 0; a < 7; a++) {
+            //        if (a != 2) {
+            //            $('.inside-ul-list').eq(a).slideUp();
+            //        }
+
+            //    }
+            //}
+            //else if ($(this).attr('dayid') == 4) {
+            //    $('.inside-ul-list').eq(3).toggle("fast");
+
+            //    for (var a = 0; a < 7; a++) {
+            //        if (a != 3) {
+            //            $('.inside-ul-list').eq(a).slideUp();
+            //        }
+
+            //    }
+            //}
+            //else if ($(this).attr('dayid') == 5) {
+            //    $('.inside-ul-list').eq(4).toggle("fast");
+
+            //    for (var a = 0; a < 7; a++) {
+            //        if (a != 4) {
+            //            $('.inside-ul-list').eq(a).slideUp();
+            //        }
+
+            //    }
+            //}
+            //else if ($(this).attr('dayid') == 6) {
+            //    $('.inside-ul-list').eq(5).toggle("fast");
+
+            //    for (var a = 0; a < 7; a++) {
+            //        if (a != 5) {
+            //            $('.inside-ul-list').eq(a).slideUp();
+            //        }
+
+            //    }
+            //}
+            //else if ($(this).attr('dayid') == 7) {
+            //    $('.inside-ul-list').eq(6).toggle("fast");
+
+            //    for (var a = 0; a < 7; a++) {
+            //        if (a != 6) {
+            //            $('.inside-ul-list').eq(a).slideUp();
+            //        }
+
+            //    }
+            //}
+
+        });
+
+
+        $("body").on('mouseenter','.content', function(){
+            $(this).css("border-style", "solid");
+            $(this).css("opacity", "0.8");
+            //$('.hover-options').show();
+            $(this).find(".hover-options").show();
+        });
+
+        $("body").on('mouseleave', '.content', function () {
+            $(this).css("border-style", "dashed");
+            $(this).css("opacity", "1");
+            $(this).find(".hover-options").hide();
+            //$(this).find(":button").hide();
+            //$('.action-btn').hide();
+        });
+
+
+
+
+        $("body").on('mouseenter', '.hover-options', function () {
+
+            console.log("Hello");
+            //$(this).find(".hover-options").show();
+        });
+
+
+
+
+
+        $("body").on('mouseenter', '.course-name', function () {
+            $(this).tooltip().show();
+        });
+
+
+        $("body").on('click', '.action', function () {
+
+            var current = $(this);
+
+            //console.log($(this).parent().prev().prev().children().next().text());
+            //$(this).parent().prev().append('<h6>hello</h6>');
+
+            @*$.ajax({
+
+                url: '@Url.Action("InsertSchedule", "JSON")',
+                data: {
+                    'offid': 2,
+                    'slotid': 276,
+                    'occupied': 2
+
+                },
+                type: "POST"
+
+            }).done(function (result) {
+
+                if (result == "NO")
+                {
+                    alert("Class already scheduled");
+                }
+                else
+                {
+
+                //console.log(current.parent().prev().prev().children().next().text());
+                console.log(result);
+                //$(this).parent().prev().append('<h6>hello</h6>');
+                current.parent().prev().append('<h6 style="text-align:center;color:#767676;">' + result["sectionname"] + '(' + result["duration"] + ')' + '</h6>');
+                current.parent().prev().append('<h6 style="text-align:center;color:#767676;">' + result["teachername"] + '</h6>');
+                current.parent().prev().append('<h6 style="text-align:center;color:#767676;">' + result["title"] + '</h6>');
+                }
+            });*@
+        });
+
+
+
+        //$('.content').hover(function () {
+
+        //    //console.log("Hello");
+        //    $(this).css("border-style", "solid");
+        //    $(this).css("opacity", "0.8");
+        //    //$(this).addClass("btn btn-danger glyphicon glyphicon-eye-open");
+
+
+
+        //}
+        //, function () {
+        //    $(this).css("border-style", "dashed");
+        //    $(this).css("opacity", "1");
+        //});
+
+
+        //$(document).on("scroll", onScroll);
+
+    });
+
+
+    function scrollTo(target){
+        //console.log(target);
+        var tagScroll = $(".content[data-pos='" + target + "']");
+        //console.log(target[1]);
+        $('html,body').animate({scrollTop: tagScroll.offset().top-120},'slow');
+    }
+
+    function scrollTo2(target) {
+        //console.log(target);
+        var tagScroll = $(".day-group[data-pos2='" + target + "']");
+        $('html,body').animate({ scrollTop: tagScroll.offset().top - 120 }, 'slow');
+    }
+
+
+
+    //function onScroll(event) {
+    //    //if(contentNumber)
+
+
+
+
+
+
+    //    var scrollPos = $(document).scrollTop();
+    //    var cont = 0;
+    //    var str =0;
+    //    $('.room').each(function () {
+
+    //        cont = cont + 1;
+    //        str = "content_"+cont+"";
+
+    //        //console.log(cont);
+    //        //console.log(str);
+    //        var tagScroll = $(".content[data-pos='" + str + "']");
+
+    //        var currLink = $(this);
+    //        var refElement = $($(this).attr("content"));
+    //        $(this).attr("content");
+    //        //console.log(currLink.text());
+    //        //console.log(refElement);
+    //        if (tagScroll.position().top <= scrollPos && tagScroll.position().top + tagScroll.height() > scrollPos) {
+    //            //$('.room').removeClass("active");
+    //            currLink.css({ "color": "#37474F", "font-weight": "600" });
+    //        }
+    //    else{
+    //            currLink.css({ "color": "", "font-weight": "" });
+    //    }
+    //});
+    //}
+
+
+
+
+
+
+
+</script>
+
+
+
+@{
+
+
+    
+
+        //Slots
+        var slot1 = Model.vslottypes.Where(o => o.occupied == 3 && o.slottypeid == 1).SingleOrDefault();
+        var slot2 = Model.vslottypes.Where(o => o.occupied == 3 && o.slottypeid == 2).SingleOrDefault();
+        var slot3 = Model.vslottypes.Where(o => o.occupied == 3 && o.slottypeid == 3).SingleOrDefault();
+        var slot4 = Model.vslottypes.Where(o => o.occupied == 3 && o.slottypeid == 4).SingleOrDefault();
+
+
+        List<int> occupied = new List<int>(new int[] { 1, 2, 3 });
+
+
+    }
+
+<div class="campuses navbar">
+    <div class="row">
+        <div class="col-md-1 col-lg-1">
+            @*Welcome @Session["Username"]*@
+
+        </div>
+        <div class="col-md-2">
+            <a href="#" class="left"><span style="font-size:22px;padding-top:12px;" class="glyphicon glyphicon-arrow-left"></span></a>
+        </div>
+
+        <div class="col-md-8 col-lg-8">
+
+
+            <div style="padding-left: 51px;text-align: center;padding-top: 2px;">
+                <span class="slots">08:30 - 11:30</span>
+                <span class="slots">11:45 - 02:45</span>
+                <span class="slots">03:15 - 06:15</span>
+                <span class="slots">06:30 - 09:30</span>
+            </div>
+
+        </div>
+
+
+        <div class="col-md-2 col-lg-2 btn-group-sm font" style="padding-top: 0.7%;padding-left: 65px;margin-left: -9%;">
+            <a href="#" data-toggle="tooltip" data-placement="left" title="90 CAMPUS" class="black-tooltip btn btn-default campus active" campus="90">90</a>  <a href="#" data-toggle="tooltip" data-placement="bottom" title="100 CAMPUS" campus="100" class="btn btn-default  campus" role="button">100</a>  <a href="#" data-toggle="tooltip" data-placement="bottom" title="154 CAMPUS" campus="154" class="btn btn-default campus" role="button">154</a>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+@{int day = ((int)DateTime.Now.DayOfWeek == 0) ? 7 : (int)DateTime.Now.DayOfWeek;
+    int a = 1;
+}
+<input id="incampus" hidden value="90" />
+<input id="dayid" hidden value="@day" />
+<div id="loading" style="display:none;" class="col-md-offset-5">
+    <img src="~/Content/themes/base/images/loading.svg" height="550" width="350">
+</div>
+
+
+
+<div class="main-div">
+    <div class="row" style="padding-top:70px;margin-right: 0px;">
+        <!--Nav Bar -->
+        <div class="col-md-1 col-lg-1 visible-lg visible-md visible-sm">
+
+        </div>
+
+        <div id="NB" class="visible-md visible-lg">
+            <nav class="col-md-2 col-lg-2 bs-docs-sidebar">
+
+                @*<ul id="sidebar" class="nav nav-stacked fixed scroll" style="margin-top: -1.01%;">
+                    <li id="date" class="alert alert-info">
+                        <strong>@ViewBag.currdate</strong>
+                    </li>
+                    @{ int x = 1;}
+                    @foreach (var days in Model.days)
+            {
+
+
+                        <li>
+                            <a date="@ViewBag.dates[a-1].Date.ToString("MM/dd/yyyy")" class="day" href="#active-day-@a" dayid="@days.dayid">@days.dayname-@ViewBag.dates[a - 1].Date.ToString("dd/MMM")</a>
+                            <ul class="nav nav-stacked">
+                                @foreach (var rooms in Model.rooms)
+                                {
+
+
+                                    <li> <a href="#content_@x" class="room"> @rooms.roomno </a></li>
+                                    x++;
+                                }
+                            </ul>
+                            @{ a++; }
+                        </li>
+
+
+                                }
+                </ul>*@
+            </nav>
+        </div>
+
+        <!--Main Content -->
+        <div class="col-md-9 col-lg-9" style="padding-left:70px;">
+
+            @{int i = 1; a = 1; int z = 1;}
+
+            @foreach (var days in Model.days)
+            {
+
+                <section id="active-day-@a" class="day-group" data-pos2="#active-day-@a">
+                    <div style="position:absolute;padding-left:1.4%;margin-top:-10px;">
+                        <span style="border: 1px solid #21211b;background-color: #394c48;color: white;border-radius: 3px;">@days.dayname.Substring(0, 3).ToUpper()</span>
+                    </div>
+                    @foreach (var rooms in Model.rooms)
+                    {
+
+                    foreach (var slots in Model.vslottypes)
+                    {
+
+                        foreach (var occ in occupied)
+                        {
+                            var key = days.dayid + "-" + rooms.roomid + "-" + slots.slottypeid + "-" + occ;
+
+                        if (Model.hSchedule.ContainsKey(key))
+                            {
+                            var Schedules = Model.hSchedule[key];
+
+                        <div class="col-md-3 content room-group" id="content_@i" data-pos="#content_@i">
+                            
+                                    @foreach (var sch in Schedules)
+                                    {
+                                        if (sch.occupied == 1)
+                                        {
+                                        <h6>@sch.schid - @sch.sectionname - @sch.duration</h6>
+                                        <h6>@sch.teachername</h6>
+                                        <h6>@sch.title</h6>
+                                        }
+                                        else if (sch.occupied == 2)
+                                        {
+                                        <h6>@sch.schid - OCC = 2</h6>
+
+                                        }
+                                        else if (sch.occupied == 3)
+                                        {
+                                        <h6>@sch.schid - OCC = 3</h6>
+
+                                            }
+
+
+                                        }
+
+                        </div>
+                                }
+
+                                else
+                                {
+                                    <div class="col-md-3 content room-group" id="content_@i" data-pos="#content_@i">
+                                        No class
+                                    </div>
+
+                                }
+                            }
+
+                        }
+                    }
+
+
+
+</section>
+                                    a++;
+                                }
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<div class="row" style="padding-top:80px;">
+        <!--Nav Bar -->
+        <nav class="col-xs-3 bs-docs-sidebar">
+            <ul id="sidebar" class="nav nav-stacked fixed">
+                <li>
+                    <a href="#GroupA">Group A</a>
+                    <ul class="nav nav-stacked">
+                        <li><a href="#GroupASub1">Sub-Group 1</a></li>
+                        <li><a href="#GroupASub2">Sub-Group 2</a></li>
+                        <li><a href="#GroupASub3">Sub-Group 3</a></li>
+                        <li><a href="#GroupASub4">Sub-Group 4</a></li>
+                        <li><a href="#GroupASub5">Sub-Group 5</a></li>
+                        <li><a href="#GroupASub6">Sub-Group 6</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#GroupB">Group B</a>
+                    <ul class="nav nav-stacked">
+                        <li><a href="#GroupBSub1">Sub-Group 1</a></li>
+                        <li><a href="#GroupBSub2">Sub-Group 2</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#GroupC">Group C</a>
+                    <ul class="nav nav-stacked">
+                        <li><a href="#GroupCSub1">Sub-Group 1</a></li>
+                        <li><a href="#GroupCSub2">Sub-Group 2</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <!--Main Content -->
+        <div class="col-xs-9">
+            <section id="GroupA" class="group">
+                <h3>Group A</h3>
+                <div id="GroupASub1" class="subgroup">
+                    <h4>Group A Sub 1</h4>
+                </div>
+                <div id="GroupASub2" class="subgroup">
+                    <h4>Group A Sub 2</h4>
+                </div>
+                <div id="GroupASub3" class="subgroup">
+                    <h4>Group A Sub 3</h4>
+                </div>
+                <div id="GroupASub4" class="subgroup">
+                    <h4>Group A Sub 4</h4>
+                </div>
+                <div id="GroupASub5" class="subgroup">
+                    <h4>Group A Sub 5</h4>
+                </div>
+                <div id="GroupASub6" class="subgroup">
+                    <h4>Group A Sub 6</h4>
+                </div>
+            </section>
+            <section id="GroupB" class="group">
+                <h3>Group B</h3>
+                <div id="GroupBSub1" class="subgroup">
+                    <h4>Group B Sub 1</h4>
+                </div>
+                <div id="GroupBSub2" class="subgroup">
+                    <h4>Group B Sub 2</h4>
+                </div>
+            </section>
+            <section id="GroupC" class="group">
+                <h3>Group C</h3>
+                <div id="GroupCSub1" class="subgroup">
+                    <h4>Group C Sub 1</h4>
+                </div>
+                <div id="GroupCSub2" class="subgroup">
+                    <h4>Group C Sub 2</h4>
+                </div>
+            </section>
+        </div>
+    </div>*@

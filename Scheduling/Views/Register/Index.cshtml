@@ -1,0 +1,279 @@
+﻿@model Scheduling.Models.ViewModels.RegisterVM
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+
+    .glyphicon-remove-circle{
+
+        color:#C62828;
+        
+    }
+
+</style>
+
+<script>
+
+    $(document).ajaxStart(function () {
+
+
+
+        $("#loading").show(); // show loading indicator
+        $('#userval').hide();
+
+
+        });
+
+        $(document).ajaxComplete(function () {
+            $('#loading').hide();  // hide loading indicator
+            $('#userval').addClass("glyphicon glyphicon-exclamation-sign");
+            $('#userval').show();
+
+        });
+</script>
+
+
+
+@* <script>
+
+        $(document).ready(function () {
+
+            //$('body').on('click', '#signbtn', function () {
+            var res;
+            $("#myForm").submit(function (event) {
+                var username = $('#usertxt').val();
+                console.log(res);
+                if ($('#passtxt').val().trim() == "")
+                    {
+                    $('#warning2').show();
+                }
+                else {
+                    $('#warning2').hide();
+
+                }
+                if(res == "true")
+                {
+
+                    event.preventDefault();
+                }
+
+            });
+
+            $('#passtxt').blur(function () {
+                if ($('#passtxt').val().trim() == "")
+                    {
+                    $('#warning2').show();
+                }
+                else {
+                    $('#warning2').hide();
+
+                }
+
+
+            });
+
+
+
+
+            $('#usertxt').blur(function () {
+
+                var username = $('#usertxt').val();
+                console.log(username);
+                //alert("Hello");
+
+                $('#result').text("");
+                $("#warning").hide();
+                $("#loading").show();
+
+
+
+
+                var timeOutId = setTimeout(function () {
+
+                    $.ajax({
+                        url: '@Url.Action("UsernameValidate", "JSON")',
+                        data: {
+                            username
+                        },
+                        type: "GET",
+                        success: function (result) {
+                            clearTimeout(timeOutId);
+                            //setTimeout(jsonData, 2000);
+                            res = result;
+                            console.log(res);
+
+                            $("#loading").hide();
+                            if (result == "true") {
+                                console.log("Username exists");
+                                $('#result').show();
+                                $("#warning").show();
+                                $('#result').text("Username already exists");
+
+                            }
+                            else if (result == "false") {
+                                console.log("Username does not exist");
+                                $("#warning").hide();
+                                $('#result').hide();
+                                $('#result').text("");
+
+                            }
+                        }
+                    });
+                }, 2000);
+
+
+
+
+                @*var jsonData = $.ajax({
+
+                    url: '@Url.Action("UsernameValidate", "JSON")',
+                    data: {
+                        username
+                    },
+                    type: "GET",
+                    success: function (result) {
+                        //setTimeout(jsonData, 2000);
+                        res = result;
+                        console.log(res);
+                        if(result == "true")
+                        {
+                            console.log("Username exists");
+                            $('#result').show();
+                            $('#result').text("Username already exists");
+
+                        }
+                        else if (result == "false") {
+                            console.log("Username does not exist");
+                            $('#result').hide();
+                            $('#result').text("");
+
+                        }
+                    }
+
+
+                });
+
+
+
+
+
+            });
+
+
+
+
+            //$(document).ajaxStart(function () {
+
+
+
+            //$("#loading").show(); // show loading indicator
+
+
+            //});
+
+            //$(document).ajaxComplete(function () {
+            //$('#loading').hide();  // hide loading indicator
+
+            //});
+
+
+        });
+
+
+
+    </script>
+*@
+
+
+@using (Html.BeginForm("Index", "Register", FormMethod.Post, new { @id = "myForm" }))
+
+{
+    
+    <div class="form-horizontal">
+
+        <div class="container">
+
+            <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-7 col-md-offset-2 col-sm-8 col-sm-offset-2">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <div class="panel-title">Register</div>
+                        
+                    </div>
+
+                    <div style="padding-top:30px" class="panel-body">
+                        @Html.ValidationSummary(true, "Account creation was unsuccessful.Please correct the errors and try again.", new { @class = "text-danger" })
+                        @*@Html.ValidationMessage("incorrect")*@
+                        <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
+
+
+
+
+
+
+                        <div style="margin-bottom: 25px" class="input-group">
+
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            @*<input id="login-username" type="text" class="form-control" name="username" value="" placeholder="username or email">*@
+                            @*@Html.LabelFor(model => model.UserName)*@
+                            @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control", @placeholder = "Username",@id="usertxt" } })
+                            @*<div id="loading" style="display:block;" class="col-md-offset-5">*@
+                            <i id="warning" style="display:none;" class="glyphicon glyphicon-remove-circle"></i>    
+                            <img id="loading" style="display:none;" src="~/Content/themes/base/images/loading.svg" height="30" width="45">
+                            @*  </div>*@
+
+                            @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger",@id="userval" })
+                            <span class="text-danger" style="display:none;" id="result" />
+                        </div>
+
+                        <div style="margin-bottom: 25px" class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                            @*<input id="login-password" type="password" class="form-control" name="password" placeholder="password">*@
+                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @type = "Password", @placeholder = "Password" ,@id="passtxt"} })
+                            <i id="warning2" style="display:none;" class="glyphicon glyphicon-remove-circle"></i> 
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        </div>
+
+
+                        <div style="margin-bottom: 25px" class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                            @*<input id="login-password" type="password" class="form-control" name="password" placeholder="password">*@
+                            @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "form-control", @type = "Password", @placeholder = "Confirm Password" } })
+                            <i id="warning2" style="display:none;" class="glyphicon glyphicon-remove-circle"></i>
+                            @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+                        </div>
+
+
+
+                        <div style="margin-top:10px" class="form-group">
+                            <!-- Button -->
+
+                            <div class="col-sm-12 controls">
+                                
+                                <input type="submit" value="Register" class="btn btn-success" />
+                                
+
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+
+           
+        </div>
+    </div>
+
+
+
+
+    
+}
+
+

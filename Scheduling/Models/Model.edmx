@@ -1,0 +1,2389 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Scheduling.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Academic">
+          <Key>
+            <PropertyRef Name="AdminId" />
+          </Key>
+          <Property Name="AdminId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ATID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AccountType">
+          <Key>
+            <PropertyRef Name="ATID" />
+          </Key>
+          <Property Name="ATID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Class">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Class" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ClassTypes">
+          <Key>
+            <PropertyRef Name="CTId" />
+          </Key>
+          <Property Name="CTId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="course">
+          <Key>
+            <PropertyRef Name="courseid" />
+          </Key>
+          <Property Name="courseid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="code" Type="varchar" MaxLength="15" />
+          <Property Name="title" Type="varchar" MaxLength="100" />
+          <Property Name="hours" Type="varchar" MaxLength="10" />
+          <Property Name="abbrev" Type="varchar" MaxLength="15" />
+        </EntityType>
+        <EntityType Name="days">
+          <Key>
+            <PropertyRef Name="dayid" />
+          </Key>
+          <Property Name="dayid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="dayname" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="DEMO">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="seq" Type="int" Nullable="false" />
+          <Property Name="sec" Type="varchar" MaxLength="50" />
+          <Property Name="course" Type="varchar" MaxLength="50" />
+          <Property Name="faculty" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Login">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="50" />
+          <Property Name="Password" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Role" Type="varchar" MaxLength="50" />
+          <Property Name="PId" Type="int" />
+        </EntityType>
+        <EntityType Name="offeredcourse">
+          <Key>
+            <PropertyRef Name="offid" />
+          </Key>
+          <Property Name="offid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="courseid" Type="int" />
+          <Property Name="secid" Type="int" />
+          <Property Name="teacherid" Type="int" />
+          <Property Name="students_count" Type="int" />
+        </EntityType>
+        <EntityType Name="Programs">
+          <Key>
+            <PropertyRef Name="PId" />
+          </Key>
+          <Property Name="PId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Program" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Requests">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="offid" Type="int" Nullable="false" />
+          <Property Name="teacherid" Type="int" Nullable="false" />
+          <Property Name="slotid" Type="int" />
+          <Property Name="CTID" Type="int" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="Reason" Type="varchar(max)" />
+          <Property Name="Status" Type="bit" />
+          <Property Name="occupied" Type="int" />
+          <Property Name="last_updated" Type="date" />
+        </EntityType>
+        <EntityType Name="room">
+          <Key>
+            <PropertyRef Name="roomid" />
+          </Key>
+          <Property Name="roomid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="roomno" Type="varchar" MaxLength="20" />
+          <Property Name="campus" Type="varchar" MaxLength="20" />
+          <Property Name="roomtype" Type="varchar" MaxLength="25" />
+          <Property Name="OrderCol" Type="int" />
+          <Property Name="capacity" Type="int" />
+        </EntityType>
+        <EntityType Name="schedule">
+          <Key>
+            <PropertyRef Name="schid" />
+          </Key>
+          <Property Name="schid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="offid" Type="int" />
+          <Property Name="slotid" Type="int" />
+          <Property Name="occupied" Type="int" />
+          <Property Name="StartDate" Type="date" />
+          <Property Name="EndDate" Type="date" />
+          <Property Name="CTId" Type="int" />
+          <Property Name="SId" Type="int" />
+        </EntityType>
+        <EntityType Name="section">
+          <Key>
+            <PropertyRef Name="secid" />
+          </Key>
+          <Property Name="secid" Type="int" Nullable="false" />
+          <Property Name="PId" Type="int" Nullable="false" />
+          <Property Name="ClassId" Type="int" Nullable="false" />
+          <Property Name="sectionname" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="STID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sectiondetails">
+          <Key>
+            <PropertyRef Name="sdid" />
+          </Key>
+          <Property Name="sdid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="offid" Type="int" />
+          <Property Name="secid" Type="int" />
+        </EntityType>
+        <EntityType Name="Semester">
+          <Key>
+            <PropertyRef Name="SId" />
+          </Key>
+          <Property Name="SId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="STID" Type="int" Nullable="false" />
+          <Property Name="SemesterStartDate" Type="date" Nullable="false" />
+          <Property Name="SemesterEndDate" Type="date" Nullable="false" />
+          <Property Name="Year" Type="varchar" MaxLength="6" Nullable="false" />
+          <Property Name="flag" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SemesterType">
+          <Key>
+            <PropertyRef Name="STID" />
+          </Key>
+          <Property Name="STID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SType" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="slots">
+          <Key>
+            <PropertyRef Name="slotid" />
+          </Key>
+          <Property Name="slotid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="dayid" Type="int" Nullable="false" />
+          <Property Name="slottypeid" Type="int" Nullable="false" />
+          <Property Name="roomid" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="slottype">
+          <Key>
+            <PropertyRef Name="slottypeid" />
+          </Key>
+          <Property Name="slottypeid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="duration" Type="varchar" MaxLength="50" />
+          <Property Name="ClassStartTime" Type="time" Precision="7" />
+          <Property Name="BreakDuration" Type="int" />
+          <Property Name="ClassEndTime" Type="time" Precision="7" />
+          <Property Name="slotno" Type="int" />
+          <Property Name="slottype" Type="int" />
+          <Property Name="subslot" Type="int" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="StudentId" />
+          </Key>
+          <Property Name="StudentId" Type="int" Nullable="false" />
+          <Property Name="StudentName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ATID" Type="int" Nullable="false" />
+          <Property Name="secid" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="teacher">
+          <Key>
+            <PropertyRef Name="teacherid" />
+          </Key>
+          <Property Name="teacherid" Type="int" Nullable="false" />
+          <Property Name="teachername" Type="varchar" MaxLength="50" />
+          <Property Name="Email" Type="varchar" MaxLength="50" />
+          <Property Name="Password" Type="varchar" MaxLength="50" />
+          <Property Name="ATID" Type="int" />
+          <Property Name="PId" Type="int" />
+        </EntityType>
+        <EntityType Name="WeekWise">
+          <Key>
+            <PropertyRef Name="WId" />
+          </Key>
+          <Property Name="WId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="schid" Type="int" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="Week_no" Type="int" />
+          <Property Name="ClassStarted" Type="time" Precision="7" />
+          <Property Name="BreakDuration" Type="int" />
+          <Property Name="ClassEnded" Type="time" Precision="7" />
+          <Property Name="CTId" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'C:\USERS\SHERYAR KHAN\PICTURES\SCHEDULING(LIVE) 17\SCHEDULING(LIVE)\SCHEDULING\SCHEDULING\APP_DATA\SCHEDULE.MDF.dbo.vAvailable' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vAvailable">
+          <Key>
+            <PropertyRef Name="slotid" />
+            <PropertyRef Name="slotname" />
+          </Key>
+          <Property Name="slotid" Type="int" Nullable="false" />
+          <Property Name="slotname" Type="varchar" MaxLength="98" Nullable="false" />
+          <Property Name="Occupied" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'C:\USERS\SHERYAR KHAN\PICTURES\SCHEDULING(LIVE) 17\SCHEDULING(LIVE)\SCHEDULING\SCHEDULING\APP_DATA\SCHEDULE.MDF.dbo.voffcourses' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="voffcourses">
+          <Key>
+            <PropertyRef Name="offid" />
+            <PropertyRef Name="courseid" />
+            <PropertyRef Name="secid" />
+            <PropertyRef Name="ClassId" />
+            <PropertyRef Name="sectionname" />
+            <PropertyRef Name="STID" />
+          </Key>
+          <Property Name="offid" Type="int" Nullable="false" />
+          <Property Name="courseid" Type="int" Nullable="false" />
+          <Property Name="secid" Type="int" Nullable="false" />
+          <Property Name="ClassId" Type="int" Nullable="false" />
+          <Property Name="teachername" Type="varchar" MaxLength="50" />
+          <Property Name="code" Type="varchar" MaxLength="15" />
+          <Property Name="title" Type="varchar" MaxLength="100" />
+          <Property Name="sectionname" Type="varchar" MaxLength="154" Nullable="false" />
+          <Property Name="STID" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'C:\USERS\SHERYAR KHAN\PICTURES\SCHEDULING(LIVE) 17\SCHEDULING(LIVE)\SCHEDULING\SCHEDULING\APP_DATA\SCHEDULE.MDF.dbo.voffCoursesWithSectionsandTeachers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="voffCoursesWithSectionsandTeachers">
+          <Key>
+            <PropertyRef Name="secid" />
+            <PropertyRef Name="offid" />
+            <PropertyRef Name="courseid" />
+            <PropertyRef Name="teacherid" />
+            <PropertyRef Name="program" />
+            <PropertyRef Name="class" />
+            <PropertyRef Name="sectionname" />
+            <PropertyRef Name="Section" />
+          </Key>
+          <Property Name="secid" Type="int" Nullable="false" />
+          <Property Name="offid" Type="int" Nullable="false" />
+          <Property Name="courseid" Type="int" Nullable="false" />
+          <Property Name="teacherid" Type="int" Nullable="false" />
+          <Property Name="program" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="class" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="sectionname" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="teachername" Type="varchar" MaxLength="50" />
+          <Property Name="Section" Type="varchar" MaxLength="152" Nullable="false" />
+          <Property Name="title" Type="varchar" MaxLength="100" />
+          <Property Name="StudentCount" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'C:\USERS\SHERYAR KHAN\PICTURES\SCHEDULING(LIVE) 17\SCHEDULING(LIVE)\SCHEDULING\SCHEDULING\APP_DATA\SCHEDULE.MDF.dbo.vschedule' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vschedule">
+          <Key>
+            <PropertyRef Name="schid" />
+            <PropertyRef Name="secid" />
+            <PropertyRef Name="sectionname" />
+            <PropertyRef Name="teacherid" />
+            <PropertyRef Name="dayid" />
+            <PropertyRef Name="slottypeid" />
+            <PropertyRef Name="roomid" />
+            <PropertyRef Name="subslotid" />
+            <PropertyRef Name="Year" />
+            <PropertyRef Name="flag" />
+            <PropertyRef Name="SemesterStartDate" />
+            <PropertyRef Name="SemesterEndDate" />
+            <PropertyRef Name="SType" />
+            <PropertyRef Name="PId" />
+            <PropertyRef Name="Program" />
+            <PropertyRef Name="ClassID" />
+            <PropertyRef Name="Class" />
+            <PropertyRef Name="section" />
+          </Key>
+          <Property Name="schid" Type="int" Nullable="false" />
+          <Property Name="offid" Type="int" />
+          <Property Name="slotid" Type="int" />
+          <Property Name="courseid" Type="int" />
+          <Property Name="secid" Type="int" Nullable="false" />
+          <Property Name="sectionname" Type="varchar" MaxLength="154" Nullable="false" />
+          <Property Name="occupied" Type="int" />
+          <Property Name="code" Type="varchar" MaxLength="15" />
+          <Property Name="title" Type="varchar" MaxLength="100" />
+          <Property Name="teacherid" Type="int" Nullable="false" />
+          <Property Name="teachername" Type="varchar" MaxLength="50" />
+          <Property Name="dayid" Type="int" Nullable="false" />
+          <Property Name="slottypeid" Type="int" Nullable="false" />
+          <Property Name="roomid" Type="int" Nullable="false" />
+          <Property Name="duration" Type="varchar" MaxLength="50" />
+          <Property Name="slotno" Type="int" />
+          <Property Name="subslotid" Type="int" Nullable="false" />
+          <Property Name="ClassStartTime" Type="time" Precision="7" />
+          <Property Name="BreakDuration" Type="int" />
+          <Property Name="ClassEndTime" Type="time" Precision="7" />
+          <Property Name="dayname" Type="varchar" MaxLength="20" />
+          <Property Name="roomno" Type="varchar" MaxLength="20" />
+          <Property Name="campus" Type="varchar" MaxLength="20" />
+          <Property Name="SchCTId" Type="int" />
+          <Property Name="startdate" Type="date" />
+          <Property Name="enddate" Type="date" />
+          <Property Name="Year" Type="varchar" MaxLength="6" Nullable="false" />
+          <Property Name="flag" Type="bit" Nullable="false" />
+          <Property Name="SemesterStartDate" Type="date" Nullable="false" />
+          <Property Name="SemesterEndDate" Type="date" Nullable="false" />
+          <Property Name="SType" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="SID" Type="int" />
+          <Property Name="PId" Type="int" Nullable="false" />
+          <Property Name="Program" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ClassID" Type="int" Nullable="false" />
+          <Property Name="Class" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="section" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'C:\USERS\SHERYAR KHAN\PICTURES\SCHEDULING(LIVE) 17\SCHEDULING(LIVE)\SCHEDULING\SCHEDULING\APP_DATA\SCHEDULE.MDF.dbo.vsections' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vsections">
+          <Key>
+            <PropertyRef Name="secid" />
+            <PropertyRef Name="program" />
+            <PropertyRef Name="class" />
+            <PropertyRef Name="sectionname" />
+            <PropertyRef Name="Section" />
+          </Key>
+          <Property Name="secid" Type="int" Nullable="false" />
+          <Property Name="program" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="class" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="sectionname" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Section" Type="varchar" MaxLength="152" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'C:\USERS\SHERYAR KHAN\PICTURES\SCHEDULING(LIVE) 17\SCHEDULING(LIVE)\SCHEDULING\SCHEDULING\APP_DATA\SCHEDULE.MDF.dbo.vslottype' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vslottype">
+          <Key>
+            <PropertyRef Name="slottypeid" />
+            <PropertyRef Name="subslotid" />
+          </Key>
+          <Property Name="slottypeid" Type="int" Nullable="false" />
+          <Property Name="duration" Type="varchar" MaxLength="50" />
+          <Property Name="ClassStartTime" Type="time" Precision="7" />
+          <Property Name="BreakDuration" Type="int" />
+          <Property Name="ClassEndTime" Type="time" Precision="7" />
+          <Property Name="slotno" Type="int" />
+          <Property Name="sort" Type="numeric" Precision="12" Scale="1" />
+          <Property Name="subslotid" Type="int" Nullable="false" />
+          <Property Name="occupied" Type="int" />
+        </EntityType>
+        <Association Name="FK__offeredco__cours__57FD0775">
+          <End Role="course" Type="Self.course" Multiplicity="0..1" />
+          <End Role="offeredcourse" Type="Self.offeredcourse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="course">
+              <PropertyRef Name="courseid" />
+            </Principal>
+            <Dependent Role="offeredcourse">
+              <PropertyRef Name="courseid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__offeredco__secid__5708E33C">
+          <End Role="section" Type="Self.section" Multiplicity="0..1" />
+          <End Role="offeredcourse" Type="Self.offeredcourse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="section">
+              <PropertyRef Name="secid" />
+            </Principal>
+            <Dependent Role="offeredcourse">
+              <PropertyRef Name="secid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__offeredco__teach__58F12BAE">
+          <End Role="teacher" Type="Self.teacher" Multiplicity="0..1" />
+          <End Role="offeredcourse" Type="Self.offeredcourse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="teacher">
+              <PropertyRef Name="teacherid" />
+            </Principal>
+            <Dependent Role="offeredcourse">
+              <PropertyRef Name="teacherid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__schedule__CTId__48CFD27E">
+          <End Role="ClassTypes" Type="Self.ClassTypes" Multiplicity="0..1" />
+          <End Role="schedule" Type="Self.schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClassTypes">
+              <PropertyRef Name="CTId" />
+            </Principal>
+            <Dependent Role="schedule">
+              <PropertyRef Name="CTId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__schedule__offid__542C7691">
+          <End Role="offeredcourse" Type="Self.offeredcourse" Multiplicity="0..1" />
+          <End Role="schedule" Type="Self.schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="offeredcourse">
+              <PropertyRef Name="offid" />
+            </Principal>
+            <Dependent Role="schedule">
+              <PropertyRef Name="offid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__schedule__slotid__46E78A0C">
+          <End Role="slots" Type="Self.slots" Multiplicity="0..1" />
+          <End Role="schedule" Type="Self.schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="slots">
+              <PropertyRef Name="slotid" />
+            </Principal>
+            <Dependent Role="schedule">
+              <PropertyRef Name="slotid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__sectionde__offid__55209ACA">
+          <End Role="offeredcourse" Type="Self.offeredcourse" Multiplicity="0..1" />
+          <End Role="sectiondetails" Type="Self.sectiondetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="offeredcourse">
+              <PropertyRef Name="offid" />
+            </Principal>
+            <Dependent Role="sectiondetails">
+              <PropertyRef Name="offid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__slots__dayid__4BAC3F29">
+          <End Role="days" Type="Self.days" Multiplicity="1" />
+          <End Role="slots" Type="Self.slots" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="days">
+              <PropertyRef Name="dayid" />
+            </Principal>
+            <Dependent Role="slots">
+              <PropertyRef Name="dayid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__slots__roomid__4CA06362">
+          <End Role="room" Type="Self.room" Multiplicity="1" />
+          <End Role="slots" Type="Self.slots" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="room">
+              <PropertyRef Name="roomid" />
+            </Principal>
+            <Dependent Role="slots">
+              <PropertyRef Name="roomid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__slots__slottypei__37C5420D">
+          <End Role="slottype" Type="Self.slottype" Multiplicity="1" />
+          <End Role="slots" Type="Self.slots" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="slottype">
+              <PropertyRef Name="slottypeid" />
+            </Principal>
+            <Dependent Role="slots">
+              <PropertyRef Name="slottypeid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__WeekWise__CTId__4E88ABD4">
+          <End Role="ClassTypes" Type="Self.ClassTypes" Multiplicity="1" />
+          <End Role="WeekWise" Type="Self.WeekWise" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClassTypes">
+              <PropertyRef Name="CTId" />
+            </Principal>
+            <Dependent Role="WeekWise">
+              <PropertyRef Name="CTId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__WeekWise__schid__4D94879B">
+          <End Role="schedule" Type="Self.schedule" Multiplicity="1" />
+          <End Role="WeekWise" Type="Self.WeekWise" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="schedule">
+              <PropertyRef Name="schid" />
+            </Principal>
+            <Dependent Role="WeekWise">
+              <PropertyRef Name="schid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Admin">
+          <End Role="AccountType" Type="Self.AccountType" Multiplicity="1" />
+          <End Role="Academic" Type="Self.Academic" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountType">
+              <PropertyRef Name="ATID" />
+            </Principal>
+            <Dependent Role="Academic">
+              <PropertyRef Name="ATID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Login">
+          <End Role="Programs" Type="Self.Programs" Multiplicity="0..1" />
+          <End Role="Login" Type="Self.Login" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programs">
+              <PropertyRef Name="PId" />
+            </Principal>
+            <Dependent Role="Login">
+              <PropertyRef Name="PId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Requests">
+          <End Role="offeredcourse" Type="Self.offeredcourse" Multiplicity="1" />
+          <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="offeredcourse">
+              <PropertyRef Name="offid" />
+            </Principal>
+            <Dependent Role="Requests">
+              <PropertyRef Name="offid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Requests1">
+          <End Role="teacher" Type="Self.teacher" Multiplicity="1" />
+          <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="teacher">
+              <PropertyRef Name="teacherid" />
+            </Principal>
+            <Dependent Role="Requests">
+              <PropertyRef Name="teacherid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Requests2">
+          <End Role="slots" Type="Self.slots" Multiplicity="0..1" />
+          <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="slots">
+              <PropertyRef Name="slotid" />
+            </Principal>
+            <Dependent Role="Requests">
+              <PropertyRef Name="slotid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Requests3">
+          <End Role="ClassTypes" Type="Self.ClassTypes" Multiplicity="1" />
+          <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClassTypes">
+              <PropertyRef Name="CTId" />
+            </Principal>
+            <Dependent Role="Requests">
+              <PropertyRef Name="CTID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_schedule">
+          <End Role="Semester" Type="Self.Semester" Multiplicity="0..1" />
+          <End Role="schedule" Type="Self.schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Semester">
+              <PropertyRef Name="SId" />
+            </Principal>
+            <Dependent Role="schedule">
+              <PropertyRef Name="SId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_sec">
+          <End Role="SemesterType" Type="Self.SemesterType" Multiplicity="1" />
+          <End Role="section" Type="Self.section" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SemesterType">
+              <PropertyRef Name="STID" />
+            </Principal>
+            <Dependent Role="section">
+              <PropertyRef Name="STID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_sec1">
+          <End Role="Programs" Type="Self.Programs" Multiplicity="1" />
+          <End Role="section" Type="Self.section" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programs">
+              <PropertyRef Name="PId" />
+            </Principal>
+            <Dependent Role="section">
+              <PropertyRef Name="PId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_sec2">
+          <End Role="Class" Type="Self.Class" Multiplicity="1" />
+          <End Role="section" Type="Self.section" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Class">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="section">
+              <PropertyRef Name="ClassId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Semester">
+          <End Role="SemesterType" Type="Self.SemesterType" Multiplicity="1" />
+          <End Role="Semester" Type="Self.Semester" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SemesterType">
+              <PropertyRef Name="STID" />
+            </Principal>
+            <Dependent Role="Semester">
+              <PropertyRef Name="STID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Student">
+          <End Role="AccountType" Type="Self.AccountType" Multiplicity="1" />
+          <End Role="Student" Type="Self.Student" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountType">
+              <PropertyRef Name="ATID" />
+            </Principal>
+            <Dependent Role="Student">
+              <PropertyRef Name="ATID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Student1">
+          <End Role="section" Type="Self.section" Multiplicity="1" />
+          <End Role="Student" Type="Self.Student" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="section">
+              <PropertyRef Name="secid" />
+            </Principal>
+            <Dependent Role="Student">
+              <PropertyRef Name="secid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_teacher">
+          <End Role="AccountType" Type="Self.AccountType" Multiplicity="0..1" />
+          <End Role="teacher" Type="Self.teacher" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountType">
+              <PropertyRef Name="ATID" />
+            </Principal>
+            <Dependent Role="teacher">
+              <PropertyRef Name="ATID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_teacher1">
+          <End Role="Programs" Type="Self.Programs" Multiplicity="0..1" />
+          <End Role="teacher" Type="Self.teacher" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programs">
+              <PropertyRef Name="PId" />
+            </Principal>
+            <Dependent Role="teacher">
+              <PropertyRef Name="PId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="CurrentClasses" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="dayid" Type="int" Mode="In" />
+          <Parameter Name="slottypeid" Type="int" Mode="In" />
+          <Parameter Name="currdate" Type="varchar" Mode="In" />
+          <Parameter Name="startdate" Type="varchar" Mode="In" />
+          <Parameter Name="enddate" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="EmptyRooms" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="dayid" Type="int" Mode="In" />
+          <Parameter Name="slottypeid" Type="int" Mode="In" />
+          <Parameter Name="startdate" Type="varchar" Mode="In" />
+          <Parameter Name="enddate" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="EmptyRoomsCountByDay" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="startdate" Type="varchar" Mode="In" />
+          <Parameter Name="enddate" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="EmptyRoomsProc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="dayid" Type="int" Mode="In" />
+          <Parameter Name="campus" Type="varchar" Mode="In" />
+          <Parameter Name="slottypeid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetTeacherId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="offid" Type="int" Mode="In" />
+          <Parameter Name="startdate" Type="varchar" Mode="In" />
+          <Parameter Name="enddate" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="MonitoringByOffId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="offid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="PMEmptyRooms" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="dayid" Type="int" Mode="In" />
+          <Parameter Name="slottypeid" Type="int" Mode="In" />
+          <Parameter Name="startdate" Type="varchar" Mode="In" />
+          <Parameter Name="enddate" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="SchedulingStoreContainer">
+          <EntitySet Name="Academic" EntityType="Self.Academic" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AccountType" EntityType="Self.AccountType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Class" EntityType="Self.Class" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ClassTypes" EntityType="Self.ClassTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="course" EntityType="Self.course" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="days" EntityType="Self.days" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DEMO" EntityType="Self.DEMO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Login" EntityType="Self.Login" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="offeredcourse" EntityType="Self.offeredcourse" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Programs" EntityType="Self.Programs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Requests" EntityType="Self.Requests" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="room" EntityType="Self.room" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="schedule" EntityType="Self.schedule" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="section" EntityType="Self.section" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sectiondetails" EntityType="Self.sectiondetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Semester" EntityType="Self.Semester" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SemesterType" EntityType="Self.SemesterType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="slots" EntityType="Self.slots" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="slottype" EntityType="Self.slottype" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="teacher" EntityType="Self.teacher" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WeekWise" EntityType="Self.WeekWise" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="vAvailable" EntityType="Self.vAvailable" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vAvailable].[slotid] AS [slotid], 
+    [vAvailable].[slotname] AS [slotname], 
+    [vAvailable].[Occupied] AS [Occupied]
+    FROM [dbo].[vAvailable] AS [vAvailable]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="voffcourses" EntityType="Self.voffcourses" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [voffcourses].[offid] AS [offid], 
+    [voffcourses].[courseid] AS [courseid], 
+    [voffcourses].[secid] AS [secid], 
+    [voffcourses].[ClassId] AS [ClassId], 
+    [voffcourses].[teachername] AS [teachername], 
+    [voffcourses].[code] AS [code], 
+    [voffcourses].[title] AS [title], 
+    [voffcourses].[sectionname] AS [sectionname], 
+    [voffcourses].[STID] AS [STID]
+    FROM [dbo].[voffcourses] AS [voffcourses]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="voffCoursesWithSectionsandTeachers" EntityType="Self.voffCoursesWithSectionsandTeachers" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [voffCoursesWithSectionsandTeachers].[secid] AS [secid], 
+    [voffCoursesWithSectionsandTeachers].[offid] AS [offid], 
+    [voffCoursesWithSectionsandTeachers].[courseid] AS [courseid], 
+    [voffCoursesWithSectionsandTeachers].[teacherid] AS [teacherid], 
+    [voffCoursesWithSectionsandTeachers].[program] AS [program], 
+    [voffCoursesWithSectionsandTeachers].[class] AS [class], 
+    [voffCoursesWithSectionsandTeachers].[sectionname] AS [sectionname], 
+    [voffCoursesWithSectionsandTeachers].[teachername] AS [teachername], 
+    [voffCoursesWithSectionsandTeachers].[Section] AS [Section], 
+    [voffCoursesWithSectionsandTeachers].[title] AS [title], 
+    [voffCoursesWithSectionsandTeachers].[StudentCount] AS [StudentCount]
+    FROM [dbo].[voffCoursesWithSectionsandTeachers] AS [voffCoursesWithSectionsandTeachers]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vschedule" EntityType="Self.vschedule" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vschedule].[schid] AS [schid], 
+    [vschedule].[offid] AS [offid], 
+    [vschedule].[slotid] AS [slotid], 
+    [vschedule].[courseid] AS [courseid], 
+    [vschedule].[secid] AS [secid], 
+    [vschedule].[sectionname] AS [sectionname], 
+    [vschedule].[occupied] AS [occupied], 
+    [vschedule].[code] AS [code], 
+    [vschedule].[title] AS [title], 
+    [vschedule].[teacherid] AS [teacherid], 
+    [vschedule].[teachername] AS [teachername], 
+    [vschedule].[dayid] AS [dayid], 
+    [vschedule].[slottypeid] AS [slottypeid], 
+    [vschedule].[roomid] AS [roomid], 
+    [vschedule].[duration] AS [duration], 
+    [vschedule].[slotno] AS [slotno], 
+    [vschedule].[subslotid] AS [subslotid], 
+    [vschedule].[ClassStartTime] AS [ClassStartTime], 
+    [vschedule].[BreakDuration] AS [BreakDuration], 
+    [vschedule].[ClassEndTime] AS [ClassEndTime], 
+    [vschedule].[dayname] AS [dayname], 
+    [vschedule].[roomno] AS [roomno], 
+    [vschedule].[campus] AS [campus], 
+    [vschedule].[SchCTId] AS [SchCTId], 
+    [vschedule].[startdate] AS [startdate], 
+    [vschedule].[enddate] AS [enddate], 
+    [vschedule].[Year] AS [Year], 
+    [vschedule].[flag] AS [flag], 
+    [vschedule].[SemesterStartDate] AS [SemesterStartDate], 
+    [vschedule].[SemesterEndDate] AS [SemesterEndDate], 
+    [vschedule].[SType] AS [SType], 
+    [vschedule].[SID] AS [SID], 
+    [vschedule].[PId] AS [PId], 
+    [vschedule].[Program] AS [Program], 
+    [vschedule].[ClassID] AS [ClassID], 
+    [vschedule].[Class] AS [Class], 
+    [vschedule].[section] AS [section]
+    FROM [dbo].[vschedule] AS [vschedule]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vsections" EntityType="Self.vsections" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vsections].[secid] AS [secid], 
+    [vsections].[program] AS [program], 
+    [vsections].[class] AS [class], 
+    [vsections].[sectionname] AS [sectionname], 
+    [vsections].[Section] AS [Section]
+    FROM [dbo].[vsections] AS [vsections]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vslottype" EntityType="Self.vslottype" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vslottype].[slottypeid] AS [slottypeid], 
+    [vslottype].[duration] AS [duration], 
+    [vslottype].[ClassStartTime] AS [ClassStartTime], 
+    [vslottype].[BreakDuration] AS [BreakDuration], 
+    [vslottype].[ClassEndTime] AS [ClassEndTime], 
+    [vslottype].[slotno] AS [slotno], 
+    [vslottype].[sort] AS [sort], 
+    [vslottype].[subslotid] AS [subslotid], 
+    [vslottype].[occupied] AS [occupied]
+    FROM [dbo].[vslottype] AS [vslottype]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__offeredco__cours__57FD0775" Association="Self.FK__offeredco__cours__57FD0775">
+            <End Role="course" EntitySet="course" />
+            <End Role="offeredcourse" EntitySet="offeredcourse" />
+          </AssociationSet>
+          <AssociationSet Name="FK__offeredco__secid__5708E33C" Association="Self.FK__offeredco__secid__5708E33C">
+            <End Role="section" EntitySet="section" />
+            <End Role="offeredcourse" EntitySet="offeredcourse" />
+          </AssociationSet>
+          <AssociationSet Name="FK__offeredco__teach__58F12BAE" Association="Self.FK__offeredco__teach__58F12BAE">
+            <End Role="teacher" EntitySet="teacher" />
+            <End Role="offeredcourse" EntitySet="offeredcourse" />
+          </AssociationSet>
+          <AssociationSet Name="FK__schedule__CTId__48CFD27E" Association="Self.FK__schedule__CTId__48CFD27E">
+            <End Role="ClassTypes" EntitySet="ClassTypes" />
+            <End Role="schedule" EntitySet="schedule" />
+          </AssociationSet>
+          <AssociationSet Name="FK__schedule__offid__542C7691" Association="Self.FK__schedule__offid__542C7691">
+            <End Role="offeredcourse" EntitySet="offeredcourse" />
+            <End Role="schedule" EntitySet="schedule" />
+          </AssociationSet>
+          <AssociationSet Name="FK__schedule__slotid__46E78A0C" Association="Self.FK__schedule__slotid__46E78A0C">
+            <End Role="slots" EntitySet="slots" />
+            <End Role="schedule" EntitySet="schedule" />
+          </AssociationSet>
+          <AssociationSet Name="FK__sectionde__offid__55209ACA" Association="Self.FK__sectionde__offid__55209ACA">
+            <End Role="offeredcourse" EntitySet="offeredcourse" />
+            <End Role="sectiondetails" EntitySet="sectiondetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__slots__dayid__4BAC3F29" Association="Self.FK__slots__dayid__4BAC3F29">
+            <End Role="days" EntitySet="days" />
+            <End Role="slots" EntitySet="slots" />
+          </AssociationSet>
+          <AssociationSet Name="FK__slots__roomid__4CA06362" Association="Self.FK__slots__roomid__4CA06362">
+            <End Role="room" EntitySet="room" />
+            <End Role="slots" EntitySet="slots" />
+          </AssociationSet>
+          <AssociationSet Name="FK__slots__slottypei__37C5420D" Association="Self.FK__slots__slottypei__37C5420D">
+            <End Role="slottype" EntitySet="slottype" />
+            <End Role="slots" EntitySet="slots" />
+          </AssociationSet>
+          <AssociationSet Name="FK__WeekWise__CTId__4E88ABD4" Association="Self.FK__WeekWise__CTId__4E88ABD4">
+            <End Role="ClassTypes" EntitySet="ClassTypes" />
+            <End Role="WeekWise" EntitySet="WeekWise" />
+          </AssociationSet>
+          <AssociationSet Name="FK__WeekWise__schid__4D94879B" Association="Self.FK__WeekWise__schid__4D94879B">
+            <End Role="schedule" EntitySet="schedule" />
+            <End Role="WeekWise" EntitySet="WeekWise" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Admin" Association="Self.FK_Admin">
+            <End Role="AccountType" EntitySet="AccountType" />
+            <End Role="Academic" EntitySet="Academic" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Login" Association="Self.FK_Login">
+            <End Role="Programs" EntitySet="Programs" />
+            <End Role="Login" EntitySet="Login" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requests" Association="Self.FK_Requests">
+            <End Role="offeredcourse" EntitySet="offeredcourse" />
+            <End Role="Requests" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requests1" Association="Self.FK_Requests1">
+            <End Role="teacher" EntitySet="teacher" />
+            <End Role="Requests" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requests2" Association="Self.FK_Requests2">
+            <End Role="slots" EntitySet="slots" />
+            <End Role="Requests" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requests3" Association="Self.FK_Requests3">
+            <End Role="ClassTypes" EntitySet="ClassTypes" />
+            <End Role="Requests" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_schedule" Association="Self.FK_schedule">
+            <End Role="Semester" EntitySet="Semester" />
+            <End Role="schedule" EntitySet="schedule" />
+          </AssociationSet>
+          <AssociationSet Name="FK_sec" Association="Self.FK_sec">
+            <End Role="SemesterType" EntitySet="SemesterType" />
+            <End Role="section" EntitySet="section" />
+          </AssociationSet>
+          <AssociationSet Name="FK_sec1" Association="Self.FK_sec1">
+            <End Role="Programs" EntitySet="Programs" />
+            <End Role="section" EntitySet="section" />
+          </AssociationSet>
+          <AssociationSet Name="FK_sec2" Association="Self.FK_sec2">
+            <End Role="Class" EntitySet="Class" />
+            <End Role="section" EntitySet="section" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Semester" Association="Self.FK_Semester">
+            <End Role="SemesterType" EntitySet="SemesterType" />
+            <End Role="Semester" EntitySet="Semester" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Student" Association="Self.FK_Student">
+            <End Role="AccountType" EntitySet="AccountType" />
+            <End Role="Student" EntitySet="Student" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Student1" Association="Self.FK_Student1">
+            <End Role="section" EntitySet="section" />
+            <End Role="Student" EntitySet="Student" />
+          </AssociationSet>
+          <AssociationSet Name="FK_teacher" Association="Self.FK_teacher">
+            <End Role="AccountType" EntitySet="AccountType" />
+            <End Role="teacher" EntitySet="teacher" />
+          </AssociationSet>
+          <AssociationSet Name="FK_teacher1" Association="Self.FK_teacher1">
+            <End Role="Programs" EntitySet="Programs" />
+            <End Role="teacher" EntitySet="teacher" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Scheduling" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Academic">
+          <Key>
+            <PropertyRef Name="AdminId" />
+          </Key>
+          <Property Name="AdminId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ATID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AccountType" Relationship="Self.FK_Admin" FromRole="Academic" ToRole="AccountType" />
+        </EntityType>
+        <EntityType Name="AccountType">
+          <Key>
+            <PropertyRef Name="ATID" />
+          </Key>
+          <Property Name="ATID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Academics" Relationship="Self.FK_Admin" FromRole="AccountType" ToRole="Academic" />
+          <NavigationProperty Name="Students" Relationship="Self.FK_Student" FromRole="AccountType" ToRole="Student" />
+          <NavigationProperty Name="teachers" Relationship="Self.FK_teacher" FromRole="AccountType" ToRole="teacher" />
+        </EntityType>
+        <EntityType Name="Class">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Class1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="sections" Relationship="Self.FK_sec2" FromRole="Class" ToRole="section" />
+        </EntityType>
+        <EntityType Name="ClassType">
+          <Key>
+            <PropertyRef Name="CTId" />
+          </Key>
+          <Property Name="CTId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="schedules" Relationship="Self.FK__schedule__CTId__48CFD27E" FromRole="ClassTypes" ToRole="schedule" />
+          <NavigationProperty Name="WeekWises" Relationship="Self.FK__WeekWise__CTId__4E88ABD4" FromRole="ClassTypes" ToRole="WeekWise" />
+          <NavigationProperty Name="Requests" Relationship="Self.FK_Requests3" FromRole="ClassTypes" ToRole="Requests" />
+        </EntityType>
+        <EntityType Name="course">
+          <Key>
+            <PropertyRef Name="courseid" />
+          </Key>
+          <Property Name="courseid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="code" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="title" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="hours" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="abbrev" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="offeredcourses" Relationship="Self.FK__offeredco__cours__57FD0775" FromRole="course" ToRole="offeredcourse" />
+        </EntityType>
+        <EntityType Name="day">
+          <Key>
+            <PropertyRef Name="dayid" />
+          </Key>
+          <Property Name="dayid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dayname" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="slots" Relationship="Self.FK__slots__dayid__4BAC3F29" FromRole="days" ToRole="slots" />
+        </EntityType>
+        <EntityType Name="DEMO">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="seq" Type="Int32" Nullable="false" />
+          <Property Name="sec" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="course" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="faculty" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Login">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PId" Type="Int32" />
+          <NavigationProperty Name="Program" Relationship="Self.FK_Login" FromRole="Login" ToRole="Programs" />
+        </EntityType>
+        <EntityType Name="offeredcourse">
+          <Key>
+            <PropertyRef Name="offid" />
+          </Key>
+          <Property Name="offid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="courseid" Type="Int32" />
+          <Property Name="secid" Type="Int32" />
+          <Property Name="teacherid" Type="Int32" />
+          <Property Name="students_count" Type="Int32" />
+          <NavigationProperty Name="course" Relationship="Self.FK__offeredco__cours__57FD0775" FromRole="offeredcourse" ToRole="course" />
+          <NavigationProperty Name="section" Relationship="Self.FK__offeredco__secid__5708E33C" FromRole="offeredcourse" ToRole="section" />
+          <NavigationProperty Name="teacher" Relationship="Self.FK__offeredco__teach__58F12BAE" FromRole="offeredcourse" ToRole="teacher" />
+          <NavigationProperty Name="schedules" Relationship="Self.FK__schedule__offid__542C7691" FromRole="offeredcourse" ToRole="schedule" />
+          <NavigationProperty Name="sectiondetails" Relationship="Self.FK__sectionde__offid__55209ACA" FromRole="offeredcourse" ToRole="sectiondetails" />
+          <NavigationProperty Name="Requests" Relationship="Self.FK_Requests" FromRole="offeredcourse" ToRole="Requests" />
+        </EntityType>
+        <EntityType Name="Program">
+          <Key>
+            <PropertyRef Name="PId" />
+          </Key>
+          <Property Name="PId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Program1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Logins" Relationship="Self.FK_Login" FromRole="Programs" ToRole="Login" />
+          <NavigationProperty Name="sections" Relationship="Self.FK_sec1" FromRole="Programs" ToRole="section" />
+          <NavigationProperty Name="teachers" Relationship="Self.FK_teacher1" FromRole="Programs" ToRole="teacher" />
+        </EntityType>
+        <EntityType Name="Request">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="offid" Type="Int32" Nullable="false" />
+          <Property Name="teacherid" Type="Int32" Nullable="false" />
+          <Property Name="slotid" Type="Int32" />
+          <Property Name="CTID" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Reason" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="Boolean" />
+          <Property Name="occupied" Type="Int32" />
+          <Property Name="last_updated" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="ClassType" Relationship="Self.FK_Requests3" FromRole="Requests" ToRole="ClassTypes" />
+          <NavigationProperty Name="offeredcourse" Relationship="Self.FK_Requests" FromRole="Requests" ToRole="offeredcourse" />
+          <NavigationProperty Name="teacher" Relationship="Self.FK_Requests1" FromRole="Requests" ToRole="teacher" />
+          <NavigationProperty Name="slot" Relationship="Self.FK_Requests2" FromRole="Requests" ToRole="slots" />
+        </EntityType>
+        <EntityType Name="room">
+          <Key>
+            <PropertyRef Name="roomid" />
+          </Key>
+          <Property Name="roomid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="roomno" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="campus" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="roomtype" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="OrderCol" Type="Int32" />
+          <Property Name="capacity" Type="Int32" />
+          <NavigationProperty Name="slots" Relationship="Self.FK__slots__roomid__4CA06362" FromRole="room" ToRole="slots" />
+        </EntityType>
+        <EntityType Name="schedule">
+          <Key>
+            <PropertyRef Name="schid" />
+          </Key>
+          <Property Name="schid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="offid" Type="Int32" />
+          <Property Name="slotid" Type="Int32" />
+          <Property Name="occupied" Type="Int32" />
+          <Property Name="StartDate" Type="DateTime" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Precision="0" />
+          <Property Name="CTId" Type="Int32" />
+          <Property Name="SId" Type="Int32" />
+          <NavigationProperty Name="ClassType" Relationship="Self.FK__schedule__CTId__48CFD27E" FromRole="schedule" ToRole="ClassTypes" />
+          <NavigationProperty Name="offeredcourse" Relationship="Self.FK__schedule__offid__542C7691" FromRole="schedule" ToRole="offeredcourse" />
+          <NavigationProperty Name="slot" Relationship="Self.FK__schedule__slotid__46E78A0C" FromRole="schedule" ToRole="slots" />
+          <NavigationProperty Name="WeekWises" Relationship="Self.FK__WeekWise__schid__4D94879B" FromRole="schedule" ToRole="WeekWise" />
+          <NavigationProperty Name="Semester" Relationship="Self.FK_schedule" FromRole="schedule" ToRole="Semester" />
+        </EntityType>
+        <EntityType Name="section">
+          <Key>
+            <PropertyRef Name="secid" />
+          </Key>
+          <Property Name="secid" Type="Int32" Nullable="false" />
+          <Property Name="PId" Type="Int32" Nullable="false" />
+          <Property Name="ClassId" Type="Int32" Nullable="false" />
+          <Property Name="sectionname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="STID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Class" Relationship="Self.FK_sec2" FromRole="section" ToRole="Class" />
+          <NavigationProperty Name="offeredcourses" Relationship="Self.FK__offeredco__secid__5708E33C" FromRole="section" ToRole="offeredcourse" />
+          <NavigationProperty Name="Program" Relationship="Self.FK_sec1" FromRole="section" ToRole="Programs" />
+          <NavigationProperty Name="SemesterType" Relationship="Self.FK_sec" FromRole="section" ToRole="SemesterType" />
+          <NavigationProperty Name="Students" Relationship="Self.FK_Student1" FromRole="section" ToRole="Student" />
+        </EntityType>
+        <EntityType Name="sectiondetail">
+          <Key>
+            <PropertyRef Name="sdid" />
+          </Key>
+          <Property Name="sdid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="offid" Type="Int32" />
+          <Property Name="secid" Type="Int32" />
+          <NavigationProperty Name="offeredcourse" Relationship="Self.FK__sectionde__offid__55209ACA" FromRole="sectiondetails" ToRole="offeredcourse" />
+        </EntityType>
+        <EntityType Name="Semester">
+          <Key>
+            <PropertyRef Name="SId" />
+          </Key>
+          <Property Name="SId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="STID" Type="Int32" Nullable="false" />
+          <Property Name="SemesterStartDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="SemesterEndDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Year" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="flag" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="schedules" Relationship="Self.FK_schedule" FromRole="Semester" ToRole="schedule" />
+          <NavigationProperty Name="SemesterType" Relationship="Self.FK_Semester" FromRole="Semester" ToRole="SemesterType" />
+        </EntityType>
+        <EntityType Name="SemesterType">
+          <Key>
+            <PropertyRef Name="STID" />
+          </Key>
+          <Property Name="STID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SType" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="sections" Relationship="Self.FK_sec" FromRole="SemesterType" ToRole="section" />
+          <NavigationProperty Name="Semesters" Relationship="Self.FK_Semester" FromRole="SemesterType" ToRole="Semester" />
+        </EntityType>
+        <EntityType Name="slot">
+          <Key>
+            <PropertyRef Name="slotid" />
+          </Key>
+          <Property Name="slotid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dayid" Type="Int32" Nullable="false" />
+          <Property Name="slottypeid" Type="Int32" Nullable="false" />
+          <Property Name="roomid" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="day" Relationship="Self.FK__slots__dayid__4BAC3F29" FromRole="slots" ToRole="days" />
+          <NavigationProperty Name="Requests" Relationship="Self.FK_Requests2" FromRole="slots" ToRole="Requests" />
+          <NavigationProperty Name="room" Relationship="Self.FK__slots__roomid__4CA06362" FromRole="slots" ToRole="room" />
+          <NavigationProperty Name="schedules" Relationship="Self.FK__schedule__slotid__46E78A0C" FromRole="slots" ToRole="schedule" />
+          <NavigationProperty Name="slottype" Relationship="Self.FK__slots__slottypei__37C5420D" FromRole="slots" ToRole="slottype" />
+        </EntityType>
+        <EntityType Name="slottype">
+          <Key>
+            <PropertyRef Name="slottypeid" />
+          </Key>
+          <Property Name="slottypeid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="duration" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ClassStartTime" Type="Time" Precision="7" />
+          <Property Name="BreakDuration" Type="Int32" />
+          <Property Name="ClassEndTime" Type="Time" Precision="7" />
+          <Property Name="slotno" Type="Int32" />
+          <Property Name="slottype1" Type="Int32" />
+          <Property Name="subslot" Type="Int32" />
+          <NavigationProperty Name="slots" Relationship="Self.FK__slots__slottypei__37C5420D" FromRole="slottype" ToRole="slots" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="StudentId" />
+          </Key>
+          <Property Name="StudentId" Type="Int32" Nullable="false" />
+          <Property Name="StudentName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ATID" Type="Int32" Nullable="false" />
+          <Property Name="secid" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AccountType" Relationship="Self.FK_Student" FromRole="Student" ToRole="AccountType" />
+          <NavigationProperty Name="section" Relationship="Self.FK_Student1" FromRole="Student" ToRole="section" />
+        </EntityType>
+        <EntityType Name="teacher">
+          <Key>
+            <PropertyRef Name="teacherid" />
+          </Key>
+          <Property Name="teacherid" Type="Int32" Nullable="false" />
+          <Property Name="teachername" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ATID" Type="Int32" />
+          <Property Name="PId" Type="Int32" />
+          <NavigationProperty Name="AccountType" Relationship="Self.FK_teacher" FromRole="teacher" ToRole="AccountType" />
+          <NavigationProperty Name="offeredcourses" Relationship="Self.FK__offeredco__teach__58F12BAE" FromRole="teacher" ToRole="offeredcourse" />
+          <NavigationProperty Name="Program" Relationship="Self.FK_teacher1" FromRole="teacher" ToRole="Programs" />
+          <NavigationProperty Name="Requests" Relationship="Self.FK_Requests1" FromRole="teacher" ToRole="Requests" />
+        </EntityType>
+        <EntityType Name="WeekWise">
+          <Key>
+            <PropertyRef Name="WId" />
+          </Key>
+          <Property Name="WId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="schid" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Week_no" Type="Int32" />
+          <Property Name="ClassStarted" Type="Time" Precision="7" />
+          <Property Name="BreakDuration" Type="Int32" />
+          <Property Name="ClassEnded" Type="Time" Precision="7" />
+          <Property Name="CTId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ClassType" Relationship="Self.FK__WeekWise__CTId__4E88ABD4" FromRole="WeekWise" ToRole="ClassTypes" />
+          <NavigationProperty Name="schedule" Relationship="Self.FK__WeekWise__schid__4D94879B" FromRole="WeekWise" ToRole="schedule" />
+        </EntityType>
+        <EntityType Name="vAvailable">
+          <Key>
+            <PropertyRef Name="slotid" />
+            <PropertyRef Name="slotname" />
+          </Key>
+          <Property Name="slotid" Type="Int32" Nullable="false" />
+          <Property Name="slotname" Type="String" MaxLength="98" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Occupied" Type="Int32" />
+        </EntityType>
+        <EntityType Name="voffcours">
+          <Key>
+            <PropertyRef Name="offid" />
+            <PropertyRef Name="courseid" />
+            <PropertyRef Name="secid" />
+            <PropertyRef Name="ClassId" />
+            <PropertyRef Name="sectionname" />
+            <PropertyRef Name="STID" />
+          </Key>
+          <Property Name="offid" Type="Int32" Nullable="false" />
+          <Property Name="courseid" Type="Int32" Nullable="false" />
+          <Property Name="secid" Type="Int32" Nullable="false" />
+          <Property Name="ClassId" Type="Int32" Nullable="false" />
+          <Property Name="teachername" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="code" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="title" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="sectionname" Type="String" MaxLength="154" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="STID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="voffCoursesWithSectionsandTeacher">
+          <Key>
+            <PropertyRef Name="secid" />
+            <PropertyRef Name="offid" />
+            <PropertyRef Name="courseid" />
+            <PropertyRef Name="teacherid" />
+            <PropertyRef Name="program" />
+            <PropertyRef Name="class" />
+            <PropertyRef Name="sectionname" />
+            <PropertyRef Name="Section" />
+          </Key>
+          <Property Name="secid" Type="Int32" Nullable="false" />
+          <Property Name="offid" Type="Int32" Nullable="false" />
+          <Property Name="courseid" Type="Int32" Nullable="false" />
+          <Property Name="teacherid" Type="Int32" Nullable="false" />
+          <Property Name="program" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="class" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="sectionname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="teachername" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Section" Type="String" MaxLength="152" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="title" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="StudentCount" Type="Int32" />
+        </EntityType>
+        <EntityType Name="vschedule">
+          <Key>
+            <PropertyRef Name="schid" />
+            <PropertyRef Name="secid" />
+            <PropertyRef Name="sectionname" />
+            <PropertyRef Name="teacherid" />
+            <PropertyRef Name="dayid" />
+            <PropertyRef Name="slottypeid" />
+            <PropertyRef Name="roomid" />
+            <PropertyRef Name="subslotid" />
+            <PropertyRef Name="Year" />
+            <PropertyRef Name="flag" />
+            <PropertyRef Name="SemesterStartDate" />
+            <PropertyRef Name="SemesterEndDate" />
+            <PropertyRef Name="SType" />
+            <PropertyRef Name="PId" />
+            <PropertyRef Name="Program" />
+            <PropertyRef Name="ClassID" />
+            <PropertyRef Name="Class" />
+            <PropertyRef Name="section" />
+          </Key>
+          <Property Name="schid" Type="Int32" Nullable="false" />
+          <Property Name="offid" Type="Int32" />
+          <Property Name="slotid" Type="Int32" />
+          <Property Name="courseid" Type="Int32" />
+          <Property Name="secid" Type="Int32" Nullable="false" />
+          <Property Name="sectionname" Type="String" MaxLength="154" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="occupied" Type="Int32" />
+          <Property Name="code" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="title" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="teacherid" Type="Int32" Nullable="false" />
+          <Property Name="teachername" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="dayid" Type="Int32" Nullable="false" />
+          <Property Name="slottypeid" Type="Int32" Nullable="false" />
+          <Property Name="roomid" Type="Int32" Nullable="false" />
+          <Property Name="duration" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="slotno" Type="Int32" />
+          <Property Name="subslotid" Type="Int32" Nullable="false" />
+          <Property Name="ClassStartTime" Type="Time" Precision="7" />
+          <Property Name="BreakDuration" Type="Int32" />
+          <Property Name="ClassEndTime" Type="Time" Precision="7" />
+          <Property Name="dayname" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="roomno" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="campus" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SchCTId" Type="Int32" />
+          <Property Name="startdate" Type="DateTime" Precision="0" />
+          <Property Name="enddate" Type="DateTime" Precision="0" />
+          <Property Name="Year" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="flag" Type="Boolean" Nullable="false" />
+          <Property Name="SemesterStartDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="SemesterEndDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="SType" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="SID" Type="Int32" />
+          <Property Name="PId" Type="Int32" Nullable="false" />
+          <Property Name="Program" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ClassID" Type="Int32" Nullable="false" />
+          <Property Name="Class" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="section" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="vsection">
+          <Key>
+            <PropertyRef Name="secid" />
+            <PropertyRef Name="program" />
+            <PropertyRef Name="class" />
+            <PropertyRef Name="sectionname" />
+            <PropertyRef Name="Section" />
+          </Key>
+          <Property Name="secid" Type="Int32" Nullable="false" />
+          <Property Name="program" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="class" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="sectionname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Section" Type="String" MaxLength="152" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="vslottype">
+          <Key>
+            <PropertyRef Name="slottypeid" />
+            <PropertyRef Name="subslotid" />
+          </Key>
+          <Property Name="slottypeid" Type="Int32" Nullable="false" />
+          <Property Name="duration" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ClassStartTime" Type="Time" Precision="7" />
+          <Property Name="BreakDuration" Type="Int32" />
+          <Property Name="ClassEndTime" Type="Time" Precision="7" />
+          <Property Name="slotno" Type="Int32" />
+          <Property Name="sort" Type="Decimal" Precision="12" Scale="1" />
+          <Property Name="subslotid" Type="Int32" Nullable="false" />
+          <Property Name="occupied" Type="Int32" />
+        </EntityType>
+        <Association Name="FK_Admin">
+          <End Role="AccountType" Type="Self.AccountType" Multiplicity="1" />
+          <End Role="Academic" Type="Self.Academic" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountType">
+              <PropertyRef Name="ATID" />
+            </Principal>
+            <Dependent Role="Academic">
+              <PropertyRef Name="ATID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Student">
+          <End Role="AccountType" Type="Self.AccountType" Multiplicity="1" />
+          <End Role="Student" Type="Self.Student" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountType">
+              <PropertyRef Name="ATID" />
+            </Principal>
+            <Dependent Role="Student">
+              <PropertyRef Name="ATID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_teacher">
+          <End Role="AccountType" Type="Self.AccountType" Multiplicity="0..1" />
+          <End Role="teacher" Type="Self.teacher" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountType">
+              <PropertyRef Name="ATID" />
+            </Principal>
+            <Dependent Role="teacher">
+              <PropertyRef Name="ATID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_sec2">
+          <End Role="Class" Type="Self.Class" Multiplicity="1" />
+          <End Role="section" Type="Self.section" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Class">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="section">
+              <PropertyRef Name="ClassId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__schedule__CTId__48CFD27E">
+          <End Role="ClassTypes" Type="Self.ClassType" Multiplicity="0..1" />
+          <End Role="schedule" Type="Self.schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClassTypes">
+              <PropertyRef Name="CTId" />
+            </Principal>
+            <Dependent Role="schedule">
+              <PropertyRef Name="CTId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__WeekWise__CTId__4E88ABD4">
+          <End Role="ClassTypes" Type="Self.ClassType" Multiplicity="1" />
+          <End Role="WeekWise" Type="Self.WeekWise" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClassTypes">
+              <PropertyRef Name="CTId" />
+            </Principal>
+            <Dependent Role="WeekWise">
+              <PropertyRef Name="CTId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Requests3">
+          <End Role="ClassTypes" Type="Self.ClassType" Multiplicity="1" />
+          <End Role="Requests" Type="Self.Request" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClassTypes">
+              <PropertyRef Name="CTId" />
+            </Principal>
+            <Dependent Role="Requests">
+              <PropertyRef Name="CTID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__offeredco__cours__57FD0775">
+          <End Role="course" Type="Self.course" Multiplicity="0..1" />
+          <End Role="offeredcourse" Type="Self.offeredcourse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="course">
+              <PropertyRef Name="courseid" />
+            </Principal>
+            <Dependent Role="offeredcourse">
+              <PropertyRef Name="courseid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__slots__dayid__4BAC3F29">
+          <End Role="days" Type="Self.day" Multiplicity="1" />
+          <End Role="slots" Type="Self.slot" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="days">
+              <PropertyRef Name="dayid" />
+            </Principal>
+            <Dependent Role="slots">
+              <PropertyRef Name="dayid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Login">
+          <End Role="Programs" Type="Self.Program" Multiplicity="0..1" />
+          <End Role="Login" Type="Self.Login" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programs">
+              <PropertyRef Name="PId" />
+            </Principal>
+            <Dependent Role="Login">
+              <PropertyRef Name="PId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__offeredco__secid__5708E33C">
+          <End Role="section" Type="Self.section" Multiplicity="0..1" />
+          <End Role="offeredcourse" Type="Self.offeredcourse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="section">
+              <PropertyRef Name="secid" />
+            </Principal>
+            <Dependent Role="offeredcourse">
+              <PropertyRef Name="secid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__offeredco__teach__58F12BAE">
+          <End Role="teacher" Type="Self.teacher" Multiplicity="0..1" />
+          <End Role="offeredcourse" Type="Self.offeredcourse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="teacher">
+              <PropertyRef Name="teacherid" />
+            </Principal>
+            <Dependent Role="offeredcourse">
+              <PropertyRef Name="teacherid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__schedule__offid__542C7691">
+          <End Role="offeredcourse" Type="Self.offeredcourse" Multiplicity="0..1" />
+          <End Role="schedule" Type="Self.schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="offeredcourse">
+              <PropertyRef Name="offid" />
+            </Principal>
+            <Dependent Role="schedule">
+              <PropertyRef Name="offid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__sectionde__offid__55209ACA">
+          <End Role="offeredcourse" Type="Self.offeredcourse" Multiplicity="0..1" />
+          <End Role="sectiondetails" Type="Self.sectiondetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="offeredcourse">
+              <PropertyRef Name="offid" />
+            </Principal>
+            <Dependent Role="sectiondetails">
+              <PropertyRef Name="offid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Requests">
+          <End Role="offeredcourse" Type="Self.offeredcourse" Multiplicity="1" />
+          <End Role="Requests" Type="Self.Request" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="offeredcourse">
+              <PropertyRef Name="offid" />
+            </Principal>
+            <Dependent Role="Requests">
+              <PropertyRef Name="offid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_sec1">
+          <End Role="Programs" Type="Self.Program" Multiplicity="1" />
+          <End Role="section" Type="Self.section" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programs">
+              <PropertyRef Name="PId" />
+            </Principal>
+            <Dependent Role="section">
+              <PropertyRef Name="PId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_teacher1">
+          <End Role="Programs" Type="Self.Program" Multiplicity="0..1" />
+          <End Role="teacher" Type="Self.teacher" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Programs">
+              <PropertyRef Name="PId" />
+            </Principal>
+            <Dependent Role="teacher">
+              <PropertyRef Name="PId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Requests1">
+          <End Role="teacher" Type="Self.teacher" Multiplicity="1" />
+          <End Role="Requests" Type="Self.Request" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="teacher">
+              <PropertyRef Name="teacherid" />
+            </Principal>
+            <Dependent Role="Requests">
+              <PropertyRef Name="teacherid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Requests2">
+          <End Role="slots" Type="Self.slot" Multiplicity="0..1" />
+          <End Role="Requests" Type="Self.Request" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="slots">
+              <PropertyRef Name="slotid" />
+            </Principal>
+            <Dependent Role="Requests">
+              <PropertyRef Name="slotid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__slots__roomid__4CA06362">
+          <End Role="room" Type="Self.room" Multiplicity="1" />
+          <End Role="slots" Type="Self.slot" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="room">
+              <PropertyRef Name="roomid" />
+            </Principal>
+            <Dependent Role="slots">
+              <PropertyRef Name="roomid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__schedule__slotid__46E78A0C">
+          <End Role="slots" Type="Self.slot" Multiplicity="0..1" />
+          <End Role="schedule" Type="Self.schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="slots">
+              <PropertyRef Name="slotid" />
+            </Principal>
+            <Dependent Role="schedule">
+              <PropertyRef Name="slotid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__WeekWise__schid__4D94879B">
+          <End Role="schedule" Type="Self.schedule" Multiplicity="1" />
+          <End Role="WeekWise" Type="Self.WeekWise" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="schedule">
+              <PropertyRef Name="schid" />
+            </Principal>
+            <Dependent Role="WeekWise">
+              <PropertyRef Name="schid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_schedule">
+          <End Role="Semester" Type="Self.Semester" Multiplicity="0..1" />
+          <End Role="schedule" Type="Self.schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Semester">
+              <PropertyRef Name="SId" />
+            </Principal>
+            <Dependent Role="schedule">
+              <PropertyRef Name="SId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_sec">
+          <End Role="SemesterType" Type="Self.SemesterType" Multiplicity="1" />
+          <End Role="section" Type="Self.section" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SemesterType">
+              <PropertyRef Name="STID" />
+            </Principal>
+            <Dependent Role="section">
+              <PropertyRef Name="STID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Student1">
+          <End Role="section" Type="Self.section" Multiplicity="1" />
+          <End Role="Student" Type="Self.Student" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="section">
+              <PropertyRef Name="secid" />
+            </Principal>
+            <Dependent Role="Student">
+              <PropertyRef Name="secid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Semester">
+          <End Role="SemesterType" Type="Self.SemesterType" Multiplicity="1" />
+          <End Role="Semester" Type="Self.Semester" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SemesterType">
+              <PropertyRef Name="STID" />
+            </Principal>
+            <Dependent Role="Semester">
+              <PropertyRef Name="STID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__slots__slottypei__37C5420D">
+          <End Role="slottype" Type="Self.slottype" Multiplicity="1" />
+          <End Role="slots" Type="Self.slot" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="slottype">
+              <PropertyRef Name="slottypeid" />
+            </Principal>
+            <Dependent Role="slots">
+              <PropertyRef Name="slottypeid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Academics" EntityType="Self.Academic" />
+          <EntitySet Name="AccountTypes" EntityType="Self.AccountType" />
+          <EntitySet Name="Classes" EntityType="Self.Class" />
+          <EntitySet Name="ClassTypes" EntityType="Self.ClassType" />
+          <EntitySet Name="courses" EntityType="Self.course" />
+          <EntitySet Name="days" EntityType="Self.day" />
+          <EntitySet Name="DEMOes" EntityType="Self.DEMO" />
+          <EntitySet Name="Logins" EntityType="Self.Login" />
+          <EntitySet Name="offeredcourses" EntityType="Self.offeredcourse" />
+          <EntitySet Name="Programs" EntityType="Self.Program" />
+          <EntitySet Name="Requests" EntityType="Self.Request" />
+          <EntitySet Name="rooms" EntityType="Self.room" />
+          <EntitySet Name="schedules" EntityType="Self.schedule" />
+          <EntitySet Name="sections" EntityType="Self.section" />
+          <EntitySet Name="sectiondetails" EntityType="Self.sectiondetail" />
+          <EntitySet Name="Semesters" EntityType="Self.Semester" />
+          <EntitySet Name="SemesterTypes" EntityType="Self.SemesterType" />
+          <EntitySet Name="slots" EntityType="Self.slot" />
+          <EntitySet Name="slottypes" EntityType="Self.slottype" />
+          <EntitySet Name="Students" EntityType="Self.Student" />
+          <EntitySet Name="teachers" EntityType="Self.teacher" />
+          <EntitySet Name="WeekWises" EntityType="Self.WeekWise" />
+          <EntitySet Name="vAvailables" EntityType="Self.vAvailable" />
+          <EntitySet Name="voffcourses" EntityType="Self.voffcours" />
+          <EntitySet Name="voffCoursesWithSectionsandTeachers" EntityType="Self.voffCoursesWithSectionsandTeacher" />
+          <EntitySet Name="vschedules" EntityType="Self.vschedule" />
+          <EntitySet Name="vsections" EntityType="Self.vsection" />
+          <EntitySet Name="vslottypes" EntityType="Self.vslottype" />
+          <AssociationSet Name="FK_Admin" Association="Self.FK_Admin">
+            <End Role="AccountType" EntitySet="AccountTypes" />
+            <End Role="Academic" EntitySet="Academics" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Student" Association="Self.FK_Student">
+            <End Role="AccountType" EntitySet="AccountTypes" />
+            <End Role="Student" EntitySet="Students" />
+          </AssociationSet>
+          <AssociationSet Name="FK_teacher" Association="Self.FK_teacher">
+            <End Role="AccountType" EntitySet="AccountTypes" />
+            <End Role="teacher" EntitySet="teachers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_sec2" Association="Self.FK_sec2">
+            <End Role="Class" EntitySet="Classes" />
+            <End Role="section" EntitySet="sections" />
+          </AssociationSet>
+          <AssociationSet Name="FK__schedule__CTId__48CFD27E" Association="Self.FK__schedule__CTId__48CFD27E">
+            <End Role="ClassTypes" EntitySet="ClassTypes" />
+            <End Role="schedule" EntitySet="schedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK__WeekWise__CTId__4E88ABD4" Association="Self.FK__WeekWise__CTId__4E88ABD4">
+            <End Role="ClassTypes" EntitySet="ClassTypes" />
+            <End Role="WeekWise" EntitySet="WeekWises" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requests3" Association="Self.FK_Requests3">
+            <End Role="ClassTypes" EntitySet="ClassTypes" />
+            <End Role="Requests" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="FK__offeredco__cours__57FD0775" Association="Self.FK__offeredco__cours__57FD0775">
+            <End Role="course" EntitySet="courses" />
+            <End Role="offeredcourse" EntitySet="offeredcourses" />
+          </AssociationSet>
+          <AssociationSet Name="FK__slots__dayid__4BAC3F29" Association="Self.FK__slots__dayid__4BAC3F29">
+            <End Role="days" EntitySet="days" />
+            <End Role="slots" EntitySet="slots" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Login" Association="Self.FK_Login">
+            <End Role="Programs" EntitySet="Programs" />
+            <End Role="Login" EntitySet="Logins" />
+          </AssociationSet>
+          <AssociationSet Name="FK__offeredco__secid__5708E33C" Association="Self.FK__offeredco__secid__5708E33C">
+            <End Role="section" EntitySet="sections" />
+            <End Role="offeredcourse" EntitySet="offeredcourses" />
+          </AssociationSet>
+          <AssociationSet Name="FK__offeredco__teach__58F12BAE" Association="Self.FK__offeredco__teach__58F12BAE">
+            <End Role="teacher" EntitySet="teachers" />
+            <End Role="offeredcourse" EntitySet="offeredcourses" />
+          </AssociationSet>
+          <AssociationSet Name="FK__schedule__offid__542C7691" Association="Self.FK__schedule__offid__542C7691">
+            <End Role="offeredcourse" EntitySet="offeredcourses" />
+            <End Role="schedule" EntitySet="schedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK__sectionde__offid__55209ACA" Association="Self.FK__sectionde__offid__55209ACA">
+            <End Role="offeredcourse" EntitySet="offeredcourses" />
+            <End Role="sectiondetails" EntitySet="sectiondetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requests" Association="Self.FK_Requests">
+            <End Role="offeredcourse" EntitySet="offeredcourses" />
+            <End Role="Requests" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_sec1" Association="Self.FK_sec1">
+            <End Role="Programs" EntitySet="Programs" />
+            <End Role="section" EntitySet="sections" />
+          </AssociationSet>
+          <AssociationSet Name="FK_teacher1" Association="Self.FK_teacher1">
+            <End Role="Programs" EntitySet="Programs" />
+            <End Role="teacher" EntitySet="teachers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requests1" Association="Self.FK_Requests1">
+            <End Role="teacher" EntitySet="teachers" />
+            <End Role="Requests" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requests2" Association="Self.FK_Requests2">
+            <End Role="slots" EntitySet="slots" />
+            <End Role="Requests" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="FK__slots__roomid__4CA06362" Association="Self.FK__slots__roomid__4CA06362">
+            <End Role="room" EntitySet="rooms" />
+            <End Role="slots" EntitySet="slots" />
+          </AssociationSet>
+          <AssociationSet Name="FK__schedule__slotid__46E78A0C" Association="Self.FK__schedule__slotid__46E78A0C">
+            <End Role="slots" EntitySet="slots" />
+            <End Role="schedule" EntitySet="schedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK__WeekWise__schid__4D94879B" Association="Self.FK__WeekWise__schid__4D94879B">
+            <End Role="schedule" EntitySet="schedules" />
+            <End Role="WeekWise" EntitySet="WeekWises" />
+          </AssociationSet>
+          <AssociationSet Name="FK_schedule" Association="Self.FK_schedule">
+            <End Role="Semester" EntitySet="Semesters" />
+            <End Role="schedule" EntitySet="schedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK_sec" Association="Self.FK_sec">
+            <End Role="SemesterType" EntitySet="SemesterTypes" />
+            <End Role="section" EntitySet="sections" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Student1" Association="Self.FK_Student1">
+            <End Role="section" EntitySet="sections" />
+            <End Role="Student" EntitySet="Students" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Semester" Association="Self.FK_Semester">
+            <End Role="SemesterType" EntitySet="SemesterTypes" />
+            <End Role="Semester" EntitySet="Semesters" />
+          </AssociationSet>
+          <AssociationSet Name="FK__slots__slottypei__37C5420D" Association="Self.FK__slots__slottypei__37C5420D">
+            <End Role="slottype" EntitySet="slottypes" />
+            <End Role="slots" EntitySet="slots" />
+          </AssociationSet>
+          <FunctionImport Name="CurrentClasses" ReturnType="Collection(Scheduling.CurrentClasses_Result)">
+            <Parameter Name="dayid" Mode="In" Type="Int32" />
+            <Parameter Name="slottypeid" Mode="In" Type="Int32" />
+            <Parameter Name="currdate" Mode="In" Type="String" />
+            <Parameter Name="startdate" Mode="In" Type="String" />
+            <Parameter Name="enddate" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="EmptyRooms" ReturnType="Collection(Scheduling.EmptyRooms_Result)">
+            <Parameter Name="dayid" Mode="In" Type="Int32" />
+            <Parameter Name="slottypeid" Mode="In" Type="Int32" />
+            <Parameter Name="startdate" Mode="In" Type="String" />
+            <Parameter Name="enddate" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="EmptyRoomsCountByDay" ReturnType="Collection(Scheduling.EmptyRoomsCountByDay_Result)">
+            <Parameter Name="startdate" Mode="In" Type="String" />
+            <Parameter Name="enddate" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="EmptyRoomsProc" ReturnType="Collection(Scheduling.EmptyRoomsProc_Result)">
+            <Parameter Name="dayid" Mode="In" Type="Int32" />
+            <Parameter Name="campus" Mode="In" Type="String" />
+            <Parameter Name="slottypeid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetTeacherId" ReturnType="Collection(Int32)">
+            <Parameter Name="offid" Mode="In" Type="Int32" />
+            <Parameter Name="startdate" Mode="In" Type="String" />
+            <Parameter Name="enddate" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="MonitoringByOffId" ReturnType="Collection(Scheduling.MonitoringByOffId_Result)">
+            <Parameter Name="offid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="PMEmptyRooms" ReturnType="Collection(Scheduling.PMEmptyRooms_Result)">
+            <Parameter Name="dayid" Mode="In" Type="Int32" />
+            <Parameter Name="slottypeid" Mode="In" Type="Int32" />
+            <Parameter Name="startdate" Mode="In" Type="String" />
+            <Parameter Name="enddate" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="CurrentClasses_Result">
+          <Property Type="Int32" Name="schid" Nullable="false" />
+          <Property Type="Int32" Name="slotid" Nullable="true" />
+          <Property Type="String" Name="sectionname" Nullable="false" MaxLength="154" />
+          <Property Type="String" Name="teachername" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="duration" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="title" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="roomno" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="campus" Nullable="true" MaxLength="20" />
+          <Property Type="Int32" Name="CTID" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="EmptyRooms_Result">
+          <Property Type="Int32" Name="slotid" Nullable="false" />
+          <Property Type="Int32" Name="roomid" Nullable="false" />
+          <Property Type="String" Name="roomno" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="campus" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="duration" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="dayid" Nullable="false" />
+          <Property Type="String" Name="dayname" Nullable="true" MaxLength="20" />
+          <Property Type="Int32" Name="slottypeid" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="EmptyRoomsCountByDay_Result">
+          <Property Type="Int32" Name="dayid" Nullable="false" />
+          <Property Type="String" Name="dayname" Nullable="true" MaxLength="20" />
+          <Property Type="Int32" Name="slottypeid" Nullable="false" />
+          <Property Type="String" Name="duration" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="Empty" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="EmptyRoomsProc_Result">
+          <Property Type="Int32" Name="roomid" Nullable="false" />
+          <Property Type="String" Name="roomno" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="campus" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="duration" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="occupied" Nullable="true" />
+          <Property Type="Int32" Name="slottypeid" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="MonitoringByOffId_Result">
+          <Property Type="DateTime" Name="Date" Nullable="false" />
+          <Property Type="Int32" Name="Week_no" Nullable="true" />
+          <Property Type="Int32" Name="CTId" Nullable="false" />
+          <Property Type="Time" Name="ClassStarted" Nullable="true" />
+          <Property Type="Time" Name="ClassEnded" Nullable="true" />
+          <Property Type="Int32" Name="BreakDuration" Nullable="true" />
+          <Property Type="String" Name="teachername" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="PMEmptyRooms_Result">
+          <Property Type="Int32" Name="slotid" Nullable="false" />
+          <Property Type="Int32" Name="dayid" Nullable="false" />
+          <Property Type="Int32" Name="roomid" Nullable="false" />
+          <Property Type="Int32" Name="slottypeid" Nullable="false" />
+          <Property Type="String" Name="slotname" Nullable="false" MaxLength="49" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SchedulingStoreContainer" CdmEntityContainer="DBEntities">
+          <EntitySetMapping Name="Academics">
+            <EntityTypeMapping TypeName="Scheduling.Academic">
+              <MappingFragment StoreEntitySet="Academic">
+                <ScalarProperty Name="AdminId" ColumnName="AdminId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="ATID" ColumnName="ATID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AccountTypes">
+            <EntityTypeMapping TypeName="Scheduling.AccountType">
+              <MappingFragment StoreEntitySet="AccountType">
+                <ScalarProperty Name="ATID" ColumnName="ATID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Classes">
+            <EntityTypeMapping TypeName="Scheduling.Class">
+              <MappingFragment StoreEntitySet="Class">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Class1" ColumnName="Class" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClassTypes">
+            <EntityTypeMapping TypeName="Scheduling.ClassType">
+              <MappingFragment StoreEntitySet="ClassTypes">
+                <ScalarProperty Name="CTId" ColumnName="CTId" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="courses">
+            <EntityTypeMapping TypeName="Scheduling.course">
+              <MappingFragment StoreEntitySet="course">
+                <ScalarProperty Name="courseid" ColumnName="courseid" />
+                <ScalarProperty Name="code" ColumnName="code" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="hours" ColumnName="hours" />
+                <ScalarProperty Name="abbrev" ColumnName="abbrev" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="days">
+            <EntityTypeMapping TypeName="Scheduling.day">
+              <MappingFragment StoreEntitySet="days">
+                <ScalarProperty Name="dayid" ColumnName="dayid" />
+                <ScalarProperty Name="dayname" ColumnName="dayname" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DEMOes">
+            <EntityTypeMapping TypeName="Scheduling.DEMO">
+              <MappingFragment StoreEntitySet="DEMO">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="seq" ColumnName="seq" />
+                <ScalarProperty Name="sec" ColumnName="sec" />
+                <ScalarProperty Name="course" ColumnName="course" />
+                <ScalarProperty Name="faculty" ColumnName="faculty" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Logins">
+            <EntityTypeMapping TypeName="Scheduling.Login">
+              <MappingFragment StoreEntitySet="Login">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="PId" ColumnName="PId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="offeredcourses">
+            <EntityTypeMapping TypeName="Scheduling.offeredcourse">
+              <MappingFragment StoreEntitySet="offeredcourse">
+                <ScalarProperty Name="offid" ColumnName="offid" />
+                <ScalarProperty Name="courseid" ColumnName="courseid" />
+                <ScalarProperty Name="secid" ColumnName="secid" />
+                <ScalarProperty Name="teacherid" ColumnName="teacherid" />
+                <ScalarProperty Name="students_count" ColumnName="students_count" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Programs">
+            <EntityTypeMapping TypeName="Scheduling.Program">
+              <MappingFragment StoreEntitySet="Programs">
+                <ScalarProperty Name="PId" ColumnName="PId" />
+                <ScalarProperty Name="Program1" ColumnName="Program" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Requests">
+            <EntityTypeMapping TypeName="Scheduling.Request">
+              <MappingFragment StoreEntitySet="Requests">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="offid" ColumnName="offid" />
+                <ScalarProperty Name="teacherid" ColumnName="teacherid" />
+                <ScalarProperty Name="slotid" ColumnName="slotid" />
+                <ScalarProperty Name="CTID" ColumnName="CTID" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="occupied" ColumnName="occupied" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="rooms">
+            <EntityTypeMapping TypeName="Scheduling.room">
+              <MappingFragment StoreEntitySet="room">
+                <ScalarProperty Name="roomid" ColumnName="roomid" />
+                <ScalarProperty Name="roomno" ColumnName="roomno" />
+                <ScalarProperty Name="campus" ColumnName="campus" />
+                <ScalarProperty Name="roomtype" ColumnName="roomtype" />
+                <ScalarProperty Name="OrderCol" ColumnName="OrderCol" />
+                <ScalarProperty Name="capacity" ColumnName="capacity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="schedules">
+            <EntityTypeMapping TypeName="Scheduling.schedule">
+              <MappingFragment StoreEntitySet="schedule">
+                <ScalarProperty Name="schid" ColumnName="schid" />
+                <ScalarProperty Name="offid" ColumnName="offid" />
+                <ScalarProperty Name="slotid" ColumnName="slotid" />
+                <ScalarProperty Name="occupied" ColumnName="occupied" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="CTId" ColumnName="CTId" />
+                <ScalarProperty Name="SId" ColumnName="SId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sections">
+            <EntityTypeMapping TypeName="Scheduling.section">
+              <MappingFragment StoreEntitySet="section">
+                <ScalarProperty Name="secid" ColumnName="secid" />
+                <ScalarProperty Name="PId" ColumnName="PId" />
+                <ScalarProperty Name="ClassId" ColumnName="ClassId" />
+                <ScalarProperty Name="sectionname" ColumnName="sectionname" />
+                <ScalarProperty Name="STID" ColumnName="STID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sectiondetails">
+            <EntityTypeMapping TypeName="Scheduling.sectiondetail">
+              <MappingFragment StoreEntitySet="sectiondetails">
+                <ScalarProperty Name="sdid" ColumnName="sdid" />
+                <ScalarProperty Name="offid" ColumnName="offid" />
+                <ScalarProperty Name="secid" ColumnName="secid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Semesters">
+            <EntityTypeMapping TypeName="Scheduling.Semester">
+              <MappingFragment StoreEntitySet="Semester">
+                <ScalarProperty Name="SId" ColumnName="SId" />
+                <ScalarProperty Name="STID" ColumnName="STID" />
+                <ScalarProperty Name="SemesterStartDate" ColumnName="SemesterStartDate" />
+                <ScalarProperty Name="SemesterEndDate" ColumnName="SemesterEndDate" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="flag" ColumnName="flag" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SemesterTypes">
+            <EntityTypeMapping TypeName="Scheduling.SemesterType">
+              <MappingFragment StoreEntitySet="SemesterType">
+                <ScalarProperty Name="STID" ColumnName="STID" />
+                <ScalarProperty Name="SType" ColumnName="SType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="slots">
+            <EntityTypeMapping TypeName="Scheduling.slot">
+              <MappingFragment StoreEntitySet="slots">
+                <ScalarProperty Name="slotid" ColumnName="slotid" />
+                <ScalarProperty Name="dayid" ColumnName="dayid" />
+                <ScalarProperty Name="slottypeid" ColumnName="slottypeid" />
+                <ScalarProperty Name="roomid" ColumnName="roomid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="slottypes">
+            <EntityTypeMapping TypeName="Scheduling.slottype">
+              <MappingFragment StoreEntitySet="slottype">
+                <ScalarProperty Name="slottypeid" ColumnName="slottypeid" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="ClassStartTime" ColumnName="ClassStartTime" />
+                <ScalarProperty Name="BreakDuration" ColumnName="BreakDuration" />
+                <ScalarProperty Name="ClassEndTime" ColumnName="ClassEndTime" />
+                <ScalarProperty Name="slotno" ColumnName="slotno" />
+                <ScalarProperty Name="slottype1" ColumnName="slottype" />
+                <ScalarProperty Name="subslot" ColumnName="subslot" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Students">
+            <EntityTypeMapping TypeName="Scheduling.Student">
+              <MappingFragment StoreEntitySet="Student">
+                <ScalarProperty Name="StudentId" ColumnName="StudentId" />
+                <ScalarProperty Name="StudentName" ColumnName="StudentName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="ATID" ColumnName="ATID" />
+                <ScalarProperty Name="secid" ColumnName="secid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="teachers">
+            <EntityTypeMapping TypeName="Scheduling.teacher">
+              <MappingFragment StoreEntitySet="teacher">
+                <ScalarProperty Name="teacherid" ColumnName="teacherid" />
+                <ScalarProperty Name="teachername" ColumnName="teachername" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="ATID" ColumnName="ATID" />
+                <ScalarProperty Name="PId" ColumnName="PId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WeekWises">
+            <EntityTypeMapping TypeName="Scheduling.WeekWise">
+              <MappingFragment StoreEntitySet="WeekWise">
+                <ScalarProperty Name="WId" ColumnName="WId" />
+                <ScalarProperty Name="schid" ColumnName="schid" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Week_no" ColumnName="Week_no" />
+                <ScalarProperty Name="ClassStarted" ColumnName="ClassStarted" />
+                <ScalarProperty Name="BreakDuration" ColumnName="BreakDuration" />
+                <ScalarProperty Name="ClassEnded" ColumnName="ClassEnded" />
+                <ScalarProperty Name="CTId" ColumnName="CTId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vAvailables">
+            <EntityTypeMapping TypeName="Scheduling.vAvailable">
+              <MappingFragment StoreEntitySet="vAvailable">
+                <ScalarProperty Name="slotid" ColumnName="slotid" />
+                <ScalarProperty Name="slotname" ColumnName="slotname" />
+                <ScalarProperty Name="Occupied" ColumnName="Occupied" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="voffcourses">
+            <EntityTypeMapping TypeName="Scheduling.voffcours">
+              <MappingFragment StoreEntitySet="voffcourses">
+                <ScalarProperty Name="offid" ColumnName="offid" />
+                <ScalarProperty Name="courseid" ColumnName="courseid" />
+                <ScalarProperty Name="secid" ColumnName="secid" />
+                <ScalarProperty Name="ClassId" ColumnName="ClassId" />
+                <ScalarProperty Name="teachername" ColumnName="teachername" />
+                <ScalarProperty Name="code" ColumnName="code" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="sectionname" ColumnName="sectionname" />
+                <ScalarProperty Name="STID" ColumnName="STID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="voffCoursesWithSectionsandTeachers">
+            <EntityTypeMapping TypeName="Scheduling.voffCoursesWithSectionsandTeacher">
+              <MappingFragment StoreEntitySet="voffCoursesWithSectionsandTeachers">
+                <ScalarProperty Name="secid" ColumnName="secid" />
+                <ScalarProperty Name="offid" ColumnName="offid" />
+                <ScalarProperty Name="courseid" ColumnName="courseid" />
+                <ScalarProperty Name="teacherid" ColumnName="teacherid" />
+                <ScalarProperty Name="program" ColumnName="program" />
+                <ScalarProperty Name="class" ColumnName="class" />
+                <ScalarProperty Name="sectionname" ColumnName="sectionname" />
+                <ScalarProperty Name="teachername" ColumnName="teachername" />
+                <ScalarProperty Name="Section" ColumnName="Section" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="StudentCount" ColumnName="StudentCount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vschedules">
+            <EntityTypeMapping TypeName="Scheduling.vschedule">
+              <MappingFragment StoreEntitySet="vschedule">
+                <ScalarProperty Name="schid" ColumnName="schid" />
+                <ScalarProperty Name="offid" ColumnName="offid" />
+                <ScalarProperty Name="slotid" ColumnName="slotid" />
+                <ScalarProperty Name="courseid" ColumnName="courseid" />
+                <ScalarProperty Name="secid" ColumnName="secid" />
+                <ScalarProperty Name="sectionname" ColumnName="sectionname" />
+                <ScalarProperty Name="occupied" ColumnName="occupied" />
+                <ScalarProperty Name="code" ColumnName="code" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="teacherid" ColumnName="teacherid" />
+                <ScalarProperty Name="teachername" ColumnName="teachername" />
+                <ScalarProperty Name="dayid" ColumnName="dayid" />
+                <ScalarProperty Name="slottypeid" ColumnName="slottypeid" />
+                <ScalarProperty Name="roomid" ColumnName="roomid" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="slotno" ColumnName="slotno" />
+                <ScalarProperty Name="subslotid" ColumnName="subslotid" />
+                <ScalarProperty Name="ClassStartTime" ColumnName="ClassStartTime" />
+                <ScalarProperty Name="BreakDuration" ColumnName="BreakDuration" />
+                <ScalarProperty Name="ClassEndTime" ColumnName="ClassEndTime" />
+                <ScalarProperty Name="dayname" ColumnName="dayname" />
+                <ScalarProperty Name="roomno" ColumnName="roomno" />
+                <ScalarProperty Name="campus" ColumnName="campus" />
+                <ScalarProperty Name="SchCTId" ColumnName="SchCTId" />
+                <ScalarProperty Name="startdate" ColumnName="startdate" />
+                <ScalarProperty Name="enddate" ColumnName="enddate" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="flag" ColumnName="flag" />
+                <ScalarProperty Name="SemesterStartDate" ColumnName="SemesterStartDate" />
+                <ScalarProperty Name="SemesterEndDate" ColumnName="SemesterEndDate" />
+                <ScalarProperty Name="SType" ColumnName="SType" />
+                <ScalarProperty Name="SID" ColumnName="SID" />
+                <ScalarProperty Name="PId" ColumnName="PId" />
+                <ScalarProperty Name="Program" ColumnName="Program" />
+                <ScalarProperty Name="ClassID" ColumnName="ClassID" />
+                <ScalarProperty Name="Class" ColumnName="Class" />
+                <ScalarProperty Name="section" ColumnName="section" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vsections">
+            <EntityTypeMapping TypeName="Scheduling.vsection">
+              <MappingFragment StoreEntitySet="vsections">
+                <ScalarProperty Name="secid" ColumnName="secid" />
+                <ScalarProperty Name="program" ColumnName="program" />
+                <ScalarProperty Name="class" ColumnName="class" />
+                <ScalarProperty Name="sectionname" ColumnName="sectionname" />
+                <ScalarProperty Name="Section" ColumnName="Section" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vslottypes">
+            <EntityTypeMapping TypeName="Scheduling.vslottype">
+              <MappingFragment StoreEntitySet="vslottype">
+                <ScalarProperty Name="slottypeid" ColumnName="slottypeid" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="ClassStartTime" ColumnName="ClassStartTime" />
+                <ScalarProperty Name="BreakDuration" ColumnName="BreakDuration" />
+                <ScalarProperty Name="ClassEndTime" ColumnName="ClassEndTime" />
+                <ScalarProperty Name="slotno" ColumnName="slotno" />
+                <ScalarProperty Name="sort" ColumnName="sort" />
+                <ScalarProperty Name="subslotid" ColumnName="subslotid" />
+                <ScalarProperty Name="occupied" ColumnName="occupied" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="CurrentClasses" FunctionName="Scheduling.Store.CurrentClasses">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Scheduling.CurrentClasses_Result">
+                <ScalarProperty Name="schid" ColumnName="schid" />
+                <ScalarProperty Name="slotid" ColumnName="slotid" />
+                <ScalarProperty Name="sectionname" ColumnName="sectionname" />
+                <ScalarProperty Name="teachername" ColumnName="teachername" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="roomno" ColumnName="roomno" />
+                <ScalarProperty Name="campus" ColumnName="campus" />
+                <ScalarProperty Name="CTID" ColumnName="CTID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="EmptyRooms" FunctionName="Scheduling.Store.EmptyRooms">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Scheduling.EmptyRooms_Result">
+                <ScalarProperty Name="slotid" ColumnName="slotid" />
+                <ScalarProperty Name="roomid" ColumnName="roomid" />
+                <ScalarProperty Name="roomno" ColumnName="roomno" />
+                <ScalarProperty Name="campus" ColumnName="campus" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="dayid" ColumnName="dayid" />
+                <ScalarProperty Name="dayname" ColumnName="dayname" />
+                <ScalarProperty Name="slottypeid" ColumnName="slottypeid" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="EmptyRoomsCountByDay" FunctionName="Scheduling.Store.EmptyRoomsCountByDay">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Scheduling.EmptyRoomsCountByDay_Result">
+                <ScalarProperty Name="dayid" ColumnName="dayid" />
+                <ScalarProperty Name="dayname" ColumnName="dayname" />
+                <ScalarProperty Name="slottypeid" ColumnName="slottypeid" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="Empty" ColumnName="Empty" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="EmptyRoomsProc" FunctionName="Scheduling.Store.EmptyRoomsProc">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Scheduling.EmptyRoomsProc_Result">
+                <ScalarProperty Name="roomid" ColumnName="roomid" />
+                <ScalarProperty Name="roomno" ColumnName="roomno" />
+                <ScalarProperty Name="campus" ColumnName="campus" />
+                <ScalarProperty Name="duration" ColumnName="duration" />
+                <ScalarProperty Name="occupied" ColumnName="occupied" />
+                <ScalarProperty Name="slottypeid" ColumnName="slottypeid" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetTeacherId" FunctionName="Scheduling.Store.GetTeacherId" />
+          <FunctionImportMapping FunctionImportName="MonitoringByOffId" FunctionName="Scheduling.Store.MonitoringByOffId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Scheduling.MonitoringByOffId_Result">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Week_no" ColumnName="Week_no" />
+                <ScalarProperty Name="CTId" ColumnName="CTId" />
+                <ScalarProperty Name="ClassStarted" ColumnName="ClassStarted" />
+                <ScalarProperty Name="ClassEnded" ColumnName="ClassEnded" />
+                <ScalarProperty Name="BreakDuration" ColumnName="BreakDuration" />
+                <ScalarProperty Name="teachername" ColumnName="teachername" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="PMEmptyRooms" FunctionName="Scheduling.Store.PMEmptyRooms">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Scheduling.PMEmptyRooms_Result">
+                <ScalarProperty Name="slotid" ColumnName="slotid" />
+                <ScalarProperty Name="dayid" ColumnName="dayid" />
+                <ScalarProperty Name="roomid" ColumnName="roomid" />
+                <ScalarProperty Name="slottypeid" ColumnName="slottypeid" />
+                <ScalarProperty Name="slotname" ColumnName="slotname" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

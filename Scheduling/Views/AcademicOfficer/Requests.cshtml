@@ -1,0 +1,280 @@
+﻿@model List<Scheduling.Models.Request>
+@{
+    ViewBag.Title = "Requests";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script>
+
+    $(document).ready(function () {
+
+        $('body').on('click', '.approve', function () {
+
+            var this_btn = $(this);
+            var ctid = $(this).attr('ctid');
+
+            if (ctid == 2)
+            {
+                var offid = $(this).attr('offid');
+                var date = $(this).attr('date');
+                var requestid = $(this).attr('requestid');
+                console.log(offid, date);
+
+
+                var jsonData = $.ajax({
+
+                    url: '@Url.Action("ApproveCancelRequest", "JSON")',
+                    data: {
+                        requestid,
+                        offid,
+                        date
+                    },
+                    type: "POST",
+                    beforeSend: function () {
+                        this_btn.attr('disabled', 'disabled');
+                        $('body').css({ 'cursor': 'wait' });
+
+                    },
+                    complete: function () {
+                        //$('#loading').hide();
+
+                        //$('.approve').removeAttr('disabled');
+                        $('body').css({ 'cursor': 'default' });
+                    },
+                    success: function (result) {
+                        alert(result);
+
+                        //this_btn.attr('disabled', 'disabled');
+                        this_btn.parent().prev().text('Approved');
+                    },
+                    error: function (data, errorThrown) {
+                        alert("Network Error!");
+                    }
+
+                });
+
+
+            }
+            else if (ctid == 3)
+            {
+
+                var offid = $(this).attr('offid');
+                var date = $(this).attr('date');
+                var requestid = $(this).attr('requestid');
+                var teacherid = $(this).attr('teacherid');
+                var slotid = $(this).attr('slotid');
+                var occupied = $(this).attr('occupied');
+                console.log('3');
+                var jsonData = $.ajax({
+
+                    url: '@Url.Action("ApproveMakeupRequest", "JSON")',
+                    data: {
+                        requestid,
+                        teacherid,
+                        offid,
+                        slotid,
+                        occupied,
+                        date
+                    },
+                    type: "POST",
+                    beforeSend: function () {
+                        this_btn.attr('disabled', 'disabled');
+
+                    },
+                    complete: function () {
+                        //$('#loading').hide();
+
+                        //$('.approve').removeAttr('disabled');
+                    },
+                    success: function (result) {
+                        alert(result);
+
+                        //this_btn.attr('disabled', 'disabled');
+                        this_btn.parent().prev().text('Approved');
+                    },
+                    error: function (data, errorThrown) {
+                        alert("Network Error!");
+                    }
+
+                });
+
+            }
+
+
+
+        });
+
+    });
+
+</script>
+
+
+@{int i = 1; }
+
+<div class="container">
+
+    @*<div style="position:absolute;">
+        <div style="width:20px;height:20px;background-color:blue;">Approved</div>
+    </div>*@
+
+    <ol class="breadcrumb">
+        <li><i class="fa fa-home"></i></li>
+        <li><a href="/AcademicOfficer/Schedule">Dashboard</a></li>
+        <li class="active">Requests</li>
+    </ol>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <span class="h3">Requests List</span>
+                        </div>
+                        <div class="col-md-2">
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped table-bordered" style="font-size:12.8px;">
+
+                        <thead>
+
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Request Type</th>
+                                <th>Teacher</th>
+                                <th>Course</th>
+                                <th>Room - Campus</th>
+                                <th>Date</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                                
+                            </tr>
+
+                        </thead>
+                        <tbody class="tb">
+
+                            @foreach (var item in Model)
+                            {
+                                if (item.CTID == 3)
+                                {
+                                    <tr>
+                                        <td>@i</td>
+                                        <td>MakeUp</td>
+                                        <td>@item.teacher.teachername</td>
+                                        <td>@item.offeredcourse.course.code-@item.offeredcourse.course.title - @item.offeredcourse.section.Program.Program1 @item.offeredcourse.section.Class.Class1 - @item.offeredcourse.section.sectionname</td>
+                                        <td>@item.slot.room.roomno - @item.slot.room.campus</td>
+                                        <td>@item.Date.ToString("MM/dd/yyyy")</td>
+
+                                        @*   Occupied 1   *@
+                                        @if (item.occupied == 1 && item.slot.slottypeid == 1)
+                                        {
+                                        <td>08:30 - 10:00</td>
+                                        }
+                                        else if (item.occupied == 1 && item.slot.slottypeid == 2)
+                                        {
+                                            <td>11:45 - 01:15</td>
+                                        }
+                                        else if (item.occupied == 1 && item.slot.slottypeid == 3)
+                                        {
+                                            <td>03:15 - 04:45</td>
+                                        }
+                                       
+
+                                        //Occupied 2
+                                        else if (item.occupied == 2 && item.slot.slottypeid == 1)
+                                        {
+                                            <td>10:00 - 11:30</td>
+                                        }
+                                        else if (item.occupied == 2 && item.slot.slottypeid == 2)
+                                        {
+                                            <td>01:30 - 03:00</td>
+                                        }
+                                        else if (item.occupied == 2 && item.slot.slottypeid == 3)
+                                        {
+                                            <td>04:45 - 06:15</td>
+                                        }
+
+
+                                        //Occupied 3
+                                        else if (item.occupied == 3 && item.slot.slottypeid == 1)
+                                        {
+                                            <td>@item.slot.slottype.duration</td>
+                                        }
+                                        else if (item.occupied == 3 && item.slot.slottypeid == 2)
+                                        {
+                                            <td>@item.slot.slottype.duration</td>
+                                        }
+                                        else if (item.occupied == 3 && item.slot.slottypeid == 3)
+                                        {
+                                            <td>@item.slot.slottype.duration</td>
+                                        }
+                                        else if (item.occupied == 3 && item.slot.slottypeid == 4)
+                                        {
+                                            <td>@item.slot.slottype.duration</td>
+                                        }
+                                        
+
+
+                                        @if (item.Status == false)
+                                        {
+                                            <td>Pending</td>
+                                            <td><button class="btn btn-sm btn-primary approve" ctid="3" offid="@item.offid" date="@item.Date" slotid="@item.slotid" requestid="@item.Id" occupied="@item.occupied" teacherid="@item.teacherid">Approve</button></td>
+                                        }
+                                        else
+                                        {
+                                            <td>Approved</td>
+                                            <td><button class="btn btn-sm btn-primary" disabled>Approve</button></td>
+                                        }
+
+                                        
+                                       
+                                            
+                                        
+
+                                    </tr>
+                                }
+                                else if (item.CTID == 2)
+                                {
+                                    <tr>
+                                        <td>@i</td>
+                                        <td>Cancel</td>
+                                        <td>@item.teacher.teachername</td>
+                                        <td>@item.offeredcourse.course.code-@item.offeredcourse.course.title - @item.offeredcourse.section.Program.Program1 @item.offeredcourse.section.Class.Class1 - @item.offeredcourse.section.sectionname</td>
+                                        <td></td>
+                                        <td>@item.Date.ToString("MM/dd/yyyy")</td>
+                                        <td></td>
+
+                                        @if (item.Status == false)
+                                        {
+                                            <td>Pending</td>
+                                            <td><button class="btn btn-sm btn-primary approve" ctid="2" offid="@item.offid" date="@item.Date" requestid="@item.Id">Approve</button></td> 
+                                        }
+                                        else
+                                        {
+                                            <td>Approved</td>
+                                            <td><button class="btn btn-sm btn-primary" disabled>Approve</button></td>
+                                        }
+                                      
+                                         
+                                        
+
+                                    </tr>
+                                }
+                                i++;
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

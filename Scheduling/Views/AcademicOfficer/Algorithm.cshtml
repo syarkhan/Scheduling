@@ -1,0 +1,108 @@
+﻿@model Scheduling.Models.ViewModels.CombineScheduleVM
+@{
+    ViewBag.Title = "Algorithm";
+    Layout = null;
+}
+
+
+<div class="container">
+
+    <div class="well well-sm">
+        <h2>Total Minutes taken : @ViewBag.minutes </h2>
+        <h2>Total Seconds taken : @ViewBag.seconds </h2>
+        <h2>Total Generations : @ViewBag.generations </h2>
+    </div>
+
+    <table class="table table-condensed table-striped">
+
+
+        <tr>
+            <td>S.No.</td>
+            <td>Id</td>
+            <td>Day</td>
+            <td>Room - Campus</td>
+            <td>Slottype</td>
+            <td>OfferedCourse</td>
+            <td>Teacher</td>
+        </tr>
+        @{int i = 1; }
+                @foreach (var data in Model.NewClasses.OrderBy(s=>s.Slot.dayid).OrderBy(s=>s.Slot.slottype.slottypeid))
+                {
+                    var id = data.Id + 1;
+                    
+                    
+                    <tr>
+                        <td>@i</td>
+                        <td>@id</td>
+                        <td>@data.Slot.day.dayname</td>
+                        <td>@data.Slot.room.roomno - @data.Slot.room.campus -@data.Slot.room.capacity</td>
+                        <td>@data.Slot.slottype.duration</td>
+                        <td>
+                            @data.OfferedCourse.section.Program.Program1 @data.OfferedCourse.section.Class.Class1
+                            @data.OfferedCourse.section.sectionname
+                            @data.OfferedCourse.course.title
+                            @data.OfferedCourse.students_count
+                        </td>
+                        <td>@data.OfferedCourse.teacher.teachername</td>
+                    </tr>
+                    i = i + 1;
+                }
+
+
+
+
+
+            @*@foreach (var data in Model.NewClasses)
+            {
+                foreach (var slot in Model.slots)
+                {
+                    if (slot.slotid == data.Slot.slotid)
+                    {
+                        var id = data.Id + 1;
+                    <tr>
+                        <td>@id</td>
+                        <td>@slot.day.dayname</td>
+                        <td>@slot.room.roomno - @slot.room.campus</td>
+                        <td>@slot.slottype.duration</td>
+                        <td>
+                            @data.OfferedCourse.section.Program.Program1 @data.OfferedCourse.section.Class.Class1
+                            @data.OfferedCourse.section.sectionname
+                            @data.OfferedCourse.course.title
+                        </td>
+                        <td>@data.OfferedCourse.teacher.teachername</td>
+                    </tr>
+                    }
+                    else
+                    {
+                    <tr>
+                        <td>-</td>
+                        <td>@slot.day.dayname</td>
+                        <td>@slot.room.roomno - @slot.room.campus</td>
+                        <td>@slot.slottype.duration</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    }
+                }
+            
+        }*@
+
+        @*@foreach (var data in Model.NewClasses)
+        {
+            
+            <tr>
+                <td>@id</td>
+                <td>@data.OfferedCourse.section.Program.Program1 @data.OfferedCourse.section.Class.Class1
+                    @data.OfferedCourse.section.sectionname
+                    @data.OfferedCourse.teacher.teachername @data.OfferedCourse.course.title</td>
+            </tr>
+        }*@
+
+
+
+
+
+
+    </table>
+</div>
+

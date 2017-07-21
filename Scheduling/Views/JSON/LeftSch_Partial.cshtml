@@ -1,0 +1,306 @@
+﻿@model Scheduling.Models.ViewModels.CombineScheduleVM
+
+
+@{ int a = 1;
+    List<int> occupied = new List<int>(new int[] { 1, 2, 3 });
+
+}
+<div class="row" style="padding-top:70px;margin-right: 0px;">
+    <!--Nav Bar -->
+    <div class="col-md-1 col-lg-1 visible-lg visible-md visible-sm">
+        Left
+    </div>
+
+    <div id="NB" class="visible-md visible-lg">
+        <nav class="col-md-2 col-lg-2 bs-docs-sidebar">
+
+            <ul id="sidebar" class="nav nav-stacked fixed scroll" style="margin-top: -1.01%;">
+                <li id="date" class="alert alert-info">
+                    <strong>@ViewBag.currdate</strong>
+                </li>
+                @{ int x = 1;}
+                @foreach (var days in Model.days)
+            {
+
+
+                    <li>
+                        <a date="@ViewBag.dates[a-1].Date.ToString("MM/dd/yyyy")" class="day" href="#active-day-@a" dayid="@days.dayid">@days.dayname-@ViewBag.dates[a - 1].Date.ToString("dd/MMM")</a>
+                        <ul class="nav nav-stacked">
+                            @foreach (var rooms in Model.rooms)
+                            {
+
+
+                                <li> <a href="#content_@x" class="room">@rooms.roomno </a></li>
+                                x++;
+                            }
+                        </ul>
+                        @{ a++; }
+                    </li>
+
+
+                            }
+            </ul>
+        </nav>
+    </div>
+
+    <!--Main Content -->
+    <div class="col-md-9 col-lg-9" style="padding-left:70px;">
+
+        @{int i = 1; a = 1; int z = 0;}
+
+        @foreach (var days in Model.days)
+        {
+
+            <section id="active-day-@a" class="day-group" data-pos2="#active-day-@a" day-date="@ViewBag.dates[a-1].Date.ToString("MM/dd/yyyy")">
+                <div style="position:absolute;padding-left:1.4%;margin-top:-10px;">
+                    <span style="border: 1px solid #21211b;background-color: #394c48;color: white;border-radius: 3px;">@days.dayname</span>
+                </div>
+                @foreach (var rooms in Model.rooms)
+                {
+
+                foreach (var slots in Model.vslottypes)
+                {
+
+
+                    //<a href="#" class="content-link">
+
+                    <div class="col-md-3 content" id="content_@i" data-pos="#content_@i">
+                        @{
+                            var IsSchedule = Model.vschedule.Where(d => d.dayid == days.dayid && d.slottypeid == slots.slottypeid && d.roomid == rooms.roomid).ToList();
+
+                            var Occupied1and2 = Model.vschedule.Where(d => d.dayid == days.dayid && d.slottypeid == slots.slottypeid && d.roomid == rooms.roomid && d.occupied >= 1 && d.occupied <= 2).ToList();
+
+
+                            if (z % 4 == 0)
+                            {
+
+                                if (rooms.roomno.Length < 3)
+                                {
+                                    <div style="position:absolute;margin-left:-22px;">
+                                        <span style="border: 1px solid #21211b;background-color: #394c48;color: white;border-radius: 3px;">@rooms.roomno</span>
+                                    </div>
+                                }
+
+                                else if (rooms.roomno.Length == 3)
+                                {
+                                    <div style="position:absolute;margin-left:-29px;">
+                                        <span class="room-tag" style="border: 1px solid #21211b;background-color: #394c48;color: white;border-radius: 3px;">@rooms.roomno</span>
+                                    </div>
+
+                                }
+
+                                else if (rooms.roomno.Length > 3)
+                                {
+                                    <div style="position:absolute;margin-left:-43px;">
+                                        <span class="room-tag" title="@rooms.roomno" style="border: 1px solid #21211b;background-color: #394c48;color: white;border-radius: 3px;">@rooms.roomno.Substring(0, 4)..</span>
+                                    </div>
+
+                                }
+                            }
+
+
+                            z++;
+
+
+                            if (IsSchedule.Count > 0)
+                            {
+
+                                foreach (var sch in IsSchedule)
+                                {
+
+                                    if (Occupied1and2.Count > 1)
+                                    {
+                                        if (sch.occupied == 1)
+                                        {
+                                            <div class="parts">
+
+                                                <h6 style="font-size:11.5px;color: #767676;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                <h6 style="text-align:center;font-size:11.5px;color: #767676;">@sch.teachername</h6>
+                                                <h6 class="course-name" data-toggle="tooltip" data-placement="left" title="@sch.title" style="text-align:center;color: #767676;">@sch.title</h6>
+
+                                            </div>
+
+                                        }
+
+                                        else
+                                        {
+                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                            <div class="parts">
+
+                                                <h6 style="font-size:11.5px;color: #767676;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                <h6 style="text-align:center;font-size:11.5px;color: #767676;">@sch.teachername</h6>
+                                                <h6 class="course-name" data-toggle="tooltip" data-placement="right" title="@sch.title" style="text-align:center;color: #767676;">@sch.title</h6>
+                                            </div>
+                                            <div style="text-align:end;margin-top:17px;">
+                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                            </div>
+
+                                            @*<div class="action-btn" style="text-align:center;">
+                                                    <button data-toggle="tooltip" data-placement="left" title="Action" type="button" style="font-size:10px;display:none;" class="btn btn-danger glyphicon glyphicon-pencil"></button>
+                                                </div>*@
+
+                                        }
+
+                                    }
+
+
+                                    else if (sch.occupied == 2)
+                                    {
+
+
+
+                                        <div class="parts">
+                                            @*<h4 style="text-align:center;">No class in 1st Half</h4>*@
+                                        </div>
+                                        <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                        <div class="parts">
+
+
+                                            <h6 style="font-size:11.5px;color: #767676;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                            <h6 style="text-align:center;font-size:11.5px;color: #767676;">@sch.teachername</h6>
+                                            <h6 class="course-name" data-toggle="tooltip" data-placement="left" title="@sch.title" style="text-align:center;color: #767676;">@sch.title</h6>
+                                        </div>
+                                        <div style="text-align:end;margin-top:20px;">
+                                            <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                        </div>
+                                        @*<div class="action-btn" style="text-align:center;">
+                                                <button data-toggle="tooltip" data-placement="left" title="Action" type="button" style="font-size:10px;display:none;" class="action btn btn-danger glyphicon glyphicon-pencil"></button>
+                                            </div>*@
+
+                                    }
+                                    else if (sch.occupied == 1)
+                                    {
+
+
+
+                                        <div class="parts">
+
+                                            <h6 style="font-size:11.5px;color: #767676;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                            <h6 style="text-align:center;font-size:11.5px;color: #767676;">@sch.teachername</h6>
+                                            <h6 data-toggle="tooltip" data-placement="left" title="@sch.title" class="course-name" style="text-align:center;color: #767676;">@sch.title</h6>
+                                        </div>
+                                        <div class="parts">
+                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                            @*<h4 style="text-align:center;">No class in 2nd Half</h4>*@
+                                        </div>
+                                        <div style="text-align:end;margin-top:20px;">
+                                            <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                        </div>
+
+                                        @*<div class="action-btn" style="text-align:center;">
+                                                <button data-toggle="tooltip" data-placement="left" title="Action" type="button" style="font-size:10px;display:none;" class="action btn btn-danger glyphicon glyphicon-pencil"></button>
+                                            </div>*@
+
+                                    }
+
+
+
+                                    else if (sch.occupied == 3)
+                                    {
+                                        var weekwise = Model.WeekWise.Where(w => w.schid == sch.schid).ToList();
+
+                                        if (weekwise.Count() > 0)
+                                        {
+
+                                        <div class="parts">
+                                            @*<span style="font-weight:800;font-size:14.5px;color:black;">@slots.duration</span>
+                                                <hr style="margin:1px;border-bottom: 1px dashed;color:#00BCD4;" />*@
+                                            <h6 style="font-size:11.5px;text-align:center;color: #767676;">@sch.sectionname</h6>
+                                            <h6 style="text-align:center;font-size:11.5px;color: #767676;">@sch.teachername</h6>
+                                            <h6 style="text-align:center;color: #767676;">@sch.title</h6>
+                                        </div>
+                                            <div class="parts">
+
+                                            </div>
+                                                <div style="text-align:end;margin-top:20px;">
+                                                    <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                </div>
+                                                <div class="content1" style="display:none;text-align:center;">
+                                                    <div style="padding-top:115px;">
+                                                        <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w=>w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span style="float:right;" class="glyphicon glyphicon-list"></span> </span></div>
+                                                        @*<div style="cursor:pointer;" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime" class-break="@sch.BreakDuration">Class Held</div>
+                                                        <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger class-cancel">Cancel class</div></a>*@
+                                                    </div>
+                                                </div>
+
+                                               
+                                        }
+                                        else
+                                        {
+                                            <div class="parts">
+                                                
+                                                <h6 style="font-size:11.5px;text-align:center;color: #767676;">@sch.sectionname</h6>
+                                                <h6 style="text-align:center;font-size:11.5px;color: #767676;">@sch.teachername</h6>
+                                                <h6 style="text-align:center;color: #767676;">@sch.title</h6>
+                                            </div>
+                                            <div class="parts">
+
+                                            </div>
+                                            <div style="text-align:end;margin-top:20px;">
+                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                            </div>
+                                                <div class="content1" style="display:none;text-align:center;">
+                                                    <div style="padding-top:115px;">
+                                                        @*<div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held<span class="glyphicon glyphicon-check"></span> <span style="float:right;" class="glyphicon glyphicon-list"></span> </span></div>*@
+                                                        <div style="cursor:pointer;" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime" class-break="@sch.BreakDuration">Class Held</div>
+                                                        <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger class-cancel">Cancel class</div></a>
+                                                    </div>
+                                                </div>
+
+
+                                        }
+                                    }
+
+
+                                }
+
+                            }
+                            else
+                            {
+                                <div class="parts">
+                                    @*<h4 style="text-align:center;"> No Class Scheduled</h4>*@
+                                    <div style="text-align:center;">
+                                        <span data-toggle="tooltip" data-placement="left" title="No Class Scheduled" class="glyphicon glyphicon-exclamation-sign course-name" style="font-size: 45px;color: #53575a;"></span>
+                                    </div>
+                                </div>
+                                <div class="parts">
+
+                                </div>
+                                <div style="text-align:end;margin-top:20px;">
+                                    <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                </div>
+                                <div class="content1" style="display:none;text-align:center;">
+                                    <div style="padding-top:115px;">
+                                        @*<a href="#" style="text-decoration:none;"><div class="btn-sm btn-primary">Class Held</div></a>*@
+                                        <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Makeup class</div></a>
+                                    </div>
+                                </div>
+                                @*<div class="action-btn" style="text-align:center;">
+                                        <button data-toggle="tooltip" data-placement="left" title="Action" type="button" style="font-size:10px;display:none;" class="btn btn-danger glyphicon glyphicon-pencil"></button>
+                                    </div>*@
+
+
+                            }
+
+                        }
+
+
+                        @*<div class="content1" style="display:none;text-align:center;">
+                                <div style="padding-top:115px;">
+                                    <a href="#" style="text-decoration:none;"><div class="btn-sm btn-primary">Schedule class</div></a>
+                                    <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Cancel class</div></a>
+                                </div>
+                            </div>*@
+
+                    </div>
+
+
+                                }
+                                i++;
+                            }
+            </section>
+                                a++;
+                            }
+
+    </div>
+</div>

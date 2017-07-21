@@ -1,0 +1,571 @@
+﻿@model  Scheduling.Models.ViewModels.CombineScheduleVM
+@{
+    ViewBag.Title = "AddTeacher";
+    Layout = "~/Views/Shared/Layout_AAC.cshtml";
+}
+
+<script type="text/javascript">
+
+    var Teacher_id;
+
+    var Teacher_id_Edit = 0;
+
+    var Teacher_id_Del = 0;
+
+
+
+
+
+
+$(function () {
+
+
+
+
+
+
+        $('#myTable').dataTable({
+            "fnDrawCallback":function(){
+
+
+                $(".edit_td").click(function () {
+
+                    Teacher_id = $(this).parent().attr('teacher_id');
+                    console.log(Teacher_id);
+
+
+                    var json = $.ajax({
+
+
+
+                        url: '@Url.Action("Edit_teacher", "JSON")',
+                        data: {
+                            Teacher_id
+                        },
+                        type: "GET",
+
+                        success: function (result) {
+                            console.log(result)
+
+                            console.log(result["teachername"])
+                            console.log(result["teacherid"])
+
+
+                            Teacher_id_Edit = result["teacherid"]
+
+                            $('#teanameid_frEdit').val(result["teachername"]);
+                            $('#teaemailid_frEdit').val(result["Email"]);
+                            $('#teapassid_frEdit').val(result["Password"]);
+
+
+
+
+
+
+
+                        },
+
+                        error: (error) => {
+                            console.log(JSON.stringify(error));
+                        }
+
+
+
+
+
+
+
+                    })
+
+
+                    //$('#teanameid').text(result["teachername"]);
+                })
+
+
+                $("#btnsubmit_frEdit").click(function () {
+
+
+                    var teachername = $("#teanameid_frEdit").val();
+                    var Email = $("#teaemailid_frEdit").val();
+                    var Password = $("#teapassid_frEdit").val();
+                    var teacherid = Teacher_id_Edit;
+
+
+                    var ATID = 2;
+                    var PID = null;
+
+
+                    console.log(teacherid);
+                    console.log(teachername);
+                    console.log(Email);
+                    console.log(Password);
+
+                    var json = $.ajax({
+
+                        url: '@Url.Action("Edit_teacher", "AAC")',
+                        type: "POST",
+
+                        data: {
+                            teacherid,
+                            teachername,
+                            Email,
+                            Password,
+                            ATID,
+                            PID
+                        },
+
+
+
+                        success: function (result) {
+                            window.location.reload();
+                            $(".info").html("<p style='color:green' >data updated successfully</p>");
+
+
+                        },
+                        error: (error) => {
+                            console.log(JSON.stringify(error));
+
+                        }
+
+                    })
+
+                });
+
+
+                $(".btn_del").click(function () {
+                    Teacher_id_Del = $(this).parent().attr('teacher_id');
+                    console.log(Teacher_id_Del);
+
+
+
+                });
+
+
+
+
+
+                $(".btn_submit_frDelete").click(function () {
+
+                    var teacherid = Teacher_id_Del;
+
+
+
+                    var json = $.ajax({
+
+                        url: '@Url.Action("Delete", "AAC")',
+                        type: "POST",
+
+                        data: {
+                            teacherid
+                        },
+
+
+
+                        success: function (result) {
+                            window.location.reload();
+                            $(".info").html("<p style='color:green' >data updated successfully</p>");
+                            alert("yes");
+
+                        },
+                        error: (error) => {
+                            console.log(JSON.stringify(error));
+
+                        }
+
+                    })
+
+                })
+
+
+
+
+
+
+
+
+
+
+
+
+
+                $("#btnsubmit").click(function () {
+                    var teachername = teachername = $("#teanameid").val();
+                    var Email = Email = $("#teaemailid").val();
+                    var Password = Password = $("#teapassid").val();
+
+
+                    var ATID = 2;
+                    var PID = null;
+
+                    console.log(teachername);
+                    console.log(Email);
+                    console.log(Password);
+
+                    var json = $.ajax({
+
+                        url: '@Url.Action("AddTeacher","AAC")',
+
+                        data: {
+                            teachername,
+                            Email,
+                            Password,
+                            ATID,
+                            PID
+                        },
+
+                        type: "POST",
+
+
+                        success: function (result) {
+                            console.log(result);
+                            if (result == "NO") {
+                                $(".info").html("<p style='color:red' >ERROR! data could not added</p>");
+                                alert("no");
+                            }
+                            else {
+                                window.location.reload();
+                                $(".info").html("<p style='color:green' >data added successfully</p>");
+
+                            }
+                        }
+
+
+
+                    })
+
+                })
+
+
+            } });
+
+
+
+
+
+
+
+
+    })
+
+</script>
+
+<div class="container">
+    
+
+    
+
+    <div class="modal class-request-modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header modal-header-success">
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4>Add teacher</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="well">
+                        <div class="form-group">
+                            <label for="course" class="col-2 col-form-label">Teacher Name</label>
+                            <div class="row">
+                                <div class="col-md-11">
+                                    <input class="form-control" type="text" value="" id="teanameid">
+                                </div>
+                                <div class="col-md-1"></div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="type" class="col-2 col-form-label">E-Mail</label>
+                            <div class="row">
+                                <div class="col-md-11">
+                                    <input class="form-control" type="text" id="teaemailid">
+                                </div>
+                                <div class="col-md-1"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="type" class="col-2 col-form-label">Password</label>
+                            <div class="row">
+                                <div class="col-md-11">
+                                    <input class="form-control" type="text" id="teapassid">
+                                </div>
+                                <div class="col-md-1"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" id="btnsubmit" class="btn btn-success btn-block" data-dismiss="modal">Send Request</button>
+                    <button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal teacher-edit-modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+
+
+
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header modal-header-success">
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4>Edit teacher</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="well">
+                        <div class="form-group">
+                            <label for="course" class="col-2 col-form-label">teachername</label>
+                            <div class="row">
+                                <div class="col-md-11">
+                                    <input class="form-control" type="text" value="" id="teanameid_frEdit">
+                                </div>
+                                <div class="col-md-1"></div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="type" class="col-2 col-form-label">E-Mail</label>
+                            <div class="row">
+                                <div class="col-md-11">
+                                    <input class="form-control" type="text" id="teaemailid_frEdit">
+                                </div>
+                                <div class="col-md-1"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="type" class="col-2 col-form-label">Password</label>
+                            <div class="row">
+                                <div class="col-md-11">
+                                    <input class="form-control" type="text" id="teapassid_frEdit">
+                                </div>
+                                <div class="col-md-1"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" id="btnsubmit_frEdit" frEdit="yes" class="btn btn-success btn-block" data-dismiss="modal">Update</button>
+                    <button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal del-teacher-modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header modal-header-danger">
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4>Delete Teacher</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="well">
+                        <p><span class="glyphicon glyphicon-alert"></span> Are you sure you want to delete this teacher?</p>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn_submit_frDelete btn btn-primary btn-block" id="btn_yes" data-dismiss="modal">Yes</button>
+                    <button type="button" class="btn btn-danger btn-block" data-dismiss="modal">No</button>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel='stylesheet' type='text/css'>
+    <div class="container">
+        <div class="row">
+
+
+            <div class="col-md-10 col-md-offset-1">
+                <div class="panel panel-default panel-table">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col col-xs-6">
+                                <h3>Teacher Data</h3>
+                            </div>
+                            <div class="col col-xs-6 text-right">
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target=".class-request-modal">ADD Teacher</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <table id="myTable" class="table table-striped table-bordered table-list">
+                            <thead>
+                                <tr>
+                                    <th><em class="fa fa-cog"></em></th>
+                                    <th>Name</th>
+                                    <th>E-mail</th>
+                                    <th>Password</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+
+
+                                @try
+                                {
+
+                                    foreach (var teacr in Model.teachers)
+                                    {
+                                        <tr>
+                                            <td teacher_id="@teacr.teacherid" align="center">
+                                                @*  <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target=".class-request-modal"><em class="fa fa-pencil"></em></button>*@
+                                                <button teacher_id="@teacr.teacherid" data-toggle="modal" data-target=".teacher-edit-modal" class="edit_td btn btn-primary"><em class="fa fa-pencil"></em></button>
+                                                <a data-toggle="modal" data-target=".del-teacher-modal" class="btn_del btn btn-danger"><em class="fa fa-trash">  </em></a>
+                                            </td>
+                                            <td>@teacr.teachername</td>
+                                            <td>@teacr.Email</td>
+                                            <td>@teacr.Password</td>
+                                            
+
+                                        </tr>
+                                    }
+
+                                }
+                                catch (NullReferenceException)
+                                {
+
+
+
+                                }
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*<div class="container">
+
+            <ol class="breadcrumb">
+                <li><i class="fa fa-home"></i></li>
+                <li><a href="/AAC">Dashboard</a></li>
+                <li class="active">Teacher list</li>
+            </ol>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <span class="h3">Teachers List</span>
+                                </div>
+                                <div class="col-md-2">
+
+                                 <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target=".class-request-modal">ADD Teacher</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-striped table-bordered">
+
+                                <thead>
+
+                                    <tr>
+
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+                                    @try
+                                    {
+
+                                    foreach (var teacr in Model.teachers)
+                                    {
+                                    <tr>
+                                        <td>@teacr.teachername</td>
+                                        <td>@teacr.Email</td>
+                                        <td>@teacr.Password</td>
+                                        <td>@teacr.ATID</td>
+                                        <td>@teacr.PId</td>
+
+                                    </tr>
+                                        }
+
+                                    }
+                                    catch(NullReferenceException)
+                                    {
+
+
+
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>*@
+
+
+
+
+    @*@using (Html.BeginForm("AddTeacher", "AAC", FormMethod.Post))
+        {
+
+            @Html.AntiForgeryToken();
+
+
+            @Html.LabelFor(m => m.teachername)
+            @Html.TextBoxFor(m => m.teachername, "", new { @class = "teaname" })
+
+            @Html.LabelFor(m => m.Email)
+            @Html.TextBoxFor(m => m.Email, "", new { @class = "teaemail" })
+
+            @Html.LabelFor(m => m.Password)
+            @Html.TextBoxFor(m => m.Password, "", new { @class = "teapassword" })
+
+
+
+
+            <input  class="btnsubmit" type="button" value="submit" />*@
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+

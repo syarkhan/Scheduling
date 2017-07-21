@@ -1,0 +1,196 @@
+﻿
+@{
+    ViewBag.Title = "Monitoring";
+    Layout = "~/Views/Shared/Layout_AAC.cshtml";
+}
+
+<style>
+    
+</style>
+
+
+
+<script>
+
+    $(document).ready(function () {
+
+        var offid;
+        var jsonData = $.ajax({
+
+            url: '@Url.Action("GetAllCourses", "JSON")',
+
+            type: "GET",
+            beforeSend: function () {
+
+            },
+            complete: function () {
+
+            },
+            success: function (result) {
+                console.log(result);
+
+                $("#course").autocomplete({
+                    source: result,
+
+                    minLength: 2,
+                    focus: function (event, ui) {
+                        // prevent autocomplete from updating the textbox
+                        event.preventDefault();
+                        // manually update the textbox
+                        //$(this).val(ui.item.label);
+                    },
+
+                    select: function (event, ui) {
+
+                        // prevent autocomplete from updating the textbox
+                        event.preventDefault();
+
+                        // manually update the textbox and hidden field
+                        $(this).val(ui.item.label);
+                        //console.log(ui.item.value);
+                        offid = ui.item.value;
+                        console.log(offid);
+
+                        $('.tb').remove();
+
+                        var jsonData = $.ajax({
+
+                            url: '@Url.Action("MonitoringByOffid", "JSON")',
+                            data: {
+                                offid
+                            },
+                            type: "GET",
+                            beforeSend: function () {
+                                $('#loading').show();
+                                //$('.right').attr('disabled', 'disabled');
+                                //$('.left').attr('disabled', 'disabled');
+                            },
+                            complete: function () {
+                                $('#loading').hide();
+                                //$('.right').removeAttr('disabled');
+                                //$('.left').removeAttr('disabled');
+                            },
+                            success: function (result) {
+                                //console.log(result);
+                                $("body").scrollTop(0);
+                                //$('').remove();
+                                $('.main-div').html(result);
+                            }
+                        });
+
+                    }
+                });
+
+
+            },
+            error: function (data, errorThrown) {
+                alert("Network Error!");
+            }
+
+        });
+
+        @*var jsonData = $.ajax({
+
+                url: '@Url.Action("MonitoringByOffid", "JSON")',
+                data: {
+                    offid
+                },
+                type: "GET",
+                beforeSend: function () {
+                    $('#loading').show();
+                    //$('.right').attr('disabled', 'disabled');
+                    //$('.left').attr('disabled', 'disabled');
+                },
+                complete: function () {
+                    $('#loading').hide();
+                    //$('.right').removeAttr('disabled');
+                    //$('.left').removeAttr('disabled');
+                },
+                success: function (result) {
+                    //console.log(result);
+                    $("body").scrollTop(0);
+                    //$('').remove();
+                    $('.main-div').html(result);
+                }
+            });*@
+
+    });
+</script>
+
+
+
+
+
+<div class="container" style="font-family:'Segoe UI';">
+
+    <h2>Monitoring</h2>
+    @*@Html.DropDownList("offcourses", null, htmlAttributes: new { @class = "form-control" })*@
+
+    <input class="form-control" type="text" value="" id="course">
+    
+
+    <div id="loading" style="display:none;" class="col-md-offset-5">
+        <img src="~/Content/themes/base/images/loading.svg" height="350" width="350">
+    </div>
+
+    <div class="main-div" style="font-size:12.8px;">
+        <table class="table table-striped tb">
+            <tr>
+                <th>
+                    @Html.Label("SNo")
+                </th>
+                <th>
+                    @Html.Label("Date")
+                </th>
+                <th>
+                    @Html.Label("Type")
+                </th>
+                <th>
+                    @Html.Label("Class Started")
+                </th>
+                <th>
+                    @Html.Label("Class Ended")
+                </th>
+                <th>
+                    @Html.Label("Break Duration")
+                </th>
+                <th>
+                    @Html.Label("Teacher")
+                </th>
+
+
+
+            </tr>
+
+           
+                <tr>
+
+
+                    <td>
+                      
+                    </td>
+                  
+
+                    <td>
+                        
+                    </td>
+                    <td>
+                       
+                    </td>
+                    <td>
+                       
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+
+
+
+
+                </tr>
+                        
+
+        </table>
+    </div>
+</div>
+

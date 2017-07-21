@@ -1,0 +1,142 @@
+﻿@model Scheduling.Models.ViewModels.ReportsVM
+
+@{
+    ViewBag.Title = "Reports";
+    Layout = "~/Views/Shared/Layout_AAC.cshtml";
+}
+<style>
+    
+</style>
+
+
+
+<script>
+
+    $(document).ready(function () {
+
+        $('#slottypes,#days,.campus').change(function () {
+
+            $('.tb').remove();
+            //$(".INO").remove();
+            var slottypeid = $('#slottypes').val();
+            var start =  $('#startdate').val();
+            var end = $('#enddate').val();
+            var campus = $('.campus').val();
+            var dayid = $('#days').val();
+
+            //value = new Date(parseInt(start.replace("/Date(", "").replace(")/", ""), 10));
+
+            console.log(slottypeid,start,end,campus,dayid);
+
+            var jsonData = $.ajax({
+
+                url: '@Url.Action("FilterEmptyRoomBySlottype", "JSON")',
+                data: {
+                    dayid,
+                    campus,
+                    slottypeid,
+                    start,
+                    end
+                },
+                type: "GET",
+                beforeSend: function () {
+                    $('#loading').show();
+                    //$('.right').attr('disabled', 'disabled');
+                    //$('.left').attr('disabled', 'disabled');
+                },
+                complete: function () {
+                    $('#loading').hide();
+                    //$('.right').removeAttr('disabled');
+                    //$('.left').removeAttr('disabled');
+                },
+                success: function (result) {
+                    //console.log(result);
+                    $("body").scrollTop(0);
+                    //$('').remove();
+                    $('.main-div').html(result);
+                }
+            });
+
+
+        });
+
+    });
+</script>
+
+@{int i = 1; }
+
+
+<div class="container">
+
+    <input hidden value="@ViewBag.startdate.ToString("MM/dd/yyyy")"  id="startdate"/>
+    <input hidden value="@ViewBag.enddate.ToString("MM/dd/yyyy")" id="enddate" />
+
+    <h2>Empty Rooms</h2>
+    @Html.DropDownList("slottypes", null, htmlAttributes: new { @class = "form-control" })
+    @*@Html.DropDownList("slottypes", (SelectList)ViewBag.slottypes, htmlAttributes: new { @class = "slottypes form-control", @slottype = "11:45 - 02:45" })*@
+
+
+    @Html.DropDownList("days", null, htmlAttributes: new { @class = "form-control" })
+
+
+
+    <select name="campus" class="campus form-control">
+        <option value="90">90</option>
+        <option value="100">100</option>
+        <option value="154">154</option>
+    </select>
+
+
+    <div id="loading" style="display:none;" class="col-md-offset-5">
+        <img src="~/Content/themes/base/images/loading.svg" height="350" width="350">
+    </div>
+    <div class="main-div">
+        <table class="table tb">
+            <tr>
+                <th>
+                    @Html.Label("SNo")
+                </th>
+                <th>
+                    @Html.Label("Room")
+                </th>
+                <th>
+                    @Html.Label("Campus")
+                </th>
+                <th>
+                    @Html.Label("Duration")
+                </th>
+
+
+
+            </tr>
+
+            @foreach (var item in Model.empty_rooms)
+    {
+                <tr>
+
+
+                    <td>
+                        @i
+
+                    </td>
+                    @{i++;}
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.roomno)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.campus)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.duration)
+                    </td>
+
+
+
+
+                </tr>
+                    }
+
+        </table>
+    </div>
+</div>

@@ -1,0 +1,226 @@
+﻿@model  Scheduling.Models.ViewModels.CombineScheduleVM
+
+@{int nxt_section = 0; }
+<script type="text/javascript">
+    var element;
+
+
+    $(function(){
+
+        @*console.log(@ViewBag.numbrOfClasses);*@
+
+
+        if (@ViewBag.numbrOfClasses == 6)
+        {
+            element = 1000;
+
+        }
+        else if(@ViewBag.numbrOfClasses == 5)
+        {
+            element = 860;
+        }
+        else if (@ViewBag.numbrOfClasses == 4)
+        {
+            element = 730;
+
+        }
+        else if (@ViewBag.numbrOfClasses == 3)
+        {
+            element = 650;
+
+        }
+        else if (@ViewBag.numbrOfClasses == 2)
+        {
+            element = 436;
+
+        }
+        else if (@ViewBag.numbrOfClasses == 1)
+        {
+            element = 291;
+
+        }
+
+
+
+        $("table").css({ 'width': element });
+
+
+
+    })
+
+
+
+
+
+
+
+
+</script>
+
+<div class="wrapper" style="margin-left:110px">
+
+    <table>
+
+        <tr>
+            <th class="fixed td-color" style="left: 2px; right:50px; height:154.5px; vertical-align:middle; width:115px; border-right: 1px solid black;">Days</th>
+            <th class="fixed td-color" style="left: 100px; height:154.5px; width:115px;  border-right: 2px solid black;">Time Slots</th>
+
+            @foreach (var sections in Model.sections)
+            {
+                //if (nxt_section < 61)
+                //{
+                //    nxt_section = sections.secid + 1;
+                //}
+                //else
+                //{
+                //    nxt_section = sections.secid;
+
+
+                //}
+                //var sec_name = "d";
+                //try
+                //{
+                //     sec_name = Model.sections.Where(s => s.secid == nxt_section).Single().sectionname;
+                //}
+                //catch (InvalidOperationException)
+                //{
+                //    sec_name = "gsgd";
+
+
+                //}
+
+                <th class="td-color">@sections.Class.Class1 @sections.sectionname</th>
+
+
+            }
+
+
+
+
+        </tr>
+        @{int nxt_section2 = 0; int count = 1111; int a = 1; }
+        @foreach (var days in Model.days)
+        {
+            foreach (var slottypes in Model.vslottypes)
+            {
+                <tr>
+
+                    @if (Model.vslottypes.ElementAt(0) == slottypes)
+                    {
+                        <th class="fixed td-color" style="left: 2px; height:13.7%; width:100px; border-right: 2px solid black;" rowspan="@Model.vslottypes.Count()">
+                            <span class="rotate">@ViewBag.dates[a - 1].Date.ToString("dd/MMM") @days.dayname</span>
+                        </th>
+                        a++;
+                    }
+
+                    <th class="fixed td-color" style="left: 100px; height:154.5px; width:115px; border-right: 2px solid black;">@slottypes.duration</th>
+
+                    @foreach (var sections in Model.sections)
+                    {
+                        var IsSchedule = Model.vschedule.Where(d => d.dayid == days.dayid && d.slottypeid == slottypes.slottypeid && d.secid == sections.secid
+                                        || d.dayid == days.dayid && d.slottypeid == slottypes.slottypeid && d.secid == sections.secid && d.occupied >= 1 && d.occupied <= 2).ToList();
+
+                        //if (nxt_section2 < 61)
+                        //{
+                        //    nxt_section2 = sections.secid + 1;
+                        //}
+                        //else
+                        //{
+                        //    nxt_section2 = sections.secid;
+
+
+                        //}
+                        //var sec_name = "d";
+                        //try
+                        //{
+                        //    sec_name = Model.sections.Where(s => s.secid == nxt_section).Single().sectionname;
+                        //}
+                        //catch (InvalidOperationException)
+                        //{
+                        //    sec_name = "gsgd";
+                        //}
+
+
+                        if (IsSchedule.Count > 0)
+                        {
+                            if (IsSchedule.Count == 1)
+                            {
+                                foreach (var sch in IsSchedule)
+                                {
+
+
+                                    if (sch.occupied == 1)
+                                    {
+                                        <td class="empty" data-slot="@days.dayid-@slottypes.slottypeid-@sections.secid" style="height:154.5px; font-size:11px; vertical-align:top"><h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name"> @sch.title</h6> @IsSchedule[0].teachername<br>@sch.roomno- @IsSchedule[0].campus<br>(@IsSchedule[0].duration)<hr></td>
+                                    }
+
+
+
+                                    if (sch.occupied == 2)
+                                    {
+                                        <td class="empty" data-slot="@days.dayid-@slottypes.slottypeid-@sections.secid" style="height:154.5px; font-size:11px; vertical-align:bottom"> <hr><h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name"> @sch.title</h6> @IsSchedule[0].teachername<br>@sch.roomno- @IsSchedule[0].campus<br>(@IsSchedule[0].duration)</td>
+
+
+                                    }
+                                    if (sch.occupied == 3)
+                                    {
+
+                                        <td style="height:154.5px; font-size:11px;"><h6 class="" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name"> @sch.title</h6> @IsSchedule[0].teachername<br>@sch.roomno- @IsSchedule[0].campus</td>
+
+                                    }
+
+
+
+
+
+
+                                }
+                            }
+                            if (IsSchedule.Count > 1 && IsSchedule.Count < 3 && IsSchedule[0].occupied != IsSchedule[1].occupied)
+
+                            {
+
+                                <td style="height:154.5px; font-size:10.5px; padding:0 ">
+                                    <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@IsSchedule[0].title" title="Course Name">@IsSchedule[0].title</h6>@IsSchedule[0].teachername<br>@IsSchedule[0].roomno- @IsSchedule[0].campus -(@IsSchedule[0].duration)
+                                    <hr> <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@IsSchedule[0].title" title="Course Name">@IsSchedule[0].title</h6>@IsSchedule[1].teachername<br> @IsSchedule[1].roomno- @IsSchedule[1].campus- (@IsSchedule[1].duration)
+                                </td>
+                            }
+                            @*if (sections.sectionname.Contains("1") && sec_name.Contains("3") || (sections.sectionname.Contains("3") && sec_name.Contains("5")) || (sections.sectionname.Contains("5") && sec_name.Contains("7")))
+                                {
+                                    <td class="rest_of_tds" style="height:154.5px; font-size:11px;border-right: 3px solid black;"> @IsSchedule[0].title<br> @IsSchedule[0].teachername<br>@IsSchedule[0].roomno- @IsSchedule[0].campus<br>(@IsSchedule[0].duration)</td>
+
+                                }
+                                else
+                                {
+                                    <td class="rest_of_tds" style="height:154.5px;"> @IsSchedule[0].title<br> @IsSchedule[0].teachername<br>@IsSchedule[0].roomno- @IsSchedule[0].campus<br>(@IsSchedule[0].duration)</td>
+
+                                }*@
+
+                        }
+
+                        else
+                        {
+
+                            <td class="empty empty-color" data-slot="@days.dayid-@slottypes.slottypeid-@sections.secid" style="height: 150px;"></td>
+                        }
+
+
+                    }
+
+                </tr>
+            }
+        }
+
+
+
+
+
+
+
+
+
+    </table>
+
+</div>
+
+

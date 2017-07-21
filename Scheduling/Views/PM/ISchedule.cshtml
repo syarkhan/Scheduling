@@ -1,0 +1,381 @@
+﻿@model  Scheduling.Models.ViewModels.CombineScheduleVM
+@{
+    ViewBag.Title = "ISchedule";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style type="text/css">
+    hr {
+        border-color: orangered;
+        padding: 0;
+        margin-bottom: 1.5px;
+        margin-top: 1.5px;
+        margin-right: 0;
+        margin-left: 0;
+    }
+
+    table {
+        width: 250%;
+        border: 1px solid black;
+        text-align: center;
+        table-layout: fixed;
+    }
+
+
+
+    .wrapper {
+        overflow-x: scroll;
+    }
+
+    td {
+        min-width: 50px;
+    }
+
+    .fixed {
+        position: absolute;
+    }
+
+
+
+
+    td, th {
+        font-size: 12px;
+        border: 1px solid black;
+        padding-top: 4px;
+        padding-bottom: 4px;
+        /*word-wrap:break-word;*/
+    }
+</style>
+
+
+<script type="text/javascript">
+
+    var semesterNumber;
+
+    $(function () {
+
+
+
+
+            //$(".parent_tr").next().children().find(':nth-child(2)').addClass(".boder");
+
+
+        //document.getElementById("wrap").addEventListener("scroll", function () {
+        //    var translate = "translate(0," + this.scrollTop + "px)";
+        //    this.querySelector("thead").style.transform = translate;
+        //});
+
+
+        $("body").on('change', '.sem_dropDown', function () {
+
+            semesterNumber = parseInt($('.sem_dropDown option:selected').text());
+            console.log(semesterNumber);
+
+            var jsonData = $.ajax({
+
+                url: '@Url.Action("PmSemDropDown", "JSON")',
+                data: {
+                    semesterNumber
+                },
+                type: "POST",
+                beforeSend: function () {
+                    $('#loading').show();
+                    $('.wrapper').hide();
+
+                },
+                complete: function () {
+                    $('#loading').hide();
+                },
+                success: function (result) {
+                    $('.wrapper').html(result);
+                    $('.wrapper').show();
+
+                },
+                error: function (data, errorThrown) {
+                    alert("Error! Cannot monitor class");
+                }
+
+
+            });
+
+        });
+
+
+
+
+
+
+    });
+
+
+
+
+
+</script>
+
+
+
+    <h2>BSCS Schedule</h2>
+    BSCS <select class="sem_dropDown">
+        <option>1</option>
+        <option>3</option>
+        <option>5</option>
+        <option>7</option>
+
+
+
+    </select>
+
+    <br>
+    <br>
+
+
+    @{int nxt_section = 0; }
+
+    <div id="loading" style="display:none;" class="col-md-offset-5">
+        <img src="~/Content/themes/base/images/loading.svg" height="550" width="350">
+    </div>
+
+
+    @{int i = 1;}
+
+    <div class="wrapper" style="margin-left: 100px">
+
+        <table>
+
+            <tr>
+                <th class="fixed" style="left: 0px; right:50px; height:154.5px; vertical-align:middle; width:100px; border-right: 2px solid black; border-top: 2px solid black; background-color:darkgray">Days</th>
+                <th class="fixed" style="left: 97px; height:154.5px; width:115px;  border-right: 3px solid black; background-color:darkgray">Time Slots</th>
+
+                @foreach (var sections in Model.sections)
+            {
+                if (nxt_section < 61)
+                {
+                    nxt_section = sections.secid + 1;
+                }
+                else
+                {
+                    nxt_section = sections.secid;
+
+
+                }
+                var sec_name = Model.sections.Where(s => s.secid == nxt_section).Single().sectionname;
+
+                if (sections.sectionname.Contains("1") && sec_name.Contains("3") || (sections.sectionname.Contains("3") && sec_name.Contains("5")) || (sections.sectionname.Contains("5") && sec_name.Contains("7")))
+                {
+            <th style="border-right: 3px solid black; background-color:darkgray;">@sections.sectionname</th>
+
+                }
+                else
+                {
+            <th style="background-color:darkgray">@sections.sectionname</th>
+
+                }
+            }
+
+
+
+
+            </tr>
+            @{int nxt_section2 = 0; int count = 778899; }
+            @foreach (var days in Model.days)
+            {
+                foreach (var slottypes in Model.vslottypes)
+                {
+        <tr>
+
+            <td class="fixed" style="left: 0px; right:50px;  height:154.5px; width:100px; border-right: 2px solid black; background-color:darkgray "><span style="text-align:center; vertical-align:middle;">@days.dayname</span></td>
+            <td class="fixed" style="left: 97px; height:154.5px; width:115px; border-right: 3px solid black; background-color:darkgray;">@slottypes.duration</td>
+
+
+            @foreach (var sections in Model.sections)
+            {
+                var IsSchedule = Model.vschedule.Where(d => d.dayid == days.dayid && d.slottypeid == slottypes.slottypeid && d.secid == sections.secid).ToList();
+
+                if (nxt_section2 < 61)
+                {
+                    nxt_section2 = sections.secid + 1;
+                }
+                else
+                {
+                    nxt_section2 = sections.secid;
+
+
+                }
+                var sec_name = Model.sections.Where(s => s.secid == nxt_section2).Single().sectionname;
+
+
+
+
+
+                if (IsSchedule.Count > 0)
+                {
+                    //if (IsSchedule.Count == 1)
+                    //{
+
+                    if (IsSchedule.Count > 1 && IsSchedule.Count < 3 && IsSchedule[0].occupied != IsSchedule[1].occupied)
+
+                    {
+                        
+                            <td class="rest_of_tds" style="height:154.5px; font-size:10.5px; padding:0 ">
+                                @count
+                                @IsSchedule[0].title<br> @IsSchedule[0].teachername<br>@IsSchedule[0].roomno- @IsSchedule[0].campus -(@IsSchedule[0].duration)
+                                <hr> @count @IsSchedule[1].title<br>@IsSchedule[1].teachername<br> @IsSchedule[1].roomno- @IsSchedule[1].campus- (@IsSchedule[1].duration)
+                            </td>
+                        
+
+
+
+
+
+
+                    }
+                    if (IsSchedule.Count == 1)
+                    {
+                        foreach (var sch in IsSchedule)
+                        {
+                            if (sch.occupied == 1)
+                            {
+                                
+                                    <td style="height:154.5px; font-size:11px; vertical-align:top"> @count @sch.title<br> @IsSchedule[0].teachername<br>@sch.roomno- @IsSchedule[0].campus<br>(@IsSchedule[0].duration)<hr></td>
+
+                                
+
+
+                            }
+                            else if (sch.occupied == 2)
+                            {
+                                
+                                    <td style="height:154.5px; font-size:11px; vertical-align:bottom"><hr> @count @sch.title<br> @IsSchedule[0].teachername<br>@sch.roomno- @IsSchedule[0].campus<br>(@IsSchedule[0].duration)</td>
+
+                                
+                            }
+                            else if (sch.occupied == 3)
+                            {
+                                
+                                    <td style="height:154.5px; font-size:11px;">@count @sch.title<br> @IsSchedule[0].teachername<br>@sch.roomno- @IsSchedule[0].campus</td>
+
+                                
+
+                            }
+
+
+
+
+                        }
+
+                    }
+
+
+
+
+                    @*if (sections.sectionname.Contains("1") && sec_name.Contains("3") || (sections.sectionname.Contains("3") && sec_name.Contains("5")) || (sections.sectionname.Contains("5") && sec_name.Contains("7")))
+                        {
+                            <td class="rest_of_tds" style="height:154.5px; font-size:11px;border-right: 3px solid black;"> @IsSchedule[0].title<br> @IsSchedule[0].teachername<br>@IsSchedule[0].roomno- @IsSchedule[0].campus<br>(@IsSchedule[0].duration)</td>
+
+                        }
+                        else
+                        {
+                            <td class="rest_of_tds" style="height:154.5px;"> @IsSchedule[0].title<br> @IsSchedule[0].teachername<br>@IsSchedule[0].roomno- @IsSchedule[0].campus<br>(@IsSchedule[0].duration)</td>
+
+                        }*@
+
+                }
+                else
+                {
+                    <td style="height: 154.5px;"></td>
+                    @*if (sections.sectionname.Contains("1") && sec_name.Contains("3") || (sections.sectionname.Contains("3") && sec_name.Contains("5")) || (sections.sectionname.Contains("5") && sec_name.Contains("7")))
+                         {
+
+
+                        <td style="height:154.5px; font-size:11px;border-right: 3px solid black;"></td>
+
+                         }
+                         else
+                         {
+                        <td  style="height: 150px;"></td>
+
+                         }*@
+                }
+
+
+            }
+
+
+        </tr>
+            }
+        }
+
+
+
+
+
+
+
+
+
+        </table>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

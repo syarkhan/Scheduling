@@ -1,0 +1,643 @@
+﻿@model  Scheduling.Models.ViewModels.CombineScheduleVM
+@{
+    ViewBag.Title = "ISchedule";
+    Layout = "~/Views/Shared/Layout_PM.cshtml";
+}
+
+<style type="text/css">
+    hr {
+        border-color: orangered;
+        padding: 0;
+        margin-bottom: 1.5px;
+        margin-top: 1.5px;
+        margin-right: 0;
+        margin-left: 0;
+    }
+
+    table {
+        width: 250%;
+        text-align: center;
+        table-layout: fixed;
+        margin-right: 20px;
+        vertical-align: middle;
+    }
+
+
+
+    .wrapper {
+        overflow-x: scroll;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    td {
+        min-width: 50px;
+    }
+
+    th {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .fixed {
+        position: absolute;
+        margin-left: 40px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+
+
+    td, th {
+        font-size: 12px;
+        border: 1px solid black;
+        padding-top: 4px;
+        padding-bottom: 4px;
+        /*word-wrap:break-word;*/
+    }
+
+
+    .rotate {
+            
+    -ms-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+    position: absolute;
+    transform: rotate(-90deg);
+    top: 42%;
+    font-size: 22px;
+    left: -63%;
+    letter-spacing: 18px;
+           }
+
+
+    .td-color{
+        background-color: #37474f;
+        color: white;
+    }
+
+    .empty-color{
+        background-color:#e8e8e8;
+    }
+
+
+    
+</style>
+
+
+<script type="text/javascript">
+
+    var semesterNumber;
+    var slotid;
+    var offid;
+    var date;
+    //var type;
+    //var teacherid;
+
+    $(function () {
+
+        $('body').popover({
+            selector: '[data-toggle="popover"]',
+            trigger: 'hover'
+        });
+
+        //jQuery(function($){
+        //    $("#datepicker_es").datepicker({ minDate: 0,beforeShowDay: function(date)
+        //    { return [(date.getDay() == 2 || date.getDay() == 3 || date.getDay() == 4 || date.getDay() == 5 || date.getDay() == 6 || date.getDay() == 0), ""]; }});
+
+            //var datepicker = $('#datepicker');
+            //datepicker.datepicker();
+            //$("#datepicker").datepicker();
+
+
+            //$(".parent_tr").next().children().find(':nth-child(2)').addClass(".boder");
+
+
+        //document.getElementById("wrap").addEventListener("scroll", function () {
+        //    var translate = "translate(0," + this.scrollTop + "px)";
+        //    this.querySelector("thead").style.transform = translate;
+        //});
+
+
+        $("body").on('change', '.sem_dropDown', function () {
+
+            semesterNumber = parseInt($('.sem_dropDown option:selected').val());
+
+            console.log(isNaN(semesterNumber));
+            if (isNaN(semesterNumber))
+            {
+                semesterNumber = 0;
+            }
+            console.log(semesterNumber);
+
+            var jsonData = $.ajax({
+
+                url: '@Url.Action("PmSemDropDown", "JSON")',
+                data: {
+                    semesterNumber
+                },
+                type: "POST",
+                beforeSend: function () {
+                    $('#loading').show();
+                    $('.partial_container').hide();
+
+                },
+                complete: function () {
+                    $('#loading').hide();
+                },
+                success: function (result) {
+                    $('.partial_container').html(result);
+                    $('.partial_container').show();
+
+                },
+                error: function (data, errorThrown) {
+                    alert("Network Error!");
+                }
+
+
+            });
+
+        });
+
+
+        $("body").on('click', '.empty', function () {
+
+
+
+            var data_slot = $(this).attr('data-slot');
+
+            $(".class-request-modal").modal();
+
+            console.log(data_slot);
+
+            date = $(this).closest(".date").attr("date");
+            console.log(date);
+
+            var arr = data_slot.split("-");
+            var dayid = arr[0];
+            var slottypeid = arr[1];
+            var secid = arr[2];
+
+            //datepicker.datepicker("destroy");
+            //datepicker.datepicker({
+
+            //    beforeShowDay: function (date)
+            //    {
+            //        if (dayid == 7)
+            //        { return [(date.getDay() == 0), ""] }
+            //        else
+            //        {
+            //            return [(date.getDay() == dayid), ""];
+            //        }
+            //    }
+
+            //});
+
+
+            var jsonData = $.ajax({
+
+                url: '@Url.Action("CheckIfSlotEmpty", "JSON")',
+                data: {
+                    dayid,
+                    slottypeid,
+                    secid
+                },
+                type: "GET",
+                beforeSend: function () {
+                    //$('#loading').show();
+                    //$('.partial_container').hide();
+
+                },
+                complete: function () {
+                    //$('#loading').hide();
+                },
+                success: function (result) {
+
+                    console.log(result);
+
+                    $("#slot").autocomplete({
+                        source: result["empty"],
+                        open: function (event, ui) {
+                            $(".ui-autocomplete").css("z-index", 5000);
+
+                        },
+                        minLength: 2,
+                        focus: function (event, ui) {
+                            // prevent autocomplete from updating the textbox
+                            event.preventDefault();
+                            // manually update the textbox
+                            //$(this).val(ui.item.label);
+                        },
+
+                        select: function (event, ui) {
+
+                            // prevent autocomplete from updating the textbox
+                            event.preventDefault();
+
+                            // manually update the textbox and hidden field
+                            $(this).val(ui.item.label);
+                            //console.log(ui.item.value);
+                            slotid = ui.item.value;
+                            console.log(slotid);
+                        }
+                    });
+
+                    $("#course").autocomplete({
+                        source: result["courses"],
+                        open: function (event, ui) {
+                            $(".ui-autocomplete").css("z-index", 5000);
+
+                        },
+                        minLength: 2,
+                        focus: function (event, ui) {
+                            // prevent autocomplete from updating the textbox
+                            event.preventDefault();
+                            // manually update the textbox
+                            //$(this).val(ui.item.label);
+                        },
+
+                        select: function (event, ui) {
+
+                            // prevent autocomplete from updating the textbox
+                            event.preventDefault();
+
+                            // manually update the textbox and hidden field
+                            $(this).val(ui.item.label);
+                            //console.log(ui.item.value);
+                            offid = ui.item.value;
+                            console.log(offid);
+                        }
+                    });
+
+                    //$('.partial_container').html(result);
+                    //$('.partial_container').show();
+
+                },
+                error: function (data, errorThrown) {
+                    alert("Network Error!");
+                }
+
+
+            });
+
+
+        });
+
+        $("body").on('click', '.send-request', function () {
+
+            //date = $('#datepicker').val();
+            //date = $('#datepicker').val();
+
+            //console.log(date);
+            var CTID = 3;
+            //teacherid = $('#teacherid').val();
+
+            
+
+            var jsonData = $.ajax({
+
+                url: '@Url.Action("AddRequest", "JSON")',
+                data: {
+                    offid,
+                    slotid,
+                    CTID,
+                    date
+                },
+                type: "POST",
+                beforeSend: function () {
+                    //$('#loading').show();
+                    //$('.partial_container').hide();
+
+                },
+                complete: function () {
+                    //$('#loading').hide();
+                },
+                success: function (result) {
+
+                    console.log(result);
+                    
+                },
+                error: function (data, errorThrown) {
+                    alert("Network Error!");
+                }
+
+
+            });
+
+        });
+
+
+        
+
+
+    });
+
+
+
+
+
+</script>
+
+<input id="teacherid" hidden value="@ViewBag.teacherid" />
+<div class="modal class-request-modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4>Class Request</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="well">
+
+                    <div class="form-group">
+                        <label for="course" class="col-2 col-form-label">Slot</label>
+                        <div class="row">
+                            <div class="col-md-11">
+                                <input class="form-control" type="text" value="" id="slot">
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="course" class="col-2 col-form-label">Course</label>
+                        <div class="row">
+                            <div class="col-md-11">
+                                <input class="form-control" type="text" value="" id="course">
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                    </div>
+
+                    @*<div class="form-group">
+                        <label for="type" class="col-2 col-form-label">Request Type</label>
+                        <div class="row">
+                            <div class="col-md-11">
+                                <select class="form-control request-type">
+                                    <option value="2">Cancel Class</option>
+                                    <option value="3">Makeup Class</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                    </div>*@
+
+                    @*<div class="form-group">
+                        <label for="type" class="col-2 col-form-label">Select Date</label>
+                        <div class="row">
+                            <div class="col-md-11">
+                                <input class="form-control" type="text" id="datepicker">
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                    </div>*@
+
+                </div>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="send-request btn btn-primary btn-block" data-dismiss="modal">Send Request</button>
+                <button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="container">
+    <div class="form-group">
+        <div class="col-md-2 col-sm-3">
+            @Html.DropDownList("sections", null, "All Sections", htmlAttributes: new { @class = "sem_dropDown form-control" })
+        </div>
+    </div>
+</div>
+
+<br>
+<br>
+
+
+
+@{int nxt_section = 0; }
+
+<div id="loading" style="display:none;" class="col-md-offset-5 col-sm-offset-2">
+    <img src="~/Content/themes/base/images/loading.svg" height="550" width="350">
+</div>
+
+
+@{int i = 1;}
+<div class="partial_container" style="font-family:'Segoe UI'">
+
+
+    <div class="wrapper" style="margin-left: 132px">
+
+        <table>
+
+            <tr>
+                <th class="fixed td-color" style="left: 2px; right:50px; vertical-align:middle; width:115px; border-right: 1px solid black;">Days</th>
+                <th class="fixed td-color" style="left: 115px; width:115px;  border-right: 2px solid black;">Time Slots</th>
+
+                @foreach (var sections in Model.sections)
+                            {
+                                //data-slot="@days.dayid-@slots.slottypeid-@rooms.roomid"
+                                //if (nxt_section < Model.sections.ToList().Last().secid)
+                                //{
+                                //    nxt_section = sections.secid + 1;
+                                //}
+                                //else
+                                //{
+                                //    nxt_section = sections.secid;
+
+
+                                //}
+                                //Model.sections.Where(s => s.secid == nxt_section).Single().sectionname
+
+                                //if (sections.Class.Class1 == "2" && sec_name == "4" || (sections.Class.Class1 == "4" && sec_name == "6") || (sections.Class.Class1 == "6" && sec_name == "8"))
+
+
+                                var sec_name = "";
+
+                                if ((sections.Class.Class1 == "2" && sec_name == "4") || (sections.Class.Class1 == "4" && sec_name == "6") || (sections.Class.Class1 == "6" && sec_name == "8"))
+                                {
+                        <th class="td-color" style="border-right: 2.5px solid black;">@sections.Program.Program1 @sections.Class.Class1 @sections.sectionname</th>
+
+                    }
+                    else
+                    {
+                        <th class="td-color">@sections.Program.Program1 @sections.Class.Class1 @sections.sectionname</th>
+
+                    }
+
+                }
+
+
+
+
+            </tr>
+            @{int nxt_section2 = 0; int a = 1; int x=1; }
+            @foreach (var days in Model.days)
+            {
+                foreach (var slottypes in Model.vslottypes)
+                {
+                    <tr class="date" date="@ViewBag.dates[x - 1].Date.ToString("MM/dd/yyyy")">
+
+                        @if (Model.vslottypes.ElementAt(0) == slottypes)
+                        {
+                            <th class="fixed td-color" style="left: 2px; height:13.7%; width:115px; border-right: 2px solid black;" rowspan="@Model.vslottypes.Count()">
+                                <span class="rotate">@ViewBag.dates[a - 1].Date.ToString("dd/MMM") @days.dayname</span>
+                            </th>
+                            a++;
+                        }
+                        @*else
+                            {
+                                <th class="fixed" style="left: 1px; height:154.5px; width:115px; border-right: 2px solid black; background-color:darkgray;"></th>
+                            }*@
+                        @*<th class="fixed" style="left: 0px; right:50px;  height:154.5px; width:115px; vertical-align:middle; border-right: 1px solid black; background-color:darkgray ">@days.dayname</th>*@
+                        <th class="fixed td-color"  style="left: 115px; height:156px; width:115px; border-right: 2px solid black;">@slottypes.duration</th>
+
+
+                        @foreach (var sections in Model.sections)
+                        {
+                            var IsSchedule = Model.vschedule.Where(d => d.dayid == days.dayid && d.slottypeid == slottypes.slottypeid && d.secid == sections.secid).ToList();
+
+                            //if (nxt_section2 < Model.sections.ToList().Last().secid)
+                            //{
+                            //    nxt_section2 = sections.secid + 1;
+                            //}
+                            //else
+                            //{
+                            //    nxt_section2 = sections.secid;
+
+
+                            //}
+                            var sec_name = "2";
+
+
+                            if (IsSchedule.Count > 0)
+                            {
+                                if (IsSchedule.Count == 1)
+                                {
+
+
+
+                                    foreach (var sch in IsSchedule)
+                                    {
+                                        if (sch.occupied == 1)
+                                        {
+                                            if ((sections.Class.Class1 == "2" && sec_name == "4") || (sections.Class.Class1 == "4" && sec_name == "6") || (sections.Class.Class1 == "6" && sec_name == "8"))
+                                            {
+                                                <td class="empty" data-slot="@days.dayid-@slottypes.slottypeid-@sections.secid" style="height:154.5px; font-size:11px; border-right: 3px solid black; vertical-align:top"> <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name"> @sch.title</h6> @IsSchedule[0].teachername<br>@sch.roomno- @IsSchedule[0].campus<br>(@IsSchedule[0].duration)<hr></td>
+
+                                            }
+                                            else
+                                            {
+                                                <td class="empty" data-slot="@days.dayid-@slottypes.slottypeid-@sections.secid" style="height:154.5px; font-size:11px; vertical-align:top"><h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name"> @sch.title</h6> @IsSchedule[0].teachername<br>@sch.roomno- @IsSchedule[0].campus<br>(@IsSchedule[0].duration)<hr></td>
+
+                                            }
+
+
+                                        }
+                                        if (sch.occupied == 2)
+                                        {
+                                            if ((sections.Class.Class1 == "2" && sec_name == "4") || (sections.Class.Class1 == "4" && sec_name == "6") || (sections.Class.Class1 == "6" && sec_name == "8"))
+                                            {
+                                                <td class="empty" data-slot="@days.dayid-@slottypes.slottypeid-@sections.secid" style="height:154.5px; font-size:11px; border-right:  3px solid black; vertical-align:bottom "><hr><h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name"> @sch.title</h6> @IsSchedule[0].teachername<br>@sch.roomno- @IsSchedule[0].campus<br>(@IsSchedule[0].duration)</td>
+
+                                            }
+                                            else
+                                            {
+                                                <td class="empty" data-slot="@days.dayid-@slottypes.slottypeid-@sections.secid" style="height:154.5px; font-size:11px; vertical-align:bottom"> <hr><h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name"> @sch.title</h6> @IsSchedule[0].teachername<br>@sch.roomno- @IsSchedule[0].campus<br>(@IsSchedule[0].duration)</td>
+
+                                            }
+                                        }
+                                        if (sch.occupied == 3)
+                                        {
+                                            if ((sections.Class.Class1 == "2" && sec_name == "4") || (sections.Class.Class1 == "4" && sec_name == "6") || (sections.Class.Class1 == "6" && sec_name == "8"))
+                                            {
+                                                <td style="height:154.5px; font-size:11px; border-right: 3px solid black;"><h6 class="" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name"> @sch.title</h6> @IsSchedule[0].teachername<br>@sch.roomno- @IsSchedule[0].campus</td>
+
+                                            }
+                                            else
+                                            {
+                                                <td style="height:154.5px; font-size:11px;"><h6 class="" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name"> @sch.title</h6> @IsSchedule[0].teachername<br>@sch.roomno- @IsSchedule[0].campus</td>
+
+                                            }
+
+                                        }
+
+
+
+
+                                    }
+
+                                }
+                                if (IsSchedule.Count > 1 && IsSchedule.Count < 3 && IsSchedule[0].occupied != IsSchedule[1].occupied)
+
+                                {
+                                    if ((sections.Class.Class1 == "2" && sec_name == "4") || (sections.Class.Class1 == "4" && sec_name == "6") || (sections.Class.Class1 == "6" && sec_name == "8"))
+                                    {
+                                        <td style="height:154.5px; font-size:10.5px; border-right: 3px solid black; padding:0 ">
+
+                                            <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@IsSchedule[0].title" title="Course Name">@IsSchedule[0].title</h6>@IsSchedule[0].teachername<br>@IsSchedule[0].roomno- @IsSchedule[0].campus -(@IsSchedule[0].duration)
+                                            <hr><h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@IsSchedule[0].title" title="Course Name">@IsSchedule[0].title</h6>@IsSchedule[1].teachername<br> @IsSchedule[1].roomno- @IsSchedule[1].campus- (@IsSchedule[1].duration)
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="rest_of_tds" style="height:154.5px; font-size:10.5px; padding:0 ">
+
+                                            <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@IsSchedule[0].title" title="Course Name">@IsSchedule[0].title</h6>@IsSchedule[0].teachername<br>@IsSchedule[0].roomno- @IsSchedule[0].campus -(@IsSchedule[0].duration)
+                                            <hr> <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@IsSchedule[0].title" title="Course Name">@IsSchedule[0].title</h6>@IsSchedule[1].teachername<br> @IsSchedule[1].roomno- @IsSchedule[1].campus- (@IsSchedule[1].duration)
+                                        </td>
+                                    }
+
+
+
+
+
+
+                                }
+
+                                @*if (sections.sectionname.Contains("2") && sec_name.Contains("4") || (sections.sectionname.Contains("4") && sec_name.Contains("6")) || (sections.sectionname.Contains("6") && sec_name.Contains("8")))
+                                    {
+                                        <td class="rest_of_tds" style="height:154.5px; font-size:11px;border-right: 3px solid black;"> @IsSchedule[0].title<br> @IsSchedule[0].teachername<br>@IsSchedule[0].roomno- @IsSchedule[0].campus<br>(@IsSchedule[0].duration)</td>
+
+                                    }
+                                    else
+                                    {
+                                        <td class="rest_of_tds" style="height:154.5px;"> @IsSchedule[0].title<br> @IsSchedule[0].teachername<br>@IsSchedule[0].roomno- @IsSchedule[0].campus<br>(@IsSchedule[0].duration)</td>
+
+                                    }*@
+
+                            }
+                            else if ((sections.Class.Class1 == "2" && sec_name == "4") || (sections.Class.Class1 == "4" && sec_name == "6") || (sections.Class.Class1 == "6" && sec_name == "8"))
+                            {
+
+
+                                <td class="empty empty-color" data-slot="@days.dayid-@slottypes.slottypeid-@sections.secid" style="height:154.5px; font-size:11px;border-right: 3px solid black;"></td>
+
+                            }
+                            else
+                            {
+                                <td class="empty empty-color" data-slot="@days.dayid-@slottypes.slottypeid-@sections.secid" style="height: 150px;"></td>
+
+                            }
+
+                        }
+
+                    </tr>
+                }
+                x++;
+            }
+
+        </table>
+
+    </div>
+
+</div>

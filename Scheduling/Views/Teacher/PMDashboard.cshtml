@@ -1,0 +1,101 @@
+﻿@model  Scheduling.Models.ViewModels.CombineScheduleVM
+
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/Layout_PM.cshtml";
+}
+
+@{int i = 1;}
+<div class="container">
+    <h2>Dashboard</h2>
+
+    <ol class="breadcrumb">
+        <li><i class="fa fa-home"></i></li>
+        <li class="active">Dashboard</li>
+    </ol>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <span>@ViewBag.teachername</span>
+                </div>
+                <div class="panel-body">
+                    @Html.ActionLink("View Schedule", "ISchedule", "Teacher")
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <span>@ViewBag.teachername</span>
+                </div>
+                <div class="panel-body">
+                    @Html.ActionLink("Make Request", "PMRequest", "Teacher")
+                </div>
+            </div>
+        </div>
+
+        
+    </div>
+
+    
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <span>Classes For Today</span>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped table-bordered table-list">
+
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Course</th>
+                                <th>Section</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @if (Model.vschedule.Count() > 0)
+                            {
+                                foreach (var item in Model.vschedule)
+                                {
+
+                                <tr>
+                                    <td>@i</td>
+                                    <td>@item.title</td>
+                                    <td>@item.sectionname</td>
+                                    <td>@item.duration</td>
+                                </tr>
+                                    i++;
+                                }
+
+                            }
+                            else
+                            {
+
+                                    <tr>
+                                        <td>No classes scheduled for today </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+
+                                }
+
+                                
+                            
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

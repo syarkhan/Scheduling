@@ -1,0 +1,50 @@
+﻿@model Scheduling.Models.ViewModels.FilterScheduleVM
+@{
+    ViewBag.Title = "Index";
+}
+<script type="text/javascript">
+
+  //  $(document).ready(function(){
+  //      $("#frm").dialog({
+  //          modal: true,
+  //          autoOpen: false,
+  //          minWidth: 600,
+  //          minHeight: 500,
+  //          width: 600,
+  //          height: 500,
+  //      });
+  //      $('body').on('click','.cell-fill',function(){
+  //      $('#frm').dialog('open');
+  //      $("#frm").css({ "display": "inline" });
+  //      });
+
+  //      $('body').on('click', '.cell-empty', function () {
+  //          $('#frm').dialog('open');
+  //          $("#frm").css({ "display": "inline" });
+  //      });
+
+  //  //$( "#tags" ).autocomplete({
+  //  //  source: availableTags
+  //  //});
+  //});
+</script>
+
+<h2>Index</h2>
+<a href="">90</a> | <a href="">100</a> | <a href="">154</a>
+
+@foreach (var days in Model.day)
+{
+    <li>
+        @days.dayname
+        @foreach (var vslottypes in Model.vslottype.Where(o => o.occupied == 3))
+        {
+            <ul>
+                <li>@Html.ActionLink(vslottypes.duration,"Filter","Admin", new { slottypeid=vslottypes.slottypeid,dayid=days.dayid,campus=90 },null)</li>
+
+            </ul>
+
+
+        }
+    </li>
+}
+

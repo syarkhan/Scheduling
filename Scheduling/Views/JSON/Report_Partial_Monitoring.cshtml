@@ -1,0 +1,99 @@
+﻿
+@model Scheduling.Models.ViewModels.ReportsVM
+
+
+<table class="table table-striped tb">
+    <tr>
+        <th>
+            @Html.Label("SNo")
+        </th>
+        <th>
+            @Html.Label("Date")
+        </th>
+        <th>
+            @Html.Label("Weekno")
+        </th>
+        <th>
+            @Html.Label("Type")
+        </th>
+        <th>
+            @Html.Label("Class Started")
+        </th>
+        <th>
+            @Html.Label("Class Ended")
+        </th>
+        <th>
+            @Html.Label("Break Duration")
+        </th>
+        <th>
+            @Html.Label("Teacher")
+        </th>
+
+
+
+    </tr>
+
+
+    @{ int i = 1;}
+    @foreach (var item in Model.monitoringbyoffid)
+    {
+    <tr>
+
+
+        <td>
+            @i
+
+        </td>
+        @{i++;}
+
+
+
+
+        <td>@Html.DisplayFor(modelItem => item.Date)</td>
+        <td>@Html.DisplayFor(modelItem => item.Week_no)</td>
+
+        @{
+
+            if (item.CTId == 1)
+            {
+                <td>@Html.DisplayName("Class Held")</td>
+            }
+            else if (item.CTId == 2)
+            {
+                <td>@Html.DisplayName("Class Cancelled")</td>
+            }
+
+        }
+
+        @{ 
+            if (item.ClassStarted != null && item.ClassEnded != null && item.BreakDuration != null)
+            {
+        <td>@Html.DisplayFor(modelItem => item.ClassStarted)</td>
+        <td>@Html.DisplayFor(modelItem => item.ClassEnded)</td>
+        <td>@Html.DisplayFor(modelItem => item.BreakDuration)</td>
+            }
+
+            else if (item.ClassStarted != null && item.ClassEnded != null && item.BreakDuration == null)
+            {
+                <td>@Html.DisplayFor(modelItem => item.ClassStarted)</td>
+                <td>@Html.DisplayFor(modelItem => item.ClassEnded)</td>
+                <td>-</td>
+            }
+
+            else
+            {
+                <td> -</td>
+                <td> -</td>
+                <td> -</td>
+            }
+
+        }
+        <td>@Html.DisplayFor(modelItem => item.teachername)</td>
+
+
+
+
+    </tr>
+            }
+
+</table>

@@ -1,0 +1,1606 @@
+﻿@model Scheduling.Models.ViewModels.CombineScheduleVM
+
+
+@{ int a = 1;
+    List<int> occupied = new List<int>(new int[] { 1, 2, 3 });
+
+}
+
+
+
+<div class="row" style="padding-top:70px;margin-right: 0px;">
+    <!--Nav Bar -->
+    <div class="col-md-1 col-lg-1 visible-lg visible-md visible-sm">
+
+    </div>
+
+    <div id="NB" class="visible-md visible-lg">
+        <nav class="col-md-2 col-lg-2 bs-docs-sidebar">
+
+            <ul id="sidebar" class="nav nav-stacked fixed scroll" style="margin-top: -1.01%;">
+                <li id="date" class="alert alert-info">
+                    <strong>@ViewBag.currdate</strong>
+                </li>
+                @{ int x = 1;}
+                @foreach (var days in Model.days)
+                {
+
+
+                    <li>
+                        <a date="@ViewBag.dates[a-1].Date.ToString("MM/dd/yyyy")" class="day" href="#active-day-@a" dayid="@days.dayid">@days.dayname-@ViewBag.dates[a - 1].Date.ToString("dd/MMM")</a>
+                        <ul class="nav nav-stacked">
+                            @foreach (var rooms in Model.rooms)
+                            {
+
+
+                                <li> <a href="#content_@x" class="room"> @rooms.roomno </a></li>
+                                x++;
+                            }
+                        </ul>
+                        @{ a++; }
+                    </li>
+
+
+                            }
+            </ul>
+        </nav>
+    </div>
+
+    <!--Main Content -->
+    <div class="col-md-9 col-lg-9" style="padding-left:70px;">
+
+        @{int i = 1; a = 1; int z = 0;}
+
+        @foreach (var days in Model.days)
+            {
+
+            <section id="active-day-@a" class="day-group" data-pos2="#active-day-@a" day-date="@ViewBag.dates[a-1].Date.ToString("MM/dd/yyyy")">
+                <div style="position:absolute;padding-left:1.4%;margin-top:-12px;">
+                    <span style="border-top: 1px solid #b9b9b9;border-left: 1px solid #b9b9b9;border-right: 1px solid #b9b9b9;background-color: #ffffff;color: #474e52;border-radius: 3px;font-size: 18px;">@days.dayname</span>
+                </div>
+                @foreach (var rooms in Model.rooms)
+                {
+
+
+                    foreach (var slots in Model.vslottypes)
+                    {
+
+
+                        //<a href="#" class="content-link">
+
+                        <div class="col-md-3 content" id="content_@i" data-pos="#content_@i">
+                            @{
+                                var IsSchedule = Model.vschedule.Where(d => d.dayid == days.dayid && d.slottypeid == slots.slottypeid && d.roomid == rooms.roomid
+                                || d.dayid == days.dayid && d.slottypeid == slots.slottypeid && d.roomid == rooms.roomid && d.occupied >= 1 && d.occupied <= 2).ToList();
+
+                                //var Occupied1and2 = Model.vschedule.Where(d => d.dayid == days.dayid && d.slottypeid == slots.slottypeid && d.roomid == rooms.roomid && d.occupied >= 1 && d.occupied <= 2).ToList();
+
+
+                                if (z % 4 == 0)
+                                {
+
+                                    if (rooms.roomno.Length < 3)
+                                    {
+                                        <div style="position:absolute;margin-left:-22px;">
+                                            <span style="border: 1px solid #21211b;background-color: #394c48;color: white;border-radius: 3px;">@rooms.roomno</span>
+                                        </div>
+                                    }
+
+                                    else if (rooms.roomno.Length == 3)
+                                    {
+                                        <div style="position:absolute;margin-left:-29px;">
+                                            <span class="room-tag" style="border: 1px solid #21211b;background-color: #394c48;color: white;border-radius: 3px;">@rooms.roomno</span>
+                                        </div>
+
+                                    }
+
+                                    else if (rooms.roomno.Length > 3)
+                                    {
+                                        <div style="position:absolute;margin-left:-43px;">
+                                            <span class="room-tag" title="@rooms.roomno" style="border: 1px solid #21211b;background-color: #394c48;color: white;border-radius: 3px;">@rooms.roomno.Substring(0, 4)..</span>
+                                        </div>
+
+                                    }
+                                }
+
+
+                                z++;
+
+
+
+                                //4 classes
+                                if (IsSchedule.Count == 4)
+                                {
+                                    var weekwise = Model.WeekWise.Where(w => w.schid == IsSchedule[0].schid).ToList();
+
+                                    if (weekwise.Count > 0)
+                                    {
+                                        foreach (var week in weekwise)
+                                        {
+                                            // to check if it has been held and it is a normal class(green color)
+                                            if (week.CTId == 1 && IsSchedule[0].SchCTId == null)
+                                            {
+
+                                                <div class="parts green-color">
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[0].sectionname</h6>
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[1].sectionname</h6>
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[2].sectionname </h6>
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[3].sectionname</h6>
+                                                    <h6 style="text-align:center;font-size:11.5px;">@IsSchedule[0].teachername </h6>
+                                                    <h6 style="text-align:center;">@IsSchedule[0].title</h6>
+                                                </div>
+
+                                                    <div class="content2" style="display:none;text-align:center;">
+                                                        <div style="" class="parts">
+                                                            <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@IsSchedule[0].occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                        </div>
+                                                        <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                    </div>
+                                            }
+                                            else if (week.CTId == 1 && IsSchedule[0].SchCTId == 3)
+                                            {
+                                                <div class="parts blue-color">
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[0].sectionname</h6>
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[1].sectionname</h6>
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[2].sectionname </h6>
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[3].sectionname</h6>
+                                                    <h6 style="text-align:center;font-size:11.5px;">@IsSchedule[0].teachername </h6>
+                                                    <h6 style="text-align:center;">@IsSchedule[0].title</h6>
+                                                </div>
+
+                                                    <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+
+                                                    <div class="content2" style="display:none;text-align:center;">
+                                                        <div style="" class="parts">
+                                                            <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@IsSchedule[0].occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                        </div>
+                                                        <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                    </div>
+
+                                            }
+                                            else if (week.CTId == 2)
+                                            {
+                                                <div class="parts red-color">
+                                                    <h6 style="font-size:11.5px;text-align:center;"> @IsSchedule[0].sectionname </h6>
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[1].sectionname</h6>
+                                                    <h6 style="font-size:11.5px;text-align:center;"> @IsSchedule[2].sectionname </h6>
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[3].sectionname</h6>
+                                                    <h6 style="text-align:center;font-size:11.5px;"> @IsSchedule[0].teachername </h6>
+                                                    <h6 style="text-align:center;">@IsSchedule[0].title</h6>
+                                                </div>
+                                                    <div class="content2" style="display:none;text-align:center;">
+                                                        <div style="" class="parts">
+                                                            <div class="alert alert-danger"><span date="@weekwise.Select(w => w.Date).Single()">Class Cancelled<span class="glyphicon glyphicon-info-sign"></span> <span style="float:right;" class="glyphicon glyphicon-list"></span> </span></div>
+                                                        </div>
+                                                        <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                    </div>
+                                            }
+
+                                        }
+                                    }
+                                    else if (IsSchedule[0].SchCTId == null)
+                                    {
+                                        <div class="parts silver-color">
+                                            <h6 style="font-size:11.5px;text-align:center;"> @IsSchedule[0].sectionname </h6>
+                                            <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[1].sectionname</h6>
+                                            <h6 style="font-size:11.5px;text-align:center;"> @IsSchedule[2].sectionname </h6>
+                                            <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[3].sectionname</h6>
+                                            <h6 style="text-align:center;font-size:11.5px;"> @IsSchedule[0].teachername </h6>
+                                            <h6 style="text-align:center;">@IsSchedule[0].title</h6>
+                                        </div>
+                                            <div class="parts">
+
+                                            </div>
+                                            <div style="text-align:end;">
+                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                            </div>
+                                            <div class="content1" style="display:none;text-align:center;">
+                                                <div style="padding-top:100px;">
+                                                    @*<div>@Model.WeekWise.Where(w=>w.schid==sch.schid).Select(w=>w.CTId).SingleOrDefault()</div>*@
+                                                    <div style="cursor:pointer;" class="btn-sm btn-primary class-held" data-toggle="modal" data-target=".class-held-modal" ctid="1" schid="@IsSchedule[0].schid-@IsSchedule[1].schid-@IsSchedule[2].schid-@IsSchedule[3].schid" class-start="@IsSchedule[0].ClassStartTime" class-end="@IsSchedule[0].ClassEndTime" class-break="@IsSchedule[0].BreakDuration">Class Held</div>
+
+                                                    <div style="cursor:pointer;" data-toggle="modal" data-target=".class-cancel-modal" occupied="@IsSchedule[0].occupied" id="class-cancel" class="btn-sm btn-danger">Cancel class</div>
+                                                </div>
+                                            </div>
+                                    }
+                                    else if (IsSchedule[0].SchCTId == 3)
+                                    {
+                                        <div class="parts blue-color">
+                                            <span style="font-size: 10.3px;font-weight: 700;position:absolute;top:-1px;">Makeup</span>
+                                            <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[0].sectionname</h6>
+                                            <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[1].sectionname</h6>
+                                            <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[2].sectionname</h6>
+                                            <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[3].sectionname</h6>
+                                            <h6 style="text-align:center;font-size:11.5px;">@IsSchedule[0].teachername</h6>
+                                            <h6 style="text-align:center;">@IsSchedule[0].title</h6>
+                                        </div>
+                                            <div class="parts">
+
+                                            </div>
+                                            <div style="text-align:end;">
+                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                            </div>
+                                            <div class="content1" style="display:none;text-align:center;">
+                                                <div style="padding-top:100px;">
+                                                    @*<div>@Model.WeekWise.Where(w=>w.schid==sch.schid).Select(w=>w.CTId).SingleOrDefault()</div>*@
+                                                    <div style="cursor:pointer;" class="btn-sm btn-primary class-held" ctid="3" data-toggle="modal" data-target=".class-held-modal" schid="@IsSchedule[0].schid-@IsSchedule[1].schid-@IsSchedule[2].schid-@IsSchedule[3].schid" class-start="@IsSchedule[0].ClassStartTime" class-end="@IsSchedule[0].ClassEndTime" class-break="@IsSchedule[0].BreakDuration">Class Held</div>
+
+                                                    <div style="cursor:pointer;" data-toggle="modal" data-target=".class-cancel-modal" occupied="@IsSchedule[0].occupied" id="class-cancel" class="btn-sm btn-danger">Cancel class</div>
+                                                </div>
+                                            </div>
+
+                                    }
+
+
+
+
+
+
+                                }
+
+                                //3 classes
+                                else if (IsSchedule.Count == 3)
+                                {
+                                    var weekwise = Model.WeekWise.Where(w => w.schid == IsSchedule[0].schid).ToList();
+
+                                    if (weekwise.Count > 0)
+                                    {
+                                        foreach (var week in weekwise)
+                                        {
+                                            // to check if it has been held and it is a normal class(green color)
+                                            if (week.CTId == 1 && IsSchedule[0].SchCTId == null)
+                                            {
+
+                                                <div class="parts green-color">
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[0].sectionname</h6>
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[1].sectionname</h6>
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[2].sectionname </h6>
+                                                    <h6 style="text-align:center;font-size:11.5px;">@IsSchedule[0].teachername </h6>
+                                                    <h6 style="text-align:center;">@IsSchedule[0].title</h6>
+                                                </div>
+
+                                                    <div class="content2" style="display:none;text-align:center;">
+                                                        <div style="" class="parts">
+                                                            <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@IsSchedule[0].occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                        </div>
+                                                        <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                    </div>
+                                            }
+                                            else if (week.CTId == 1 && IsSchedule[0].SchCTId == 3)
+                                            {
+                                                <div class="parts blue-color">
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[0].sectionname</h6>
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[1].sectionname</h6>
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[2].sectionname </h6>
+                                                    <h6 style="text-align:center;font-size:11.5px;">@IsSchedule[0].teachername </h6>
+                                                    <h6 style="text-align:center;">@IsSchedule[0].title</h6>
+                                                </div>
+
+                                                    <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+
+                                                    <div class="content2" style="display:none;text-align:center;">
+                                                        <div style="" class="parts">
+                                                            <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@IsSchedule[0].occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                        </div>
+                                                        <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                    </div>
+
+                                            }
+                                            else if (week.CTId == 2)
+                                            {
+                                                <div class="parts red-color">
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[0].sectionname</h6>
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[1].sectionname</h6>
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[2].sectionname </h6>
+                                                    <h6 style="text-align:center;font-size:11.5px;">@IsSchedule[0].teachername </h6>
+                                                    <h6 style="text-align:center;">@IsSchedule[0].title</h6>
+                                                </div>
+                                                    <div class="content2" style="display:none;text-align:center;">
+                                                        <div style="" class="parts">
+                                                            <div class="alert alert-danger"><span date="@weekwise.Select(w => w.Date).Single()">Class Cancelled<span class="glyphicon glyphicon-info-sign"></span> <span style="float:right;" class="glyphicon glyphicon-list"></span> </span></div>
+                                                        </div>
+                                                        <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                    </div>
+                                            }
+                                        }
+                                    }
+                                    else if (IsSchedule[0].SchCTId == null)
+                                    {
+
+
+                                        <div class="parts silver-color">
+                                            <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[0].sectionname</h6>
+                                            <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[1].sectionname</h6>
+                                            <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[2].sectionname</h6>
+                                            <h6 style="text-align:center;font-size:11.5px;">@IsSchedule[0].teachername</h6>
+                                            <h6 style="text-align:center;">@IsSchedule[0].title</h6>
+                                        </div>
+                                            <div class="parts">
+
+                                            </div>
+                                            <div style="text-align:end;">
+                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                            </div>
+                                            <div class="content1" style="display:none;text-align:center;">
+                                                <div style="padding-top:100px;">
+                                                    @*<div>@Model.WeekWise.Where(w=>w.schid==sch.schid).Select(w=>w.CTId).SingleOrDefault()</div>*@
+                                                    <div style="cursor:pointer;" class="btn-sm btn-primary class-held" ctid="1" data-toggle="modal" data-target=".class-held-modal" schid="@IsSchedule[0].schid-@IsSchedule[1].schid-@IsSchedule[2].schid" class-start="@IsSchedule[0].ClassStartTime" class-end="@IsSchedule[0].ClassEndTime" class-break="@IsSchedule[0].BreakDuration">Class Held</div>
+                                                    <div style="cursor:pointer;" data-toggle="modal" data-target=".class-cancel-modal" occupied="@IsSchedule[0].occupied" id="class-cancel" class="btn-sm btn-danger">Cancel class</div>
+                                                </div>
+                                            </div>
+                                    }
+                                    else if (IsSchedule[0].SchCTId == 3)
+                                    {
+                                        <div class="parts blue-color">
+                                            <span style="font-size: 10.3px;font-weight: 700;position:absolute;top:-1px;">Makeup</span>
+                                            <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[0].sectionname</h6>
+                                            <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[1].sectionname</h6>
+                                            <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[2].sectionname</h6>
+                                            <h6 style="text-align:center;font-size:11.5px;">@IsSchedule[0].teachername</h6>
+                                            <h6 style="text-align:center;">@IsSchedule[0].title</h6>
+                                        </div>
+                                            <div class="parts">
+
+                                            </div>
+                                            <div style="text-align:end;">
+                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                            </div>
+                                            <div class="content1" style="display:none;text-align:center;">
+                                                <div style="padding-top:100px;">
+                                                    @*<div>@Model.WeekWise.Where(w=>w.schid==sch.schid).Select(w=>w.CTId).SingleOrDefault()</div>*@
+                                                    <div style="cursor:pointer;" class="btn-sm btn-primary class-held" ctid="3" data-toggle="modal" data-target=".class-held-modal" schid="@IsSchedule[0].schid-@IsSchedule[1].schid-@IsSchedule[2].schid-@IsSchedule[3].schid" class-start="@IsSchedule[0].ClassStartTime" class-end="@IsSchedule[0].ClassEndTime" class-break="@IsSchedule[0].BreakDuration">Class Held</div>
+
+                                                    <div style="cursor:pointer;" data-toggle="modal" data-target=".class-cancel-modal" occupied="@IsSchedule[0].occupied" id="class-cancel" class="btn-sm btn-danger">Cancel class</div>
+                                                </div>
+                                            </div>
+
+                                    }
+
+                                }
+
+
+
+                                //2 classes
+                                else if (IsSchedule.Count == 2 && IsSchedule[0].occupied == IsSchedule[1].occupied)
+                                {
+
+                                    var weekwise = Model.WeekWise.Where(w => w.schid == IsSchedule[0].schid).ToList();
+
+                                    if (weekwise.Count > 0)
+                                    {
+                                        foreach (var week in weekwise)
+                                        {
+                                            // to check if it has been held and it is a normal class(green color)
+                                            if (week.CTId == 1 && IsSchedule[0].SchCTId == null)
+                                            {
+
+                                                <div class="parts green-color">
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[0].sectionname</h6>
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[1].sectionname</h6>
+                                                    <h6 style="text-align:center;font-size:11.5px;">@IsSchedule[0].teachername </h6>
+                                                    <h6 style="text-align:center;">@IsSchedule[0].title</h6>
+                                                </div>
+
+                                                    <div class="content2" style="display:none;text-align:center;">
+                                                        <div style="" class="parts">
+                                                            <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@IsSchedule[0].occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                        </div>
+                                                        <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                    </div>
+                                            }
+                                            else if (week.CTId == 1 && IsSchedule[0].SchCTId == 3)
+                                            {
+                                                <div class="parts blue-color">
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[0].sectionname</h6>
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[1].sectionname</h6>
+                                                    <h6 style="text-align:center;font-size:11.5px;">@IsSchedule[0].teachername</h6>
+                                                    <h6 style="text-align:center;">@IsSchedule[0].title</h6>
+                                                </div>
+
+                                                    <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+
+                                                    <div class="content2" style="display:none;text-align:center;">
+                                                        <div style="" class="parts">
+                                                            <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@IsSchedule[0].occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                        </div>
+                                                        <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                    </div>
+
+                                            }
+                                            else if (week.CTId == 2)
+                                            {
+                                                <div class="parts red-color">
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[0].sectionname</h6>
+                                                    <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[1].sectionname</h6>
+                                                    <h6 style="text-align:center;font-size:11.5px;">@IsSchedule[0].teachername </h6>
+                                                    <h6 style="text-align:center;">@IsSchedule[0].title</h6>
+                                                </div>
+                                                    <div class="content2" style="display:none;text-align:center;">
+                                                        <div style="" class="parts">
+                                                            <div class="alert alert-danger"><span date="@weekwise.Select(w => w.Date).Single()">Class Cancelled<span class="glyphicon glyphicon-info-sign"></span> <span style="float:right;" class="glyphicon glyphicon-list"></span> </span></div>
+                                                        </div>
+                                                        <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                    </div>
+                                            }
+                                        }
+                                    }
+                                    else if (IsSchedule[0].SchCTId == null)
+                                    {
+
+                                        <div class="parts silver-color">
+                                            <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[0].sectionname</h6>
+                                            <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[1].sectionname</h6>
+                                            <h6 style="text-align:center;font-size:11.5px;">@IsSchedule[0].teachername</h6>
+                                            <h6 style="text-align:center;">@IsSchedule[0].title</h6>
+                                        </div>
+                                            <div class="parts">
+
+                                            </div>
+                                            <div style="text-align:end;">
+                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                            </div>
+                                            <div class="content1" style="display:none;text-align:center;">
+                                                <div style="padding-top:100px;">
+                                                    @*<div>@Model.WeekWise.Where(w=>w.schid==sch.schid).Select(w=>w.CTId).SingleOrDefault()</div>*@
+                                                    <div style="cursor:pointer;" class="btn-sm btn-primary class-held" ctid="1" data-toggle="modal" data-target=".class-held-modal" schid="@IsSchedule[0].schid-@IsSchedule[1].schid" class-start="@IsSchedule[0].ClassStartTime" class-end="@IsSchedule[0].ClassEndTime" class-break="@IsSchedule[0].BreakDuration">Class Held</div>
+                                                    <div style="cursor:pointer;" data-toggle="modal" data-target=".class-cancel-modal" occupied="@IsSchedule[0].occupied" id="class-cancel" class="btn-sm btn-danger">Cancel class</div>
+                                                </div>
+                                            </div>
+                                    }
+                                    else if (IsSchedule[0].SchCTId == 3)
+                                    {
+                                        <div class="parts blue-color">
+                                            <span style="font-size: 10.3px;font-weight: 700;position:absolute;top:-1px;">Makeup</span>
+                                            <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[0].sectionname</h6>
+                                            <h6 style="font-size:11.5px;text-align:center;">@IsSchedule[1].sectionname</h6>
+                                            <h6 style="text-align:center;font-size:11.5px;">@IsSchedule[0].teachername</h6>
+                                            <h6 style="text-align:center;">@IsSchedule[0].title</h6>
+                                        </div>
+                                            <div class="parts">
+
+                                            </div>
+                                            <div style="text-align:end;">
+                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                            </div>
+                                            <div class="content1" style="display:none;text-align:center;">
+                                                <div style="padding-top:100px;">
+                                                    @*<div>@Model.WeekWise.Where(w=>w.schid==sch.schid).Select(w=>w.CTId).SingleOrDefault()</div>*@
+                                                    <div style="cursor:pointer;" class="btn-sm btn-primary class-held" ctid="3" data-toggle="modal" data-target=".class-held-modal" schid="@IsSchedule[0].schid-@IsSchedule[1].schid-@IsSchedule[2].schid-@IsSchedule[3].schid" class-start="@IsSchedule[0].ClassStartTime" class-end="@IsSchedule[0].ClassEndTime" class-break="@IsSchedule[0].BreakDuration">Class Held</div>
+
+                                                    <div style="cursor:pointer;" data-toggle="modal" data-target=".class-cancel-modal" occupied="@IsSchedule[0].occupied" id="class-cancel" class="btn-sm btn-danger">Cancel class</div>
+                                                </div>
+                                            </div>
+
+                                    }
+
+                                }
+
+
+
+                                else if (IsSchedule.Count > 0 && IsSchedule.Count < 3)
+                                {
+
+                                    foreach (var sch in IsSchedule)
+                                    {
+
+                                        var weekwise = Model.WeekWise.Where(w => w.schid == sch.schid).ToList();
+
+                                        //occupied 1 and 2
+                                        if (IsSchedule.Count > 1 && IsSchedule[0].occupied != IsSchedule[1].occupied)
+                                        {
+
+                                            //occupied 1 !2
+                                            if (sch.occupied == 1)
+                                            {
+
+                                                //checking if class has been monitored  or not
+                                                if (weekwise.Count() > 0)
+                                                {
+                                                    foreach (var week in weekwise)
+                                                    {
+                                                        // to check if it has been held and it is a normal class(green color)
+                                                        if (week.CTId == 1 && sch.SchCTId == null)
+                                                        {
+                                                            <div class="parts green-color">
+                                                                <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name" style="text-align:center;">@sch.title</h6>
+                                                            </div>
+
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+
+                                                                <div class="content2" style="display:none;text-align:center;">
+                                                                    <div style="" class="parts">
+                                                                        <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                    </div>
+                                                                    <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                                </div>
+                                                        }
+
+                                                        // class hass been held and it is a makeup class(blue color)
+                                                        else if (week.CTId == 1 && sch.SchCTId == 3)
+                                                        {
+                                                            <div class="parts blue-color">
+                                                                <span style="font-size: 10.3px;font-weight: 700;position:absolute;top:-1px;">Makeup</span>
+                                                                <h6 style="font-size:11.5px;text-align:center;font-weight: 800;">@sch.sectionname (@sch.duration)</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name" style="text-align:center;">@sch.title</h6>
+                                                            </div>
+
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+
+                                                                <div class="content2" style="display:none;text-align:center;">
+                                                                    <div style="" class="parts">
+                                                                        <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                    </div>
+                                                                    <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                                </div>
+
+                                                        }
+
+                                                        // the class is cancelled(red color)
+                                                        else if (week.CTId == 2)
+                                                        {
+                                                            <div class="parts red-color">
+                                                                <span style="font-size: 10.3px;font-weight: 700;position:absolute;top:-1px;">Cancelled</span>
+                                                                <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name" style="text-align:center;">@sch.title</h6>
+                                                            </div>
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                                <div class="content2" style="display:none;text-align:center;">
+                                                                    <div style="" class="parts">
+                                                                        <div class="alert alert-danger"><span date="@weekwise.Select(w => w.Date).Single()">Class Cancelled<span class="glyphicon glyphicon-info-sign"></span> <span style="float:right;" class="glyphicon glyphicon-list"></span> </span></div>
+                                                                    </div>
+                                                                    <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                                </div>
+                                                        }
+                                                    }
+                                                }
+
+
+                                                // no monitoring found
+                                                else
+                                                {
+                                                    // normal class and no monitoring (silver color)
+                                                    if (sch.SchCTId == null)
+                                                    {
+                                                        <div class="parts silver-color">
+
+                                                            <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                            <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                            <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name" style="text-align:center;">@sch.title</h6>
+                                                        </div>
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            <div class="content2" style="display:none;text-align:center;padding-top:10px;">
+                                                                <div style="" class="parts">
+                                                                    <div style="cursor:pointer;" data-toggle="modal" data-target=".class-held-modal" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime" ctid="1">Class Held</div>
+
+                                                                    <div class="btn-group btn-group-sm" role="group" style="margin-right: 0px;">
+
+                                                                        <div type="button" data-toggle="modal" data-target=".class-cancel-modal" occupied="@sch.occupied" id="class-cancel" class="btn btn-danger">Cancel Class</div>
+
+                                                                        <div type="button" data-toggle="modal" data-target=".class-edit-modal" class="btn btn-warning edit-class">Edit Class</div>
+
+                                                                    </div>
+
+                                                                </div>
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            </div>
+                                                    }
+
+
+                                                    // make up class and no monitoring(blue color)
+                                                    else if (sch.SchCTId == 3)
+                                                    {
+                                                        <div class="parts blue-color">
+                                                            <span style="font-size: 10.3px;font-weight: 700;position:absolute;top:-1px;">Makeup</span>
+                                                            <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                            <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                            <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name" style="text-align:center;">@sch.title</h6>
+                                                        </div>
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            <div class="content2" style="display:none;text-align:center;padding-top:10px;">
+                                                                <div style="" class="parts">
+                                                                    <div style="cursor:pointer;" data-toggle="modal" data-target=".class-held-modal" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime" ctid="3">Class Held</div>
+                                                                    @*<a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Cancel class</div></a>*@
+                                                                </div>
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            </div>
+                                                    }
+
+                                                }
+
+                                            }
+
+
+                                            //occupied 2 !1
+                                            else if (sch.occupied == 2)
+                                            {
+
+                                                //checking if class has been monitored  or not
+                                                if (weekwise.Count() > 0)
+                                                {
+                                                    foreach (var week in weekwise)
+                                                    {
+
+                                                        // class held and normal class(green color)
+                                                        if (week.CTId == 1 && sch.SchCTId == null)
+                                                        {
+                                                            <div class="parts green-color">
+                                                                <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name" style="text-align:center;">@sch.title</h6>
+                                                            </div>
+                                                                <div style="text-align:end;">
+                                                                    <span style="display:none;" class="hover-options2 glyphicon glyphicon-cog"></span>
+                                                                </div>
+
+                                                                <div class="content2" style="display:none;text-align:center;margin-top:80px;">
+                                                                    <div style="" class="parts">
+                                                                        <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                    </div>
+                                                                </div>
+                                                        }
+
+                                                        // classs held and is makeup class(blue color)
+                                                        else if (week.CTId == 1 && sch.SchCTId == 3)
+                                                        {
+
+                                                            <div class="parts blue-color">
+                                                                <span style="font-size: 10.3px;font-weight: 700;position:absolute;top:69px;">Makeup</span>
+                                                                <h6 style="font-size:11.5px;text-align:center;font-weight: 800;">@sch.sectionname (@sch.duration)</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name" style="text-align:center;">@sch.title</h6>
+                                                            </div>
+
+                                                                <div style="text-align:end;">
+                                                                    <span style="display:none;" class="hover-options2 glyphicon glyphicon-cog"></span>
+                                                                </div>
+                                                                <div class="content2" style="display:none;text-align:center;margin-top:80px;">
+                                                                    <div style="" class="parts">
+                                                                        <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                    </div>
+
+                                                                </div>
+                                                        }
+
+                                                        // class cancelled
+                                                        else if (week.CTId == 2)
+                                                        {
+                                                            <div class="parts red-color">
+                                                                <span class="cancel" style="position:absolute;top:69px;font-size: 10.3px;font-weight: 700;">Cancelled</span>
+
+                                                                <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name" style="text-align:center;">@sch.title</h6>
+                                                            </div>
+
+                                                                <div style="text-align:end;">
+                                                                    <span style="display:none;" class="hover-options2 glyphicon glyphicon-cog"></span>
+                                                                </div>
+
+                                                                <div class="content2" style="display:none;text-align:center;margin-top:80px;">
+                                                                    <div style="" class="parts">
+                                                                        <div class="alert alert-danger"><span date="@weekwise.Select(w => w.Date).Single()">Class Cancelled<span class="glyphicon glyphicon-info-sign"></span> <span style="float:right;" class="glyphicon glyphicon-list"></span> </span></div>
+                                                                    </div>
+
+                                                                </div>
+                                                        }
+
+
+
+
+                                                    }
+                                                }
+
+                                                // no monitroing found
+                                                else
+                                                {
+
+
+                                                    // its a normal class (silver color)
+                                                    if (sch.SchCTId == null)
+                                                    {
+
+                                                        <div class="parts silver-color">
+                                                            <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                            <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                            <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name" style="text-align:center;">@sch.title</h6>
+                                                        </div>
+
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options2 glyphicon glyphicon-cog"></span>
+                                                            </div>
+                                                            <div class="content2" style="display:none;text-align:center;padding-top:10px;margin-top:80px;">
+                                                                <div style="" class="parts">
+                                                                    <div style="cursor:pointer;" data-toggle="modal" data-target=".class-held-modal" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime" ctid="1">Class Held</div>
+
+                                                                    <div class="btn-group btn-group-sm" role="group" style="margin-right: 0px;">
+
+                                                                        <div type="button" data-toggle="modal" data-target=".class-cancel-modal" occupied="@sch.occupied" id="class-cancel" class="btn btn-danger">Cancel Class</div>
+
+                                                                        <div type="button" data-toggle="modal" data-target=".class-edit-modal" class="btn btn-warning edit-class">Edit Class</div>
+
+                                                                    </div>
+
+                                                                </div>
+
+                                                            </div>
+
+                                                    }
+
+                                                    // its a makeup class and no monitoring found
+                                                    else if (sch.SchCTId == 3)
+                                                    {
+                                                        <div class="parts blue-color">
+                                                            <span style="font-size: 10.3px;font-weight: 700;position:absolute;top:69px">Makeup</span>
+                                                            <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                            <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                            <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name" style="text-align:center;">@sch.title</h6>
+                                                        </div>
+
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options2 glyphicon glyphicon-cog"></span>
+                                                            </div>
+
+                                                            <div class="content2" style="display:none;text-align:center;padding-top:10px;margin-top:80px;">
+                                                                <div style="" class="parts">
+                                                                    <div style="cursor:pointer;" data-toggle="modal" data-target=".class-held-modal" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime" ctid="3">Class Held</div>
+                                                                    @*<a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Cancel class</div></a>*@
+                                                                </div>
+
+                                                            </div>
+
+                                                    }
+
+                                                }
+
+                                            }
+
+                                        }
+
+
+                                        // only occupied 2
+                                        else if (sch.occupied == 2)
+                                        {
+
+                                            // to check if monitored or not
+                                            if (weekwise.Count() > 0)
+                                            {
+                                                foreach (var week in weekwise)
+                                                {
+
+
+                                                    // class held and its a normal class
+                                                    if (week.CTId == 1 && sch.SchCTId == null)
+                                                    {
+
+                                                        <div class="parts">
+
+                                                        </div>
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            <div class="parts green-color">
+
+
+                                                                <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name" style="text-align:center;">@sch.title</h6>
+
+                                                            </div>
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                            </div>
+
+
+                                                            <div class="content1" style="display:none;text-align:center;padding-top:10px;">
+                                                                <div style="" class="parts">
+                                                                    @*<a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Makeup class</div></a>*@
+                                                                </div>
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                                <div style="padding-top:8px;" class="parts">
+                                                                    <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                </div>
+                                                            </div>
+                                                    }
+
+
+                                                    // class is held and its a makeup class
+                                                    else if (week.CTId == 1 && sch.SchCTId == 3)
+                                                    {
+
+                                                        <div class="parts">
+
+                                                        </div>
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            <div class="parts blue-color">
+
+                                                                <span style="font-size: 10.3px;font-weight: 700;position:absolute;top:69px">Makeup</span>
+                                                                <h6 style="font-size:11.5px;text-align:center;font-weight: 800;">@sch.sectionname (@sch.duration)</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name" style="text-align:center;">@sch.title</h6>
+
+                                                            </div>
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                            </div>
+
+
+                                                            <div class="content1" style="display:none;text-align:center;padding-top:10px;">
+                                                                <div style="" class="parts">
+                                                                    @*<a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Makeup class</div></a>*@
+                                                                </div>
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                                <div style="padding-top:8px;" class="parts">
+                                                                    <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                </div>
+                                                            </div>
+                                                    }
+
+
+                                                    // class is cancelled
+                                                    else if (week.CTId == 2)
+                                                    {
+
+                                                        <div class="parts">
+
+                                                        </div>
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            <div class="parts red-color">
+
+                                                                <span class="" style="font-size: 10.3px;font-weight: 700;position:absolute;top:69px">Cancelled</span>
+                                                                <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                                <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                                <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name" style="text-align:center;">@sch.title</h6>
+
+                                                            </div>
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                            </div>
+
+
+                                                            <div class="content1" style="display:none;text-align:center;padding-top:10px;">
+                                                                <div style="" class="parts">
+                                                                    @*<a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Makeup class</div></a>*@
+                                                                </div>
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                                <div style="padding-top:8px;" class="parts">
+                                                                    <div class="alert alert-danger"><span date="@weekwise.Select(w => w.Date).Single()">Class Cancelled @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                </div>
+                                                            </div>
+                                                    }
+
+                                                }
+                                            }
+
+                                            // no monitroing found
+                                            else
+                                            {
+
+                                                // its a normal class (silver color) and not monitored
+                                                if (sch.SchCTId == null)
+                                                {
+                                                    <div class="parts">
+
+                                                    </div>
+                                                        <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                        <div class="parts silver-color">
+
+
+                                                            <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                            <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                            <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name" style="text-align:center;">@sch.title</h6>
+
+                                                        </div>
+                                                        <div style="text-align:end;">
+                                                            <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                        </div>
+
+                                                        <div class="content1" style="display:none;text-align:center;padding-top:10px;">
+                                                            <div style="" class="parts">
+                                                                @*<a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Makeup class</div></a>*@
+                                                            </div>
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            <div style="padding-top:8px;" class="parts">
+
+                                                                <div style="cursor:pointer;" data-toggle="modal" data-target=".class-held-modal" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime" class-break="" ctid="1">Class Held</div>
+
+                                                                <div class="btn-group btn-group-sm" role="group" style="margin-right: 0px;">
+
+                                                                    <div type="button" data-toggle="modal" data-target=".class-cancel-modal" occupied="@sch.occupied" id="class-cancel" class="btn btn-danger">Cancel Class</div>
+
+                                                                    <div type="button" data-toggle="modal" data-target=".class-edit-modal" class="btn btn-warning edit-class">Edit Class</div>
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                }
+
+                                                // its a makepup class and not monitored
+                                                else if (sch.SchCTId == 3)
+                                                {
+                                                    <div class="parts">
+
+                                                    </div>
+                                                        <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                        <div class="parts blue-color">
+
+                                                            <span style="font-size: 10.3px;font-weight: 700;position:absolute;top:69px">Makeup</span>
+                                                            <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                            <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                            <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name" style="text-align:center;">@sch.title</h6>
+
+                                                        </div>
+                                                        <div style="text-align:end;">
+                                                            <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                        </div>
+
+                                                        <div class="content1" style="display:none;text-align:center;padding-top:10px;">
+                                                            <div style="" class="parts">
+                                                                @*<a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Makeup class</div></a>*@
+                                                            </div>
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            <div style="padding-top:8px;" class="parts">
+
+                                                                <div style="cursor:pointer;" data-toggle="modal" data-target=".class-held-modal" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime" class-break="" ctid="3">Class Held</div>
+                                                            </div>
+                                                        </div>
+
+
+                                                }
+                                            }
+
+                                        }
+
+
+
+                                        //only occupied 1
+                                        else if (sch.occupied == 1)
+                                        {
+
+                                            // to check if the occupied one class is monitored or not
+                                            if (weekwise.Count() > 0)
+                                            {
+                                                foreach (var week in weekwise)
+                                                {
+
+                                                    // the class is held(monitored) and its a normal class(not makeup)(green color)
+                                                    if (week.CTId == 1 && sch.SchCTId == null)
+                                                    {
+
+                                                        <div class="parts green-color">
+                                                            <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                            <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                            <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name" style="text-align:center;">@sch.title</h6>
+                                                        </div>
+                                                            <div class="parts">
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+
+                                                            </div>
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                            </div>
+
+
+                                                            <div class="content1" style="display:none;text-align:center;padding-top:10px;">
+                                                                <div style="" class="parts">
+                                                                    <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                </div>
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                                <div style="padding-top:8px;" class="parts">
+
+                                                                    @*<a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Makeup class</div></a>*@
+                                                                </div>
+                                                            </div>
+                                                    }
+
+                                                    // the class is held(monitored) and its a make up class (bold blue color)
+                                                    else if (week.CTId == 1 && sch.SchCTId == 3)
+                                                    {
+                                                        <div class="parts blue-color">
+                                                            <span style="font-size: 10.3px;font-weight: 700;position:absolute;top:-1px">Makeup</span>
+                                                            <h6 style="font-size:11.5px;text-align:center;font-weight: 800;">@sch.sectionname (@sch.duration)</h6>
+                                                            <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                            <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name" style="text-align:center;">@sch.title</h6>
+                                                        </div>
+                                                            <div class="parts">
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+
+                                                            </div>
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                            </div>
+
+                                                            <div class="content1" style="display:none;text-align:center;padding-top:10px;">
+                                                                <div style="" class="parts">
+                                                                    <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded Break Duration: @week.BreakDuration" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+
+                                                                </div>
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                                <div style="padding-top:8px;" class="parts">
+
+                                                                    @*<a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Makeup class</div></a>*@
+                                                                </div>
+                                                            </div>
+
+                                                    }
+
+
+                                                    // the class is cancelled and occuped is 1
+                                                    else if (week.CTId == 2)
+                                                    {
+                                                        <div class="parts red-color">
+                                                            <span class="" style="font-size: 10.3px;font-weight: 700;position:absolute;top:-1px">Cancelled</span>
+                                                            <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                            <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                            <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name" style="text-align:center;">@sch.title</h6>
+                                                        </div>
+                                                            <div class="parts">
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+
+                                                            </div>
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                            </div>
+
+                                                            <div class="content1" style="display:none;text-align:center;padding-top:10px;">
+                                                                <div style="" class="parts">
+                                                                    <div class="alert alert-danger"><span date="@weekwise.Select(w => w.Date).Single()">Class Cancelled @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                </div>
+                                                                <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                                <div style="padding-top:8px;" class="parts">
+
+                                                                    @*<a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Makeup class</div></a>*@
+                                                                </div>
+                                                            </div>
+
+                                                    }
+
+                                                }
+                                            }
+
+
+                                            // it is occupied 1 and no monitoring(class not held) found
+                                            else
+                                            {
+
+                                                // its a normal class of occupied 1 (silver color)
+                                                if (sch.SchCTId == null)
+                                                {
+                                                    <div class="parts silver-color">
+                                                        <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                        <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                        <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name" style="text-align:center;">@sch.title</h6>
+                                                    </div>
+                                                        <div class="parts">
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+
+                                                        </div>
+                                                        <div style="text-align:end;">
+                                                            <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                        </div>
+
+                                                        <div class="content1" style="display:none;text-align:center;padding-top:10px;">
+                                                            <div style="" class="parts">
+                                                                <div style="cursor:pointer;" data-toggle="modal" data-target=".class-held-modal" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime" class-break="" ctid="1">Class Held</div>
+
+                                                                <div class="btn-group btn-group-sm" role="group" style="margin-right: 0px;">
+
+                                                                    <div type="button" data-toggle="modal" data-target=".class-cancel-modal" occupied="@sch.occupied" id="class-cancel" class="btn btn-danger">Cancel Class</div>
+
+                                                                    <div type="button" data-toggle="modal" data-target=".class-edit-modal" class="btn btn-warning edit-class">Edit Class</div>
+
+                                                                </div>
+
+
+                                                            </div>
+
+
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            <div style="padding-top:8px;" class="parts">
+                                                                @*<a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Makeup class</div></a>*@
+                                                            </div>
+                                                        </div>
+                                                }
+
+                                                // it a make up class and no monitoring done
+                                                else if (sch.SchCTId == 3)
+                                                {
+                                                    <div class="parts blue-color">
+                                                        <span style="font-size: 10.3px;font-weight: 700;position:absolute;top:-1px">Makeup</span>
+                                                        <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname (@sch.duration)</h6>
+                                                        <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                        <h6 class="course-name" data-toggle="popover" data-placement="bottom" data-content="@sch.title" title="Course Name" style="text-align:center;">@sch.title</h6>
+                                                    </div>
+                                                        <div class="parts">
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+
+                                                        </div>
+                                                        <div style="text-align:end;">
+                                                            <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                        </div>
+
+                                                        <div class="content1" style="display:none;text-align:center;padding-top:10px;">
+                                                            <div style="" class="parts">
+                                                                <div style="cursor:pointer;" data-toggle="modal" data-target=".class-held-modal" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime" class-break="" ctid="3">Class Held</div>
+                                                            </div>
+                                                            <hr style="margin:1px;border-bottom: 1px dashed;color:black;" />
+                                                            <div style="padding-top:8px;" class="parts">
+                                                                @*<a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Makeup class</div></a>*@
+                                                            </div>
+                                                        </div>
+                                                }
+
+
+                                            }
+
+                                        }
+
+
+                                        //occupied 3
+                                        else if (sch.occupied == 3)
+                                        {
+                                            // to check if the occupied one class is monitored or not
+                                            if (weekwise.Count() > 0)
+                                            {
+                                                foreach (var week in weekwise)
+                                                {
+
+                                                    // the class is held and its a normal class of occupied 3
+                                                    if (week.CTId == 1 && sch.SchCTId == null)
+                                                    {
+
+                                                        <div class="parts green-color">
+
+
+                                                            <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname</h6>
+                                                            <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                            <h6 style="text-align:center;">@sch.title</h6>
+                                                        </div>
+                                                            <div class="parts">
+
+                                                            </div>
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                            </div>
+
+                                                            <div class="content1" style="display:none;text-align:center;">
+                                                                <div style="padding-top:100px;">
+                                                                    @*<div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held<span class="glyphicon glyphicon-check"></span> <span style="float:right;" class="glyphicon glyphicon-list"></span> </span></div>*@
+                                                                    <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded Break Duration: @week.BreakDuration" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                </div>
+                                                            </div>
+                                                    }
+
+
+                                                    // the class is held and its a makeup class of occupied 3
+                                                    else if (week.CTId == 1 && sch.SchCTId == 3)
+                                                    {
+
+                                                        <div class="parts blue-color">
+
+                                                            <span style="font-size: 10.3px;font-weight: 700;position:absolute;top:-1px;">Makeup</span>
+                                                            <h6 style="font-size:11.5px;text-align:center;font-weight: 800;">@sch.sectionname</h6>
+                                                            <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                            <h6 style="text-align:center;">@sch.title</h6>
+                                                        </div>
+                                                            <div class="parts">
+
+                                                            </div>
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                            </div>
+
+                                                            <div class="content1" style="display:none;text-align:center;">
+                                                                <div style="padding-top:100px;">
+                                                                    @*<div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held<span class="glyphicon glyphicon-check"></span> <span style="float:right;" class="glyphicon glyphicon-list"></span> </span></div>*@
+                                                                    <div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held @weekwise.Select(w => w.schid).Single()<span class="glyphicon glyphicon-check"></span> <span data-occ="@sch.occupied" title="Class Start Time: @week.ClassStarted Class End Time: @week.ClassEnded Break Duration: @week.BreakDuration" style="float:right;cursor:pointer;" class="cls-held-details glyphicon glyphicon-list"></span> </span></div>
+                                                                </div>
+                                                            </div>
+                                                    }
+
+                                                    // the class is cancelled and of occupied 3
+                                                    else if (week.CTId == 2)
+                                                    {
+                                                        <div class="parts red-color">
+
+                                                            <span class="" style="font-size: 10.3px;font-weight: 700;position:absolute; top: -1px;">Cancelled</span>
+                                                            <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname</h6>
+                                                            <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                            <h6 style="text-align:center;">@sch.title</h6>
+                                                        </div>
+                                                            <div class="parts">
+
+                                                            </div>
+                                                            <div style="text-align:end;">
+                                                                <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                            </div>
+
+
+                                                            <div class="content1" style="display:none;text-align:center;">
+                                                                <div style="padding-top:100px;">
+                                                                    @*<div class="alert alert-success"><span date="@weekwise.Select(w => w.Date).Single()">Class Held<span class="glyphicon glyphicon-check"></span> <span style="float:right;" class="glyphicon glyphicon-list"></span> </span></div>*@
+                                                                    <div class="alert alert-danger"><span date="@weekwise.Select(w => w.Date).Single()">Class Cancelled<span class="glyphicon glyphicon-info-sign"></span> <span style="float:right;" class="glyphicon glyphicon-list"></span> </span></div>
+                                                                </div>
+                                                            </div>
+
+
+                                                    }
+
+                                                }
+                                            }
+
+                                            // no monitoring found of occupied 3
+                                            else
+                                            {
+
+                                                // its a normal class  and class not held(monitored) of occupied 3
+                                                if (sch.SchCTId == null)
+                                                {
+                                                    <div class="parts silver-color">
+
+
+                                                        <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname</h6>
+                                                        <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                        <h6 style="text-align:center;">@sch.title</h6>
+                                                    </div>
+                                                        <div class="parts">
+
+                                                        </div>
+                                                        <div style="text-align:end;">
+                                                            <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                        </div>
+                                                        <div class="content1" style="display:none;text-align:center;">
+                                                            <div style="padding-top:94px;">
+                                                                @*<div>@Model.WeekWise.Where(w=>w.schid==sch.schid).Select(w=>w.CTId).SingleOrDefault()</div>*@
+                                                                <div style="cursor:pointer;" data-toggle="modal" data-target=".class-held-modal" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime" class-break="@sch.BreakDuration" ctid="1">Class Held</div>
+                                                                @*<button class="btn btn-primary" data-toggle="modal" data-target=".class-held-modal">Logout modal</button>*@
+
+                                                                @*<div class="btn-group">
+                                                                        <button type="button" style="cursor:pointer;" data-toggle="modal" data-target=".class-cancel-modal" occupied="@sch.occupied" id="class-cancel" class="btn-sm btn-danger">Cancel class</button>
+                                                                        <button type="button" class="btn btn-info">Edit Class</button>
+
+                                                                    </div>*@
+                                                                @*<div style="cursor:pointer;" data-toggle="modal" data-target=".class-cancel-modal" occupied="@sch.occupied" id="class-cancel" class="btn-sm btn-danger">Cancel class</div>*@
+                                                                @*<div style="cursor:pointer;" class="btn-sm btn-info">Edit Class</div>*@
+                                                                @*<button class="btn btn-primary" data-toggle="modal" data-target=".class-cancel-modal">Cancel Class</button>*@
+                                                                <div class="btn-group btn-group-sm" role="group" style="margin-right: 0px;">
+                                                                    @*<button type="button" class="btn btn-secondary">Cancel Class</button>*@
+                                                                    <div type="button" data-toggle="modal" data-target=".class-cancel-modal" occupied="@sch.occupied" id="class-cancel" class="btn btn-danger">Cancel Class</div>
+
+                                                                    <div type="button" data-toggle="modal" data-target=".class-edit-modal" class="edit-class btn btn-warning">Edit Class</div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                }
+
+                                                // its a makeup class  and class not held(monitored)
+                                                else if (sch.SchCTId == 3)
+                                                {
+                                                    <div class="parts blue-color">
+
+                                                        <span style="font-size: 10.3px;font-weight: 700;position:absolute;top: -1px;">Makeup</span>
+                                                        <h6 style="font-size:11.5px;text-align:center;">@sch.sectionname</h6>
+                                                        <h6 style="text-align:center;font-size:11.5px;">@sch.teachername</h6>
+                                                        <h6 style="text-align:center;">@sch.title</h6>
+                                                    </div>
+                                                        <div class="parts">
+
+                                                        </div>
+                                                        <div style="text-align:end;">
+                                                            <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                                        </div>
+
+                                                        <div class="content1" style="display:none;text-align:center;">
+                                                            <div style="padding-top:100px;">
+                                                                @*<div>@Model.WeekWise.Where(w=>w.schid==sch.schid).Select(w=>w.CTId).SingleOrDefault()</div>*@
+                                                                <div style="cursor:pointer;" data-toggle="modal" data-target=".class-held-modal" class="btn-sm btn-primary class-held" schid="@sch.schid" class-start="@sch.ClassStartTime" class-end="@sch.ClassEndTime" class-break="@sch.BreakDuration" ctid="3">Class Held</div>
+
+                                                            </div>
+                                                        </div>
+
+                                                }
+
+
+                                            }
+
+                                            @*<div class="action-btn" style="text-align:center;">
+                                                    <button course="@sch.title"  data-toggle="tooltip" data-placement="left" title="Action" type="button" style="font-size:10px;display:none;" class="action btn btn-danger glyphicon glyphicon-pencil"></button>
+                                                </div>*@
+                                            //}
+                                        }
+
+                                    }
+
+
+                                }
+
+                                //no class
+                                else
+                                {
+                                    <div class="parts">
+                                        @*<h4 style="text-align:center;"> No Class Scheduled</h4>*@
+                                        <div style="text-align:center;">
+                                            <span data-toggle="popover" data-placement="bottom" title="No Class Scheduled" class="glyphicon glyphicon-exclamation-sign course-name" style="font-size: 45px;color: #53575a;"></span>
+                                        </div>
+                                    </div>
+                                        <div class="parts">
+
+                                        </div>
+                                        <div style="text-align:end;">
+                                            <span style="display:none;" class="hover-options glyphicon glyphicon-cog"></span>
+                                        </div>
+                                        <div class="content1" style="display:none;text-align:center;">
+                                            <div style="padding-top:87px;">
+                                                @*<a href="#" style="text-decoration:none;"><div class="btn-sm btn-primary">Class Held</div></a>*@
+
+                                                <button class="add-class btn btn-success btn-block btn-sm" data-slot="@days.dayid-@slots.slottypeid-@rooms.roomid" data-slottypes="@slots.slottypeid" data-toggle="modal" data-target=".class-add-modal">Add Class</button>
+                                                @*<div class="add-class btn-sm btn-success" data-slot="@days.dayid-@slots.slottypeid-@rooms.roomid" data-slottypes="@slots.slottypeid" style="cursor:pointer;">Add class</div>*@
+                                                <button class="makeup-class btn btn-primary btn-block btn-sm" data-slot="@days.dayid-@slots.slottypeid-@rooms.roomid" data-slottypes="@slots.slottypeid" data-toggle="modal" data-target=".class-makeup-modal">Makeup Class</button>
+                                            </div>
+                                        </div>
+
+                                }
+
+                            }
+
+
+                            @*<div class="content1" style="display:none;text-align:center;">
+                                    <div style="padding-top:115px;">
+                                        <a href="#" style="text-decoration:none;"><div class="btn-sm btn-primary">Schedule class</div></a>
+                                        <a href="#" style="text-decoration:none;"><div class="btn-sm btn-danger">Cancel class</div></a>
+                                    </div>
+                                </div>*@
+
+                        </div>
+
+
+                                    }
+                                    i++;
+                                }
+            </section>
+                                    a++;
+                                }
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,447 @@
+﻿@model  Scheduling.Models.ViewModels.CombineScheduleVM
+@{
+    ViewBag.Title = "Sample";
+}
+
+
+<style>
+    .font {
+        font-family: monospace;
+        font-size: 14px;
+    }
+
+        
+
+    /*.active{
+
+        background-color:#255682;
+    }*/
+
+    .campuses {
+        background-color: #ffffff;
+        position: fixed;
+        width: 1349px;
+        height: 50px;
+        margin-left: -15px;
+        margin-top: -19px;
+        border-bottom-style: groove;
+        border-bottom-width: thin;
+        border-color: black;
+    }
+
+    
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('body').on('click', '.duration', function () {
+
+            $('.slottime').text($(this).text());
+
+            $('#durid').val($(this).attr('durid'));
+
+            console.log($('#durid').val());
+
+            $('#dayid').val($(this).attr('dayid'));
+
+            console.log($('#dayid').val());
+
+            var durid = $('#durid').val();
+            var dayid = $('#dayid').val();
+            var campus = $('#incampus').val();
+            var slottime = $('.slottime').text();
+            console.log(campus);
+            $('.main-div').hide();
+            @*var json = $.ajax({
+
+                url: '@Url.Action("TotalRoomsByCampus", "JSON")',
+                data: {
+                    'campus': campus
+                },
+                type: "GET",
+                contentType: 'application/json'
+            });*@
+            var jsonData = $.ajax({
+
+                url: '@Url.Action("FilterBySlotsAndCampus", "JSON")',
+                data:{
+                    durid,
+                    dayid,
+                    campus,
+                    slottime
+
+                },
+                type: "GET",
+                success: function (result) {
+                    console.log(result);
+                    $('.table-responsive').html(result);
+                }
+
+
+            });
+
+
+
+
+        });
+        $(document).ajaxStart(function () {
+            $("#loading").show(); // show loading indicator
+            $('.main-div').hide();
+        });
+
+        $(document).ajaxComplete(function () {
+            $('#loading').hide();  // hide loading indicator
+            $('.main-div').show();
+        });
+
+        $('body').on('click', '.campus', function () {
+            //console.log("DURATION ID:" + $(this).attr('durid'));
+            //console.log("DAY ID:" + $(this).attr('dayid'));
+            $('.campus').removeClass('active');
+            $(this).addClass('active');
+
+            console.log("CAMPUS:" + $(this).attr('campus'));
+            $('#incampus').val($(this).attr('campus'));
+
+            console.log($('#incampus').val());
+            var durid = $('#durid').val();
+            var dayid = $('#dayid').val();
+            var slottime = $('.slottime').text();
+            console.log(durid);
+            console.log(dayid);
+
+            var campus = $('#incampus').val();
+            console.log(campus);
+            var jsonData = $.ajax({
+
+                url: '@Url.Action("FilterBySlotsAndCampus", "JSON")',
+                data:{
+                    durid,
+                    dayid,
+                    campus,
+                    slottime
+
+                },
+                type: "GET",
+                success: function (result) {
+                    console.log(result);
+                    $('.table-responsive').html(result);
+                }
+            });
+
+
+        });
+    });
+
+
+
+</script>
+
+
+
+
+<input id="incampus" hidden value="90" />
+
+
+@{ var slot = Model.vslottypes.Where(o => o.occupied == 3 && o.slottypeid == 1).SingleOrDefault();}
+
+<div class="campuses">
+    <div class="col-md-offset-8 btn-group-sm font container" style="position:fixed;padding-top:7px;">
+        <a href="#" class="btn btn-primary campus active" role="button" campus="90">90 Campus</a>  <a href="#" campus="100" class="btn btn-primary  campus" role="button">100 Campus</a>  <a href="#" campus="154" class="btn btn-primary campus" role="button">154 Campus</a>
+    </div>
+</div>
+<div id="loading" style="display:none;" class="col-md-offset-5">
+    <img src="~/Content/themes/base/images/loading.svg" height="300" width="300">
+</div>
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-2 font">
+            @{int a = 0; }
+            @foreach (var days in Model.days)
+        {
+
+                <ul>
+                    <li>
+                        @days.dayname
+
+                        @foreach (var vslottypes in Model.vslottypes.Where(o => o.occupied == 3))
+                {
+                    if (a == 0)
+                    {
+                                <input id="durid" hidden value="@vslottypes.slottypeid" />
+                                <input id="dayid" hidden value="@days.dayid" />
+                        }
+                        a++;
+                            <ul>
+                                @*<li>@Html.ActionLink(vslottypes.duration, "Filter", "Admin", new { slottypeid = vslottypes.slottypeid, dayid = days.dayid, campus = 90 }, null)</li>*@
+                                <li><a durid="@vslottypes.slottypeid" dayid="@days.dayid" class="duration" href="#">@vslottypes.duration</a></li>
+                            </ul>
+
+
+                    }
+                    </li>
+                </ul>
+        }
+
+        </div>
+
+
+
+
+
+
+
+
+
+        <div class="col-md-8 main-div font" style="padding-top:15px;">
+            <h2 class="font" style="font-size:30px;">Classes</h2>
+            <div class="table-responsive">
+                <table class="tablex table-hover table-condensed table-bordered">
+                    <tr>
+                        <td></td>
+
+                        <td colspan="3" class="text-center lead">TIME SLOT</td>
+
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td colspan="3" class="text-center lead slottime">@slot.duration</td>
+
+                    </tr>
+                    <tr class="tr">
+                        <td class="lead">Room</td>
+                        <td class="lead">Teacher</td>
+                        <td class="lead">Subject</td>
+                        <td class="lead">Class</td>
+
+
+                    </tr>
+
+                    @foreach (var rooms in Model.rooms)
+            {
+                        <tr class="tb">
+                            <td>
+                                @rooms.roomno
+                            </td>
+
+
+
+                            @{var key = rooms.roomid; }
+                            @if (Model.ListByCampus().ContainsKey(key.ToString()))
+                        {
+                            var Schedules = Model.ListByCampus()[key.ToString()];
+                                <td>
+                                    <table>
+
+                                        @foreach (var sch in Schedules)
+                                    {
+                                        if (sch.occupied == 1)
+                                        {
+                                                <tr class="cell-fill">
+                                                    <td>
+                                                        @sch.schid  @sch.teachername
+
+                                                        <hr style="border:1px solid;border-color:#1c3e1c;margin-top:10px;margin-bottom:10px;" />
+                                                    </td>
+                                                </tr>
+                                        }
+
+
+                                    }
+
+
+                                        @foreach (var sch in Schedules)
+                                    {
+                                        if (sch.occupied == 2)
+                                        {
+                                                <tr class="cell-fill">
+                                                    <td>
+                                                        @sch.schid  @sch.teachername
+                                                    </td>
+                                                </tr>
+                                        }
+
+
+                                    }
+
+                                        @foreach (var sch in Schedules)
+                                    {
+                                        if (sch.occupied == 3)
+                                        {
+                                                <tr class="cell-fill">
+                                                    <td>
+                                                        @sch.schid  @sch.teachername
+                                                    </td>
+                                                </tr>
+                                        }
+
+
+                                    }
+                                    </table>
+                                </td>
+
+
+
+
+
+
+
+
+                                <td>
+                                    <table>
+
+                                        @foreach (var sch in Schedules)
+                                    {
+                                        if (sch.occupied == 1)
+                                        {
+                                                <tr class="cell-fill">
+                                                    <td>
+                                                        @sch.title
+
+                                                        <hr style="border:1px solid;border-color:#1c3e1c;margin-top:10px;margin-bottom:10px;" />
+
+                                                    </td>
+                                                </tr>
+                                        }
+
+
+                                    }
+
+
+                                        @foreach (var sch in Schedules)
+                                    {
+                                        if (sch.occupied == 2)
+                                        {
+                                                <tr class="cell-fill">
+                                                    <td>
+                                                        @sch.title
+                                                    </td>
+                                                </tr>
+                                        }
+
+
+                                    }
+
+
+                                        @foreach (var sch in Schedules)
+                                    {
+                                        if (sch.occupied == 3)
+                                        {
+                                                <tr class="cell-fill">
+                                                    <td>
+
+                                                        @sch.title
+
+                                                    </td>
+                                                </tr>
+                                        }
+
+
+                                    }
+
+                                    </table>
+
+                                </td>
+
+
+
+
+
+                                <td>
+                                    <table>
+
+                                        @foreach (var sch in Schedules)
+                                    {
+                                        if (sch.occupied == 1)
+                                        {
+                                                <tr class="cell-fill">
+                                                    <td>
+                                                        @sch.sectionname
+
+                                                        <span> ( @sch.duration )</span>
+
+
+                                                        <hr style="border:1px solid;border-color:#1c3e1c;margin-top:10px;margin-bottom:10px;" />
+                                                    </td>
+                                                </tr>
+                                        }
+
+
+                                    }
+
+
+
+                                        @foreach (var sch in Schedules)
+                                    {
+                                        if (sch.occupied == 2)
+                                        {
+                                                <tr class="cell-fill">
+                                                    <td>
+
+                                                        @sch.sectionname
+
+                                                        <span> ( @sch.duration )</span>
+                                                    </td>
+                                                </tr>
+                                        }
+
+
+                                    }
+
+
+                                        @foreach (var sch in Schedules)
+                                    {
+                                        if (sch.occupied == 3)
+                                        {
+                                                <tr class="cell-fill">
+                                                    <td>
+                                                        @sch.sectionname
+                                                    </td>
+                                                </tr>
+                                        }
+
+
+                                    }
+
+
+                                    </table>
+                                </td>
+
+
+                        }
+                        else
+                        {
+                                <td class="cell-empty tb"></td>
+                                <td class="cell-empty tb"></td>
+                                <td class="cell-empty tb"></td>
+                        }
+                        </tr>
+                            }
+                </table>
+            </div>
+
+        </div>
+        <div class="col-md-2">
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+            <h1>Hello</h1>
+
+        </div>
+
+
+
+    </div>
+</div>
